@@ -1,5 +1,5 @@
 kind: Cluster
-name: k8s-dev
+name: k8s-scots-lab
 kubernetes:
   version: v1.34.3
 talos:
