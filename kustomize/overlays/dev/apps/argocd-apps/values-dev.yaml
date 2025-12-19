@@ -8,7 +8,7 @@ global:
       server: https://kubernetes.default.svc
       namespace: default
     source:
-      repoURL: https://github.com/dajrivera/k8s-cluster.git
+      repoURL: https://github.com/ghubprime/k8s-cluster.git
       targetRevision: HEAD
 
 argocdApplications:
@@ -25,7 +25,7 @@ argocdApplications:
     namespace: talos-system
     appCategory: cluster
   omni:
-    repoURL: https://github.com/dajrivera/omni-infra.git
+    repoURL: https://github.com/ghubprime/k8s-cluster.git
     path: "."
     disableAutomated: false
     disable: false
