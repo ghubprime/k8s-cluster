@@ -1,9 +1,9 @@
-kind: Cluster
+﻿kind: Cluster
 name: k8s-scots-lab
 kubernetes:
   version: v1.34.3
 talos:
-  version: v1.11.6
+  version: v1.12.0
 features:
   diskEncryption: true
   enableWorkloadProxy: true
@@ -68,11 +68,12 @@ patches:
     file: bootstrap/k8s-cluster-extramanifests-argocd-projects.yaml
   - name: extramanifests-argocd-apps
     file: bootstrap/k8s-cluster-extramanifests-argocd-apps.yaml
+
 ---
 kind: ControlPlane
 machineClass:
   name: scots-lab
-  size: 1
+  size: 3
 patches:
   - name: machinepatch
     inline:
@@ -82,7 +83,8 @@ patches:
             - ipv6.disable=1
         kernel:
           modules:
-            - name: nbd            
+            - name: nbd             
+
 ---
 kind: Workers
 machineClass:
