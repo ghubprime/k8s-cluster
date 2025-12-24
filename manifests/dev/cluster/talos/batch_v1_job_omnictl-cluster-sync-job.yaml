@@ -28,7 +28,7 @@ spec:
             secretKeyRef:
               key: omniServiceAccountKey
               name: omni-api-key
-        image: ghcr.io/dajrivera/omnictl:v0.50.0
+        image: ghcr.io/ghubprime/omnictl:v0.50.0
         name: cluster-template-sync
         securityContext:
           allowPrivilegeEscalation: false
@@ -44,7 +44,7 @@ spec:
           name: omni
       initContainers:
       - args:
-        - git clone -n --depth=1 --filter=tree:0 https://github.com/dajrivera/k8s-cluster.git
+        - git clone -n --depth=1 --filter=tree:0 https://github.com/ghubprime/k8s-cluster.git
           repo && cd repo && git sparse-checkout set --no-cone /k8s-cluster.yaml /bootstrap
           && git checkout
         command:

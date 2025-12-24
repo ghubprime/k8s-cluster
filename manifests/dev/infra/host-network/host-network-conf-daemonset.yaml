@@ -15,7 +15,7 @@ spec:
       hostNetwork: true
       containers:
         - name: host-network-conf-sleep
-          image: ghcr.io/dajrivera/alpine:3.21.3-bash-iproute
+          image: ghcr.io/ghubprime/alpine:3.21.3-bash-iproute
           securityContext:
             privileged: false
             runAsNonRoot: true
@@ -29,7 +29,7 @@ spec:
           command: ["sleep", "infinity"]
       initContainers:
         - name: host-network-conf
-          image: ghcr.io/dajrivera/alpine:3.21.3-bash-iproute
+          image: ghcr.io/ghubprime/alpine:3.21.3-bash-iproute
           securityContext:
             capabilities:
               drop:

@@ -10,7 +10,7 @@ spec:
   project: default
   source:
     path: manifests/dev/infra/host-network
-    repoURL: https://github.com/dajrivera/k8s-cluster.git
+    repoURL: https://github.com/ghubprime/k8s-cluster.git
     targetRevision: HEAD
   syncPolicy:
     automated:

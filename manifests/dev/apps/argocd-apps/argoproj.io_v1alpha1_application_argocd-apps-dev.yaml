@@ -15,7 +15,7 @@ spec:
   project: default
   source:
     path: manifests/dev/apps/argocd-apps
-    repoURL: https://github.com/dajrivera/k8s-cluster.git
+    repoURL: https://github.com/ghubprime/k8s-cluster.git
     targetRevision: HEAD
   syncPolicy:
     automated:
