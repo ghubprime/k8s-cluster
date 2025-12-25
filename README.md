@@ -1,1 +1,1 @@
-# Omni Cluster Template
+# Omni k8s Cluster Template
