@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: argocd-apps-dev
+  name: argocd-apps-scots-lab
   namespace: argocd
 spec:
   destination:
@@ -14,7 +14,7 @@ spec:
     kind: Application
   project: default
   source:
-    path: manifests/dev/apps/argocd-apps
+    path: manifests/scots-lab/apps/argocd-apps
     repoURL: https://github.com/ghubprime/k8s-cluster.git
     targetRevision: HEAD
   syncPolicy:

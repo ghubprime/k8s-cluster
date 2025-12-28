@@ -9,7 +9,7 @@ spec:
     server: https://kubernetes.default.svc
   project: default
   source:
-    path: manifests/dev/apps/cert-manager
+    path: manifests/scots-lab/apps/cert-manager
     repoURL: https://github.com/ghubprime/k8s-cluster.git
     targetRevision: HEAD
   syncPolicy:
