@@ -1,0 +1,18 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../../../base/apps/rook-ceph/
+generators:
+  - ../../../../../helm/overlays/scots-lab/apps/rook-ceph/
+patches:
+- target:
+    labelSelector: "helm.sh/chart=ceph-csi-operator-0.4.1"
+  path: patch-ceph-csi-operator-namespace.yaml
+  # fix large crds that fail kubectl apply
+- target:
+    labelSelector: "helm.sh/chart=ceph-csi-operator-0.4.1"
+    kind: CustomResourceDefinition
+  patch: |-
+    - op: add
+      path: /metadata/annotations/argocd.argoproj.io~1sync-options
+      value: Replace=true

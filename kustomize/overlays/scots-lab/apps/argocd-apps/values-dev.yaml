@@ -1,0 +1,95 @@
+global:
+  env: dev
+  helmDefault: false
+  valuesFile: values.yaml
+  spec:
+    project: default
+    destination:
+      server: https://kubernetes.default.svc
+      namespace: default
+    source:
+      repoURL: https://github.com/ghubprime/k8s-cluster.git
+      targetRevision: HEAD
+
+argocdApplications:
+  argocd:
+    disableAutomated: false
+    disable: false
+    name: argocd
+    namespace: argocd
+    appCategory: apps
+  talos:
+    disableAutomated: false
+    disable: false
+    name: talos
+    namespace: talos-system
+    appCategory: cluster
+  omni:
+    repoURL: https://github.com/ghubprime/k8s-cluster.git
+    path: "."
+    disableAutomated: false
+    disable: false
+    name: omni
+    namespace: omni-system
+    directory:
+      recurse: true
+      include: "{manifests/*}"
+    appCategory: cluster 
+  hostNetwork:
+    disableAutomated: false
+    disable: false
+    name: host-network
+    namespace: kube-system
+    appCategory: infra
+  multus:
+    disableAutomated: false
+    disable: false
+    name: multus
+    namespace: kube-system
+    appCategory: infra
+  cilium:
+    disableAutomated: false
+    disable: false
+    name: cilium
+    namespace: kube-system
+    appCategory: infra
+  gateway-api-crds:
+    disableAutomated: false
+    disable: false
+    name: gateway-api-crds
+    appCategory: cluster
+  kube-prometheus-stack:
+    disableAutomated: false
+    disable: false
+    name: kube-prometheus-stack
+    namespace: kube-prometheus-system
+    appCategory: monitoring
+  rook-ceph:
+    disableAutomated: false
+    disable: false
+    name: rook-ceph
+    namespace: rook-ceph
+    appCategory: apps
+  rook-ceph-cluster:
+    disableAutomated: false
+    disable: false
+    name: rook-ceph-cluster
+    namespace: rook-ceph
+    appCategory: cluster
+  argocdApps:
+    disableAutomated: false
+    disable: false
+    name: argocd-apps
+    namespace: argocd
+    appCategory: apps
+    ignoreDifferences:
+      - group: argoproj.io
+        kind: Application
+        jsonPointers:
+          - /spec/syncPolicy
+  certManager:
+    disableAutomated: false
+    disable: false
+    name: cert-manager
+    namespace: cert-manager
+    appCategory: apps

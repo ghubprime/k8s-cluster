@@ -1,5 +1,0 @@
-apiVersion: builtin
-kind: HelmChartInflationGenerator
-metadata:
-  name: gateway-api-crds
-valuesFile: values-dev.yaml

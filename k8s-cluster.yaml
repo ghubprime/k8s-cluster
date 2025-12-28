@@ -43,11 +43,6 @@ patches:
           extraConfig:
             shutdownGracePeriod: "600s"
             shutdownGracePeriodCriticalPods: "120s"
-        registries:
-          config:
-            git.somostechs.com:
-              tls:
-                insecureSkipVerify: true
         features:
           hostDNS:
             enabled: true

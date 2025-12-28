@@ -1,4 +1,4 @@
 cluster:
   extraManifests:
-    - https://raw.githubusercontent.com/ghubprime/k8s-cluster/refs/heads/main/manifests/dev/infra/host-network/host-network-conf-configmap.yaml
-    - https://raw.githubusercontent.com/ghubprime/k8s-cluster/refs/heads/main/manifests/dev/infra/host-network/host-network-conf-daemonset.yaml
+    - https://raw.githubusercontent.com/ghubprime/k8s-cluster/refs/heads/main/manifests/scots-lab/infra/host-network/host-network-conf-configmap.yaml
+    - https://raw.githubusercontent.com/ghubprime/k8s-cluster/refs/heads/main/manifests/scots-lab/infra/host-network/host-network-conf-daemonset.yaml

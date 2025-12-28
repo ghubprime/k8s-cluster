@@ -1,0 +1,16 @@
+apiVersion: customFunction
+kind: ClusterConfigHashGenerator
+metadata:
+  name: talos-cluster-config-generator
+  annotations:
+    config.kubernetes.io/function: |
+      exec: 
+        path: sh
+        args:
+          - ./plugins/generate-cluster-config.sh
+spec:
+  configPaths:
+    # relative to git top level
+    - k8s-cluster.yaml
+    - bootstrap
+  outputPath: ../../../../../manifests/scots-lab/cluster/talos

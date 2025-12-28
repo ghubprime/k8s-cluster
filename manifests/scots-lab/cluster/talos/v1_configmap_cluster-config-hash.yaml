@@ -1,0 +1,7 @@
+apiVersion: v1
+data:
+  clusterConfigHash: 1dbb1169d1f4ba3424fa0019aecb683ced043930
+kind: ConfigMap
+metadata:
+  name: cluster-config-hash
+  namespace: talos-system
