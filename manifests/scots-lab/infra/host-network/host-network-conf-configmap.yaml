@@ -10,7 +10,7 @@ data:
     ##
     # add and configure veth interfaces
     ##
-    interfaces=('net0' 'net1' 'ceph0')
+    interfaces=('enp1s0' 'enp2s0' 'ceph0')
 
     for interface in "${interfaces[@]}"; do
       ip link add name $interface type veth peer name ${interface}-port || echo failed to add veth interface $interface
@@ -19,11 +19,11 @@ data:
     done
 
     # configure vlans on interfaces
-    bridge vlan add vid 2-4094 dev br-ext self || echo failed to assign vlans to br-ext
-    bridge vlan add vid 2-4094 dev bond0 || echo failed to assign vlans to bond0
+    bridge vlan add vid 2-4094 scots-lab br-ext self || echo failed to assign vlans to br-ext
+    bridge vlan add vid 2-4094 scots-lab bond0 || echo failed to assign vlans to bond0
 
-    bridge vlan add vid 3000 dev ceph0-port pvid untagged || echo failed to assign vlans to ceph0-port
-    bridge vlan add vid 4094 dev net0-port pvid untagged || echo failed to assign vlans to net0-port
-    bridge vlan add vid 1000 dev net1-port pvid untagged || echo failed to assign vlans to net1-port
+    bridge vlan add vid 3000 scots-lab ceph0-port pvid untagged || echo failed to assign vlans to ceph0-port
+    bridge vlan add vid 4094 scots-lab enp1s0-port pvid untagged || echo failed to assign vlans to enp1s0-port
+    bridge vlan add vid 1000 scots-lab enp2s0-port pvid untagged || echo failed to assign vlans to enp2s0-port
 
     echo Network configuration setup complete.
