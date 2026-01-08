@@ -1,5 +1,5 @@
 cluster:
-  name: k8s-dev-cluster
+  name: k8s-scots-lab
   id: 0
 ipam:
   mode: kubernetes

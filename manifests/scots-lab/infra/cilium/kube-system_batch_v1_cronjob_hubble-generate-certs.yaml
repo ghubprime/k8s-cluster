@@ -33,9 +33,9 @@ spec:
                 certs:
                 - name: hubble-server-certs
                   namespace: kube-system
-                  commonName: "*.k8s-dev-cluster.hubble-grpc.cilium.io"
+                  commonName: "*.k8s-scots-lab.hubble-grpc.cilium.io"
                   hosts:
-                  - "*.k8s-dev-cluster.hubble-grpc.cilium.io"
+                  - "*.k8s-scots-lab.hubble-grpc.cilium.io"
                   usage:
                   - signing
                   - key encipherment
