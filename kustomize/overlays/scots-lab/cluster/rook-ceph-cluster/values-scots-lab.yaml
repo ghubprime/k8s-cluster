@@ -1,7 +1,7 @@
 # -- Cluster ceph.conf override
 configOverride: |
   [global]
-  osd_pool_default_size = 1
+  osd_pool_default_size = 3
   mon_warn_on_pool_no_redundancy = false
 
   [mon]
@@ -27,7 +27,7 @@ cephImage:
 cephClusterSpec:
   # For more details, check https://rook.io/docs/rook/v1.10/CRDs/Cluster/ceph-cluster-crd/
   mon:
-    count: 1
+    count: 3
   mgr:
     count: 2
     allowMultiplePerNode: true
@@ -130,7 +130,7 @@ cephBlockPools:
     spec:
       failureDomain: host
       replicated:
-        size: 1
+        size: 3
       # deviceClass: hdd
       deviceClass: ssd
     storageClass:
@@ -158,7 +158,7 @@ cephBlockPools:
     spec:
       failureDomain: host
       replicated:
-        size: 1
+        size: 3
       deviceClass: hdd
     storageClass:
       enabled: true
@@ -187,13 +187,13 @@ cephFileSystems:
       metadataPool:
         failureDomain: host
         replicated:
-          size: 1
+          size: 3
         # deviceClass: hdd
         deviceClass: ssd
       dataPools:
         - failureDomain: host
           replicated:
-            size: 1
+            size: 3
           name: data0
           # deviceClass: hdd
           deviceClass: ssd
@@ -232,13 +232,13 @@ cephObjectStores:
       metadataPool:
         failureDomain: host
         replicated:
-          size: 1
+          size: 3
         # deviceClass: hdd
         deviceClass: ssd
       dataPool:
         failureDomain: host
         replicated:
-          size: 1
+          size: 3
         parameters:
           bulk: "true"
         # deviceClass: hdd

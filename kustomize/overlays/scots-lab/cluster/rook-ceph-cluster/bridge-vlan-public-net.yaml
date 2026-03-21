@@ -12,14 +12,11 @@ spec:
       "bridge": "br-ext",
       "vlan": 3000,
       "ipam": {
-        "type": "host-local",
-        "ranges": [
-          [ {
-            "subnet": "10.10.0.0/16",
-            "rangeStart": "10.10.0.2",
-            "rangeEnd": "10.10.255.253",
-            "gateway": "10.10.255.254"
-          } ]
-        ]
+        "type": "whereabouts",
+        "range": "10.10.0.0/16",
+        "exclude": [
+          "10.10.0.0/24"
+        ],
+        "gateway": "10.10.255.254"
       }
     }
