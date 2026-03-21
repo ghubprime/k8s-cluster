@@ -8,7 +8,7 @@ patches:
     target:
       kind: ConfigMap
       version: v1
-      name: multus-daemon-config    
+      name: multus-daemon-config
   - path: kube-multus-ds-patch.yaml
     target:
       group: apps

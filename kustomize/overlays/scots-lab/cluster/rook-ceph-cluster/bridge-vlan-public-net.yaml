@@ -2,7 +2,7 @@ apiVersion: "k8s.cni.cncf.io/v1"
 kind: NetworkAttachmentDefinition
 metadata:
   name: public-net
-  namespace: rook-ceph  
+  namespace: rook-ceph
 spec:
   config: |-
     {
