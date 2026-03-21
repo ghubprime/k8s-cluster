@@ -1,0 +1,19 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kube-prometheus-stack-scots-lab
+  namespace: argocd
+spec:
+  destination:
+    namespace: kube-prometheus-system
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: manifests/scots-lab/monitoring/kube-prometheus-stack
+    repoURL: https://github.com/ghubprime/k8s-cluster.git
+    targetRevision: HEAD
+  syncPolicy:
+    automated:
+      allowEmpty: false
+      prune: false
+      selfHeal: true

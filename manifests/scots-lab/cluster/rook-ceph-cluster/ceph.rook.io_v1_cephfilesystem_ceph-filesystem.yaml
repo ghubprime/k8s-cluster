@@ -1,0 +1,27 @@
+apiVersion: ceph.rook.io/v1
+kind: CephFilesystem
+metadata:
+  name: ceph-filesystem
+  namespace: rook-ceph
+spec:
+  dataPools:
+  - deviceClass: ssd
+    failureDomain: host
+    name: data0
+    replicated:
+      size: 3
+  metadataPool:
+    deviceClass: ssd
+    failureDomain: host
+    replicated:
+      size: 3
+  metadataServer:
+    activeCount: 1
+    activeStandby: true
+    priorityClassName: system-node-critical
+    resources:
+      limits:
+        memory: 4Gi
+      requests:
+        cpu: null
+        memory: 4Gi
