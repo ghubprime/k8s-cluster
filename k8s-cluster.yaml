@@ -54,8 +54,8 @@ patches:
             forwardKubeDNSToHost: false              
         sysctls:
           user.max_user_namespaces: "11255"
-  - name: extramanifests
-    file: bootstrap/k8s-cluster-extramanifests.yaml
+  # - name: extramanifests
+  #   file: bootstrap/k8s-cluster-extramanifests.yaml
   - name: extramanifests-multus
     file: bootstrap/k8s-cluster-extramanifests-multus.yaml
   - name: extramanifests-cilium
@@ -64,8 +64,8 @@ patches:
     file: bootstrap/k8s-cluster-extramanifests-gateway-api-crds.yaml    
   - name: extramanifests-argocd
     file: bootstrap/k8s-cluster-extramanifests-argocd.yaml
-  - name: extramanifests-argocd-projects
-    file: bootstrap/k8s-cluster-extramanifests-argocd-projects.yaml
+  # - name: extramanifests-argocd-projects
+  #   file: bootstrap/k8s-cluster-extramanifests-argocd-projects.yaml
   - name: extramanifests-argocd-apps
     file: bootstrap/k8s-cluster-extramanifests-argocd-apps.yaml
 ---
