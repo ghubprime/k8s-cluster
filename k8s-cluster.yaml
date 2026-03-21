@@ -52,10 +52,12 @@ patches:
           hostDNS:
             enabled: true
             forwardKubeDNSToHost: false              
+        time:
+          servers:
+            - 162.159.200.1
+            - 162.159.200.123
         sysctls:
           user.max_user_namespaces: "11255"
-          net.ipv6.conf.all.disable_ipv6: "1"
-          net.ipv6.conf.default.disable_ipv6: "1"
   # - name: extramanifests
   #   file: bootstrap/k8s-cluster-extramanifests.yaml
   - name: extramanifests-multus
