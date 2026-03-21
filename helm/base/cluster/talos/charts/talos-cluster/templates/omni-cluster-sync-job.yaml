@@ -37,7 +37,7 @@ spec:
         command: ["/bin/sh","-c"]
         args:
           - >-
-            git clone -n --depth=1 --filter=tree:0 https://github.com/dajrivera/k8s-cluster.git repo
+            git clone -n --depth=1 --filter=tree:0 https://github.com/ghubprime/k8s-cluster.git repo
             && cd repo
             && git sparse-checkout set --no-cone /k8s-cluster.yaml /bootstrap
             && git checkout
@@ -46,7 +46,7 @@ spec:
           name: omni
       containers:
       - name: cluster-template-sync
-        image: ghcr.io/dajrivera/omnictl:v1.4.6@sha256:fd3bf8b4892ad7ecc8e3c05ea2ef9bd159d53729feab048c151a31c8d22d2dc4
+        image: ghcr.io/ghubprime/omnictl:v1.4.6@sha256:fd3bf8b4892ad7ecc8e3c05ea2ef9bd159d53729feab048c151a31c8d22d2dc4
         env:
         - name: HOME
           value: /omni

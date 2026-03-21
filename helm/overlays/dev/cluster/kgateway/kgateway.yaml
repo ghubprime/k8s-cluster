@@ -1,5 +1,0 @@
-apiVersion: builtin
-kind: HelmChartInflationGenerator
-metadata:
-  name: kgateway
-valuesFile: values.yaml

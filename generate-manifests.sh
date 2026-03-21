@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ENVIRONMENT="dev"
+ENVIRONMENT="scots-lab"
 KUSTOMIZE_SRC="kustomize/overlays/${ENVIRONMENT}"
 RESOURCES=$(find ${KUSTOMIZE_SRC}/*/ -mindepth 1 -maxdepth 1 -type d)
 

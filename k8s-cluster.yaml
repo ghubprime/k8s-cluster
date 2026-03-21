@@ -1,5 +1,5 @@
 kind: Cluster
-name: k8s-dev
+name: k8s-scots-lab
 kubernetes:
   version: v1.35.2
 talos:
@@ -71,8 +71,8 @@ patches:
 ---
 kind: ControlPlane
 machineClass:
-  name: dev
-  size: 1
+  name: scots-lab
+  size: 3
 patches:
   - name: machinepatch
     inline:
@@ -86,5 +86,5 @@ patches:
 ---
 kind: Workers
 machineClass:
-  name: dev
+  name: scots-lab
   size: 0
