@@ -77,9 +77,6 @@ patches:
   - name: machinepatch
     inline:
       machine:
-        install:
-          extraKernelArgs:
-            - ipv6.disable=1
         kernel:
           modules:
             - name: nbd            
