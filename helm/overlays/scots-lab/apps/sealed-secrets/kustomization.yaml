@@ -11,4 +11,5 @@ patches:
     patch: |-
       - op: replace
         path: /valuesFile
-        value: values-scots-lab.yaml
+        # Point back to the helm directory from the kustomize build directory
+        value: ../../../../../helm/overlays/scots-lab/apps/sealed-secrets/values-scots-lab.yaml
