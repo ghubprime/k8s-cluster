@@ -1,0 +1,40 @@
+name: Generate K8s Manifests
+
+# This tells GitHub to run this workflow every time you push code to the main branch
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  generate-and-commit:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Required so the GitHub bot can push commits back to your repo
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # IMPORTANT: Because your script uses 'git diff', GitHub needs the full git history
+
+      - name: Install Helm
+        uses: azure/setup-helm@v4
+
+      - name: Install Kustomize
+        run: |
+          cd /tmp
+          curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | bash
+          sudo mv kustomize /usr/local/bin/
+
+      - name: Make script executable and run it
+        run: |
+          # If your script is in a specific folder, update the path below (e.g., ./scripts/generate-manifests.sh)
+          chmod +x ./generate-manifests.sh
+          ./generate-manifests.sh
+
+      - name: Commit and Push generated manifests
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          # The [skip ci] prevents this automated commit from triggering an infinite loop of actions
+          commit_message: "chore: auto-generate K8s manifests [skip ci]" 
