@@ -1,4 +1,4 @@
-﻿---
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -150,19 +150,6 @@ spec:
         name: rook-config-override
       - emptyDir: {}
         name: ceph-config
-
----
-apiVersion: ceph.rook.io/v1
-kind: CephBlockPool
-metadata:
-  name: ceph-blockpool
-  namespace: rook-ceph
-spec:
-  deviceClass: ssd
-  failureDomain: host
-  replicated:
-    size: 3
-
 ---
 apiVersion: ceph.rook.io/v1
 kind: CephBlockPool
@@ -174,7 +161,17 @@ spec:
   failureDomain: host
   replicated:
     size: 3
-
+---
+apiVersion: ceph.rook.io/v1
+kind: CephBlockPool
+metadata:
+  name: ceph-blockpool
+  namespace: rook-ceph
+spec:
+  deviceClass: ssd
+  failureDomain: host
+  replicated:
+    size: 3
 ---
 apiVersion: ceph.rook.io/v1
 kind: CephCluster
@@ -204,10 +201,10 @@ spec:
     disable: false
   dashboard:
     enabled: true
-    port: 8080
+    port: 8443
     prometheusEndpoint: http://rook-prometheus:9090
     prometheusEndpointSSLVerify: false
-    ssl: false
+    ssl: true
   dataDirHostPath: /var/lib/rook
   disruptionManagement:
     managePodBudgets: true
@@ -260,55 +257,62 @@ spec:
       limits:
         memory: 1Gi
       requests:
+        cpu: 50m
         memory: 100Mi
     crashcollector:
       limits:
         memory: 60Mi
       requests:
+        cpu: 50m
         memory: 60Mi
     exporter:
       limits:
         memory: 128Mi
       requests:
+        cpu: 50m
         memory: 50Mi
     logcollector:
       limits:
         memory: 1Gi
       requests:
+        cpu: 50m
         memory: 100Mi
     mgr:
       limits:
         memory: 1Gi
       requests:
+        cpu: 100m
         memory: 512Mi
     mgr-sidecar:
       limits:
         memory: 100Mi
       requests:
+        cpu: 50m
         memory: 40Mi
     mon:
       limits:
         memory: 2Gi
       requests:
+        cpu: 250m
         memory: 1Gi
     osd:
       limits:
         memory: 4Gi
       requests:
+        cpu: 500m
         memory: 4Gi
     prepareosd:
       requests:
+        cpu: 100m
         memory: 50Mi
   skipUpgradeChecks: false
   storage:
-    useAllNodes: true
+    deviceFilter: ^sd[c-d]$
+    metadataDevice: sdb
     useAllDevices: false
-    deviceFilter: "^sd[c-d]$"
-    config:
-      metadataDevice: "sdb"
+    useAllNodes: true
   upgradeOSDRequiresHealthyPGs: false
   waitTimeoutForHealthyOSDInMinutes: 10
-
 ---
 apiVersion: ceph.rook.io/v1
 kind: CephFilesystem
@@ -335,9 +339,8 @@ spec:
       limits:
         memory: 4Gi
       requests:
-        cpu: null
+        cpu: 250m
         memory: 4Gi
-
 ---
 apiVersion: ceph.rook.io/v1
 kind: CephFilesystemSubVolumeGroup
@@ -349,7 +352,6 @@ spec:
   name: csi
   pinning:
     distributed: 1
-
 ---
 apiVersion: ceph.rook.io/v1
 kind: CephObjectStore
@@ -371,7 +373,7 @@ spec:
         limits:
           memory: 100Mi
         requests:
-          cpu: null
+          cpu: 50m
           memory: 40Mi
     port: 80
     priorityClassName: system-node-critical
@@ -379,7 +381,7 @@ spec:
       limits:
         memory: 2Gi
       requests:
-        cpu: null
+        cpu: 250m
         memory: 1Gi
   metadataPool:
     deviceClass: ssd
@@ -387,7 +389,6 @@ spec:
     replicated:
       size: 3
   preservePoolsOnDelete: true
-
 ---
 apiVersion: k8s.cni.cncf.io/v1
 kind: NetworkAttachmentDefinition
@@ -410,7 +411,6 @@ spec:
         ]
       }
     }
-
 ---
 apiVersion: k8s.cni.cncf.io/v1
 kind: NetworkAttachmentDefinition
@@ -434,7 +434,6 @@ spec:
         "gateway": "10.10.255.254"
       }
     }
-
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: Prometheus
@@ -455,7 +454,6 @@ spec:
   serviceMonitorSelector:
     matchLabels:
       team: rook
-
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
@@ -1533,7 +1531,6 @@ spec:
       labels:
         severity: warning
         type: ceph_default
-
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
@@ -1554,7 +1551,6 @@ spec:
     matchLabels:
       app: rook-ceph-exporter
       rook_cluster: rook-ceph
-
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
@@ -1576,7 +1572,35 @@ spec:
     matchLabels:
       app: rook-ceph-mgr
       rook_cluster: rook-ceph
-
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    rbac.ceph.rook.io/aggregate-to-prometheus: "true"
+  name: prometheus-rules
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - nodes
+  - services
+  - endpoints
+  - pods
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  verbs:
+  - get
+- nonResourceURLs:
+  - /metrics
+  verbs:
+  - get
 ---
 aggregationRule:
   clusterRoleSelectors:
@@ -1608,37 +1632,6 @@ rules:
   - /metrics
   verbs:
   - get
-
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  labels:
-    rbac.ceph.rook.io/aggregate-to-prometheus: "true"
-  name: prometheus-rules
-rules:
-- apiGroups:
-  - ""
-  resources:
-  - nodes
-  - services
-  - endpoints
-  - pods
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - ""
-  resources:
-  - configmaps
-  verbs:
-  - get
-- nonResourceURLs:
-  - /metrics
-  verbs:
-  - get
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -1652,31 +1645,6 @@ subjects:
 - kind: ServiceAccount
   name: prometheus
   namespace: rook-ceph
-
----
-allowVolumeExpansion: true
-apiVersion: storage.k8s.io/v1
-kind: StorageClass
-metadata:
-  annotations:
-    storageclass.kubernetes.io/is-default-class: "true"
-  name: ceph-block
-parameters:
-  clusterID: rook-ceph
-  csi.storage.k8s.io/controller-expand-secret-name: rook-csi-rbd-provisioner
-  csi.storage.k8s.io/controller-expand-secret-namespace: rook-ceph
-  csi.storage.k8s.io/fstype: ext4
-  csi.storage.k8s.io/node-stage-secret-name: rook-csi-rbd-node
-  csi.storage.k8s.io/node-stage-secret-namespace: rook-ceph
-  csi.storage.k8s.io/provisioner-secret-name: rook-csi-rbd-provisioner
-  csi.storage.k8s.io/provisioner-secret-namespace: rook-ceph
-  imageFeatures: layering
-  imageFormat: "2"
-  pool: ceph-blockpool
-provisioner: rook-ceph.rbd.csi.ceph.com
-reclaimPolicy: Delete
-volumeBindingMode: Immediate
-
 ---
 allowVolumeExpansion: true
 apiVersion: storage.k8s.io/v1
@@ -1700,7 +1668,29 @@ parameters:
 provisioner: rook-ceph.rbd.csi.ceph.com
 reclaimPolicy: Delete
 volumeBindingMode: Immediate
-
+---
+allowVolumeExpansion: true
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  annotations:
+    storageclass.kubernetes.io/is-default-class: "true"
+  name: ceph-block
+parameters:
+  clusterID: rook-ceph
+  csi.storage.k8s.io/controller-expand-secret-name: rook-csi-rbd-provisioner
+  csi.storage.k8s.io/controller-expand-secret-namespace: rook-ceph
+  csi.storage.k8s.io/fstype: ext4
+  csi.storage.k8s.io/node-stage-secret-name: rook-csi-rbd-node
+  csi.storage.k8s.io/node-stage-secret-namespace: rook-ceph
+  csi.storage.k8s.io/provisioner-secret-name: rook-csi-rbd-provisioner
+  csi.storage.k8s.io/provisioner-secret-namespace: rook-ceph
+  imageFeatures: layering
+  imageFormat: "2"
+  pool: ceph-blockpool
+provisioner: rook-ceph.rbd.csi.ceph.com
+reclaimPolicy: Retain
+volumeBindingMode: Immediate
 ---
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
@@ -1713,7 +1703,6 @@ parameters:
 provisioner: rook-ceph.ceph.rook.io/bucket
 reclaimPolicy: Delete
 volumeBindingMode: Immediate
-
 ---
 allowVolumeExpansion: true
 apiVersion: storage.k8s.io/v1
@@ -1736,7 +1725,6 @@ parameters:
 provisioner: rook-ceph.cephfs.csi.ceph.com
 reclaimPolicy: Delete
 volumeBindingMode: Immediate
-
 ---
 apiVersion: v1
 data:
@@ -1751,7 +1739,6 @@ kind: ConfigMap
 metadata:
   name: rook-config-override
   namespace: rook-ceph
-
 ---
 apiVersion: v1
 kind: Service
@@ -1768,11 +1755,9 @@ spec:
   selector:
     prometheus: rook-prometheus
   type: NodePort
-
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: prometheus
   namespace: rook-ceph
-

@@ -21,13 +21,14 @@ spec:
   syncPolicy:
     automated:
       allowEmpty: false
-      prune: false
+      prune: true
       selfHeal: true
-
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
   name: argocd-scots-lab
   namespace: argocd
 spec:
@@ -42,13 +43,14 @@ spec:
   syncPolicy:
     automated:
       allowEmpty: false
-      prune: false
+      prune: true
       selfHeal: true
-
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
   name: cert-manager-scots-lab
   namespace: argocd
 spec:
@@ -63,13 +65,14 @@ spec:
   syncPolicy:
     automated:
       allowEmpty: false
-      prune: false
+      prune: true
       selfHeal: true
-
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
   name: cilium-scots-lab
   namespace: argocd
 spec:
@@ -84,13 +87,14 @@ spec:
   syncPolicy:
     automated:
       allowEmpty: false
-      prune: false
+      prune: true
       selfHeal: true
-
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
   name: gateway-api-crds-scots-lab
   namespace: argocd
 spec:
@@ -105,13 +109,36 @@ spec:
   syncPolicy:
     automated:
       allowEmpty: false
-      prune: false
+      prune: true
       selfHeal: true
-
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+  name: host-network-scots-lab
+  namespace: argocd
+spec:
+  destination:
+    namespace: kube-system
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: manifests/scots-lab/infra/host-network
+    repoURL: https://github.com/ghubprime/k8s-cluster.git
+    targetRevision: HEAD
+  syncPolicy:
+    automated:
+      allowEmpty: false
+      prune: true
+      selfHeal: true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
   name: kgateway-crds-scots-lab
   namespace: argocd
 spec:
@@ -126,13 +153,14 @@ spec:
   syncPolicy:
     automated:
       allowEmpty: false
-      prune: false
+      prune: true
       selfHeal: true
-
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
   name: kgateway-scots-lab
   namespace: argocd
 spec:
@@ -147,13 +175,14 @@ spec:
   syncPolicy:
     automated:
       allowEmpty: false
-      prune: false
+      prune: true
       selfHeal: true
-
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
   name: kube-prometheus-stack-scots-lab
   namespace: argocd
 spec:
@@ -168,13 +197,14 @@ spec:
   syncPolicy:
     automated:
       allowEmpty: false
-      prune: false
+      prune: true
       selfHeal: true
-
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
   name: multus-scots-lab
   namespace: argocd
 spec:
@@ -189,13 +219,14 @@ spec:
   syncPolicy:
     automated:
       allowEmpty: false
-      prune: false
+      prune: true
       selfHeal: true
-
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
   name: omni-scots-lab
   namespace: argocd
 spec:
@@ -213,13 +244,14 @@ spec:
   syncPolicy:
     automated:
       allowEmpty: false
-      prune: false
+      prune: true
       selfHeal: true
-
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
   name: rook-ceph-cluster-scots-lab
   namespace: argocd
 spec:
@@ -234,13 +266,14 @@ spec:
   syncPolicy:
     automated:
       allowEmpty: false
-      prune: false
+      prune: true
       selfHeal: true
-
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
   name: rook-ceph-scots-lab
   namespace: argocd
 spec:
@@ -255,34 +288,14 @@ spec:
   syncPolicy:
     automated:
       allowEmpty: false
-      prune: false
+      prune: true
       selfHeal: true
-
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: whereabouts-scots-lab
-  namespace: argocd
-spec:
-  destination:
-    namespace: kube-system
-    server: https://kubernetes.default.svc
-  project: default
-  source:
-    path: manifests/scots-lab/infra/whereabouts
-    repoURL: https://github.com/ghubprime/k8s-cluster.git
-    targetRevision: HEAD
-  syncPolicy:
-    automated:
-      allowEmpty: false
-      prune: false
-      selfHeal: true
-
----
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
   name: sealed-secrets-scots-lab
   namespace: argocd
 spec:
@@ -297,6 +310,49 @@ spec:
   syncPolicy:
     automated:
       allowEmpty: false
-      prune: false
+      prune: true
       selfHeal: true
-
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+  name: talos-scots-lab
+  namespace: argocd
+spec:
+  destination:
+    namespace: talos-system
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: manifests/scots-lab/cluster/talos
+    repoURL: https://github.com/ghubprime/k8s-cluster.git
+    targetRevision: HEAD
+  syncPolicy:
+    automated:
+      allowEmpty: false
+      prune: true
+      selfHeal: true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+  name: whereabouts-scots-lab
+  namespace: argocd
+spec:
+  destination:
+    namespace: kube-system
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: manifests/scots-lab/infra/whereabouts
+    repoURL: https://github.com/ghubprime/k8s-cluster.git
+    targetRevision: HEAD
+  syncPolicy:
+    automated:
+      allowEmpty: false
+      prune: true
+      selfHeal: true

@@ -1,4 +1,4 @@
-﻿---
+---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
@@ -15,7 +15,6 @@ rules:
   - get
   - list
   - watch
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
@@ -34,7 +33,6 @@ rules:
   - delete
   - update
   - patch
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
@@ -52,7 +50,6 @@ rules:
   - get
   - list
   - watch
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -69,7 +66,6 @@ subjects:
 - kind: ServiceAccount
   name: cilium
   namespace: kube-system
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -86,7 +82,6 @@ subjects:
 - kind: ServiceAccount
   name: cilium-operator
   namespace: kube-system
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -103,7 +98,175 @@ subjects:
 - kind: ServiceAccount
   name: cilium
   namespace: kube-system
-
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  labels:
+    app.kubernetes.io/name: cilium-envoy
+    app.kubernetes.io/part-of: cilium
+    k8s-app: cilium-envoy
+    name: cilium-envoy
+  name: cilium-envoy
+  namespace: kube-system
+spec:
+  selector:
+    matchLabels:
+      k8s-app: cilium-envoy
+  template:
+    metadata:
+      annotations: null
+      labels:
+        app.kubernetes.io/name: cilium-envoy
+        app.kubernetes.io/part-of: cilium
+        k8s-app: cilium-envoy
+        name: cilium-envoy
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: cilium.io/no-schedule
+                operator: NotIn
+                values:
+                - "true"
+        podAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchLabels:
+                k8s-app: cilium
+            topologyKey: kubernetes.io/hostname
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchLabels:
+                k8s-app: cilium-envoy
+            topologyKey: kubernetes.io/hostname
+      automountServiceAccountToken: true
+      containers:
+      - args:
+        - --keep-cap-net-bind-service
+        - --
+        - -c /var/run/cilium/envoy/bootstrap-config.json
+        - --base-id 0
+        - --log-level info
+        command:
+        - /usr/bin/cilium-envoy-starter
+        env:
+        - name: K8S_NODE_NAME
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: spec.nodeName
+        - name: CILIUM_K8S_NAMESPACE
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.namespace
+        - name: KUBERNETES_SERVICE_HOST
+          value: localhost
+        - name: KUBERNETES_SERVICE_PORT
+          value: "7445"
+        image: quay.io/cilium/cilium-envoy:v1.35.9-1770979049-232ed4a26881e4ab4f766f251f258ed424fff663@sha256:8188114a2768b5f49d6ce58e168b20d765e0fbc64eee0d83241aa2b150ccd788
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          failureThreshold: 10
+          httpGet:
+            host: 127.0.0.1
+            path: /healthz
+            port: 9878
+            scheme: HTTP
+          periodSeconds: 30
+          successThreshold: 1
+          timeoutSeconds: 5
+        name: cilium-envoy
+        ports:
+        - containerPort: 9964
+          hostPort: 9964
+          name: envoy-metrics
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            host: 127.0.0.1
+            path: /healthz
+            port: 9878
+            scheme: HTTP
+          periodSeconds: 30
+          successThreshold: 1
+          timeoutSeconds: 5
+        securityContext:
+          capabilities:
+            add:
+            - NET_ADMIN
+            - SYS_ADMIN
+            - NET_BIND_SERVICE
+            drop:
+            - ALL
+          seLinuxOptions:
+            level: s0
+            type: spc_t
+        startupProbe:
+          failureThreshold: 105
+          httpGet:
+            host: 127.0.0.1
+            path: /healthz
+            port: 9878
+            scheme: HTTP
+          initialDelaySeconds: 5
+          periodSeconds: 2
+          successThreshold: 1
+        terminationMessagePolicy: FallbackToLogsOnError
+        volumeMounts:
+        - mountPath: /var/run/cilium/envoy/sockets
+          name: envoy-sockets
+          readOnly: false
+        - mountPath: /var/run/cilium/envoy/artifacts
+          name: envoy-artifacts
+          readOnly: true
+        - mountPath: /var/run/cilium/envoy/
+          name: envoy-config
+          readOnly: true
+        - mountPath: /sys/fs/bpf
+          mountPropagation: HostToContainer
+          name: bpf-maps
+      hostNetwork: true
+      nodeSelector:
+        kubernetes.io/os: linux
+      priorityClassName: system-node-critical
+      restartPolicy: Always
+      securityContext:
+        appArmorProfile:
+          type: Unconfined
+      serviceAccountName: cilium-envoy
+      terminationGracePeriodSeconds: 1
+      tolerations:
+      - operator: Exists
+      volumes:
+      - hostPath:
+          path: /var/run/cilium/envoy/sockets
+          type: DirectoryOrCreate
+        name: envoy-sockets
+      - hostPath:
+          path: /var/run/cilium/envoy/artifacts
+          type: DirectoryOrCreate
+        name: envoy-artifacts
+      - configMap:
+          defaultMode: 256
+          items:
+          - key: bootstrap-config.json
+            path: bootstrap-config.json
+          name: cilium-envoy-config
+        name: envoy-config
+      - hostPath:
+          path: /sys/fs/bpf
+          type: DirectoryOrCreate
+        name: bpf-maps
+  updateStrategy:
+    rollingUpdate:
+      maxUnavailable: 2
+    type: RollingUpdate
 ---
 apiVersion: apps/v1
 kind: DaemonSet
@@ -560,177 +723,6 @@ spec:
     rollingUpdate:
       maxUnavailable: 2
     type: RollingUpdate
-
----
-apiVersion: apps/v1
-kind: DaemonSet
-metadata:
-  labels:
-    app.kubernetes.io/name: cilium-envoy
-    app.kubernetes.io/part-of: cilium
-    k8s-app: cilium-envoy
-    name: cilium-envoy
-  name: cilium-envoy
-  namespace: kube-system
-spec:
-  selector:
-    matchLabels:
-      k8s-app: cilium-envoy
-  template:
-    metadata:
-      annotations: null
-      labels:
-        app.kubernetes.io/name: cilium-envoy
-        app.kubernetes.io/part-of: cilium
-        k8s-app: cilium-envoy
-        name: cilium-envoy
-    spec:
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-            - matchExpressions:
-              - key: cilium.io/no-schedule
-                operator: NotIn
-                values:
-                - "true"
-        podAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-          - labelSelector:
-              matchLabels:
-                k8s-app: cilium
-            topologyKey: kubernetes.io/hostname
-        podAntiAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-          - labelSelector:
-              matchLabels:
-                k8s-app: cilium-envoy
-            topologyKey: kubernetes.io/hostname
-      automountServiceAccountToken: true
-      containers:
-      - args:
-        - --keep-cap-net-bind-service
-        - --
-        - -c /var/run/cilium/envoy/bootstrap-config.json
-        - --base-id 0
-        - --log-level info
-        command:
-        - /usr/bin/cilium-envoy-starter
-        env:
-        - name: K8S_NODE_NAME
-          valueFrom:
-            fieldRef:
-              apiVersion: v1
-              fieldPath: spec.nodeName
-        - name: CILIUM_K8S_NAMESPACE
-          valueFrom:
-            fieldRef:
-              apiVersion: v1
-              fieldPath: metadata.namespace
-        - name: KUBERNETES_SERVICE_HOST
-          value: localhost
-        - name: KUBERNETES_SERVICE_PORT
-          value: "7445"
-        image: quay.io/cilium/cilium-envoy:v1.35.9-1770979049-232ed4a26881e4ab4f766f251f258ed424fff663@sha256:8188114a2768b5f49d6ce58e168b20d765e0fbc64eee0d83241aa2b150ccd788
-        imagePullPolicy: IfNotPresent
-        livenessProbe:
-          failureThreshold: 10
-          httpGet:
-            host: 127.0.0.1
-            path: /healthz
-            port: 9878
-            scheme: HTTP
-          periodSeconds: 30
-          successThreshold: 1
-          timeoutSeconds: 5
-        name: cilium-envoy
-        ports:
-        - containerPort: 9964
-          hostPort: 9964
-          name: envoy-metrics
-          protocol: TCP
-        readinessProbe:
-          failureThreshold: 3
-          httpGet:
-            host: 127.0.0.1
-            path: /healthz
-            port: 9878
-            scheme: HTTP
-          periodSeconds: 30
-          successThreshold: 1
-          timeoutSeconds: 5
-        securityContext:
-          capabilities:
-            add:
-            - NET_ADMIN
-            - SYS_ADMIN
-            - NET_BIND_SERVICE
-            drop:
-            - ALL
-          seLinuxOptions:
-            level: s0
-            type: spc_t
-        startupProbe:
-          failureThreshold: 105
-          httpGet:
-            host: 127.0.0.1
-            path: /healthz
-            port: 9878
-            scheme: HTTP
-          initialDelaySeconds: 5
-          periodSeconds: 2
-          successThreshold: 1
-        terminationMessagePolicy: FallbackToLogsOnError
-        volumeMounts:
-        - mountPath: /var/run/cilium/envoy/sockets
-          name: envoy-sockets
-          readOnly: false
-        - mountPath: /var/run/cilium/envoy/artifacts
-          name: envoy-artifacts
-          readOnly: true
-        - mountPath: /var/run/cilium/envoy/
-          name: envoy-config
-          readOnly: true
-        - mountPath: /sys/fs/bpf
-          mountPropagation: HostToContainer
-          name: bpf-maps
-      hostNetwork: true
-      nodeSelector:
-        kubernetes.io/os: linux
-      priorityClassName: system-node-critical
-      restartPolicy: Always
-      securityContext:
-        appArmorProfile:
-          type: Unconfined
-      serviceAccountName: cilium-envoy
-      terminationGracePeriodSeconds: 1
-      tolerations:
-      - operator: Exists
-      volumes:
-      - hostPath:
-          path: /var/run/cilium/envoy/sockets
-          type: DirectoryOrCreate
-        name: envoy-sockets
-      - hostPath:
-          path: /var/run/cilium/envoy/artifacts
-          type: DirectoryOrCreate
-        name: envoy-artifacts
-      - configMap:
-          defaultMode: 256
-          items:
-          - key: bootstrap-config.json
-            path: bootstrap-config.json
-          name: cilium-envoy-config
-        name: envoy-config
-      - hostPath:
-          path: /sys/fs/bpf
-          type: DirectoryOrCreate
-        name: bpf-maps
-  updateStrategy:
-    rollingUpdate:
-      maxUnavailable: 2
-    type: RollingUpdate
-
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -863,7 +855,6 @@ spec:
       - configMap:
           name: cilium-config
         name: cilium-config-path
-
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -975,7 +966,6 @@ spec:
               - key: ca.crt
                 path: hubble-server-ca.crt
               name: hubble-relay-client-certs
-
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -1058,7 +1048,6 @@ spec:
         name: hubble-ui-nginx-conf
       - emptyDir: {}
         name: tmp-dir
-
 ---
 apiVersion: batch/v1
 kind: CronJob
@@ -1130,7 +1119,6 @@ spec:
           serviceAccountName: hubble-generate-certs
   schedule: 0 0 1 */4 *
   successfulJobsHistoryLimit: 3
-
 ---
 apiVersion: batch/v1
 kind: Job
@@ -1196,7 +1184,6 @@ spec:
         seccompProfile:
           type: RuntimeDefault
       serviceAccountName: hubble-generate-certs
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
@@ -1214,7 +1201,6 @@ rules:
   - get
   - list
   - watch
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
@@ -1234,7 +1220,6 @@ rules:
   - get
   - list
   - watch
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
@@ -1271,7 +1256,6 @@ rules:
   verbs:
   - get
   - update
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -1288,7 +1272,6 @@ subjects:
 - kind: ServiceAccount
   name: cilium
   namespace: kube-system
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -1305,7 +1288,6 @@ subjects:
 - kind: ServiceAccount
   name: cilium-operator
   namespace: kube-system
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -1322,7 +1304,6 @@ subjects:
 - kind: ServiceAccount
   name: hubble-generate-certs
   namespace: kube-system
-
 ---
 apiVersion: v1
 data:
@@ -1489,7 +1470,6 @@ kind: ConfigMap
 metadata:
   name: cilium-config
   namespace: kube-system
-
 ---
 apiVersion: v1
 data:
@@ -1499,7 +1479,6 @@ kind: ConfigMap
 metadata:
   name: cilium-envoy-config
   namespace: kube-system
-
 ---
 apiVersion: v1
 data:
@@ -1512,7 +1491,6 @@ kind: ConfigMap
 metadata:
   name: hubble-relay-config
   namespace: kube-system
-
 ---
 apiVersion: v1
 data:
@@ -1552,7 +1530,6 @@ kind: ConfigMap
 metadata:
   name: hubble-ui-nginx
   namespace: kube-system
-
 ---
 apiVersion: v1
 kind: Service
@@ -1577,7 +1554,6 @@ spec:
   selector:
     k8s-app: cilium-envoy
   type: ClusterIP
-
 ---
 apiVersion: v1
 kind: Service
@@ -1597,7 +1573,6 @@ spec:
     targetPort: 4244
   selector:
     k8s-app: cilium
-
 ---
 apiVersion: v1
 kind: Service
@@ -1616,7 +1591,6 @@ spec:
   selector:
     k8s-app: hubble-relay
   type: ClusterIP
-
 ---
 apiVersion: v1
 kind: Service
@@ -1640,35 +1614,30 @@ spec:
   selector:
     k8s-app: hubble-ui
   type: ClusterIP
-
----
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: cilium
-  namespace: kube-system
-
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: cilium-envoy
   namespace: kube-system
-
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: cilium-operator
   namespace: kube-system
-
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: cilium
+  namespace: kube-system
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: hubble-generate-certs
   namespace: kube-system
-
 ---
 apiVersion: v1
 automountServiceAccountToken: false
@@ -1676,131 +1645,12 @@ kind: ServiceAccount
 metadata:
   name: hubble-relay
   namespace: kube-system
-
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: hubble-ui
   namespace: kube-system
-
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  labels:
-    app.kubernetes.io/part-of: cilium
-  name: cilium
-rules:
-- apiGroups:
-  - networking.k8s.io
-  resources:
-  - networkpolicies
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - discovery.k8s.io
-  resources:
-  - endpointslices
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - ""
-  resources:
-  - namespaces
-  - services
-  - pods
-  - endpoints
-  - nodes
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - coordination.k8s.io
-  resources:
-  - leases
-  verbs:
-  - create
-  - get
-  - update
-  - list
-  - delete
-- apiGroups:
-  - apiextensions.k8s.io
-  resources:
-  - customresourcedefinitions
-  verbs:
-  - list
-  - watch
-  - get
-- apiGroups:
-  - cilium.io
-  resources:
-  - ciliumloadbalancerippools
-  - ciliumbgpnodeconfigs
-  - ciliumbgpadvertisements
-  - ciliumbgppeerconfigs
-  - ciliumclusterwideenvoyconfigs
-  - ciliumclusterwidenetworkpolicies
-  - ciliumegressgatewaypolicies
-  - ciliumendpoints
-  - ciliumendpointslices
-  - ciliumenvoyconfigs
-  - ciliumidentities
-  - ciliumlocalredirectpolicies
-  - ciliumnetworkpolicies
-  - ciliumnodes
-  - ciliumnodeconfigs
-  - ciliumcidrgroups
-  - ciliuml2announcementpolicies
-  - ciliumpodippools
-  verbs:
-  - list
-  - watch
-- apiGroups:
-  - cilium.io
-  resources:
-  - ciliumidentities
-  - ciliumendpoints
-  - ciliumnodes
-  verbs:
-  - create
-- apiGroups:
-  - cilium.io
-  resources:
-  - ciliumidentities
-  verbs:
-  - update
-- apiGroups:
-  - cilium.io
-  resources:
-  - ciliumendpoints
-  verbs:
-  - delete
-  - get
-- apiGroups:
-  - cilium.io
-  resources:
-  - ciliumnodes
-  - ciliumnodes/status
-  verbs:
-  - get
-  - update
-- apiGroups:
-  - cilium.io
-  resources:
-  - ciliumendpoints/status
-  - ciliumendpoints
-  - ciliuml2announcementpolicies/status
-  - ciliumbgpnodeconfigs/status
-  verbs:
-  - patch
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -2024,7 +1874,122 @@ rules:
   - ciliumendpointslices
   verbs:
   - deletecollection
-
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/part-of: cilium
+  name: cilium
+rules:
+- apiGroups:
+  - networking.k8s.io
+  resources:
+  - networkpolicies
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - discovery.k8s.io
+  resources:
+  - endpointslices
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - namespaces
+  - services
+  - pods
+  - endpoints
+  - nodes
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - coordination.k8s.io
+  resources:
+  - leases
+  verbs:
+  - create
+  - get
+  - update
+  - list
+  - delete
+- apiGroups:
+  - apiextensions.k8s.io
+  resources:
+  - customresourcedefinitions
+  verbs:
+  - list
+  - watch
+  - get
+- apiGroups:
+  - cilium.io
+  resources:
+  - ciliumloadbalancerippools
+  - ciliumbgpnodeconfigs
+  - ciliumbgpadvertisements
+  - ciliumbgppeerconfigs
+  - ciliumclusterwideenvoyconfigs
+  - ciliumclusterwidenetworkpolicies
+  - ciliumegressgatewaypolicies
+  - ciliumendpoints
+  - ciliumendpointslices
+  - ciliumenvoyconfigs
+  - ciliumidentities
+  - ciliumlocalredirectpolicies
+  - ciliumnetworkpolicies
+  - ciliumnodes
+  - ciliumnodeconfigs
+  - ciliumcidrgroups
+  - ciliuml2announcementpolicies
+  - ciliumpodippools
+  verbs:
+  - list
+  - watch
+- apiGroups:
+  - cilium.io
+  resources:
+  - ciliumidentities
+  - ciliumendpoints
+  - ciliumnodes
+  verbs:
+  - create
+- apiGroups:
+  - cilium.io
+  resources:
+  - ciliumidentities
+  verbs:
+  - update
+- apiGroups:
+  - cilium.io
+  resources:
+  - ciliumendpoints
+  verbs:
+  - delete
+  - get
+- apiGroups:
+  - cilium.io
+  resources:
+  - ciliumnodes
+  - ciliumnodes/status
+  verbs:
+  - get
+  - update
+- apiGroups:
+  - cilium.io
+  resources:
+  - ciliumendpoints/status
+  - ciliumendpoints
+  - ciliuml2announcementpolicies/status
+  - ciliumbgpnodeconfigs/status
+  verbs:
+  - patch
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -2054,23 +2019,6 @@ rules:
   - get
   - list
   - watch
-
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  labels:
-    app.kubernetes.io/part-of: cilium
-  name: cilium
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: cilium
-subjects:
-- kind: ServiceAccount
-  name: cilium
-  namespace: kube-system
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -2086,7 +2034,21 @@ subjects:
 - kind: ServiceAccount
   name: cilium-operator
   namespace: kube-system
-
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  labels:
+    app.kubernetes.io/part-of: cilium
+  name: cilium
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cilium
+subjects:
+- kind: ServiceAccount
+  name: cilium
+  namespace: kube-system
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -2102,7 +2064,6 @@ subjects:
 - kind: ServiceAccount
   name: hubble-ui
   namespace: kube-system
-
 ---
 apiVersion: v1
 kind: Namespace
@@ -2110,4 +2071,3 @@ metadata:
   labels:
     app.kubernetes.io/part-of: cilium
   name: cilium-secrets
-
