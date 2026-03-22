@@ -31,7 +31,7 @@ jobs:
         run: |
           # If your script is in a specific folder, update the path below (e.g., ./scripts/generate-manifests.sh)
           chmod +x ./generate-manifests.sh
-          ./generate-manifests.sh
+          ./generate-manifests.sh --force
 
       - name: Commit and Push generated manifests
         uses: stefanzweifel/git-auto-commit-action@v5
