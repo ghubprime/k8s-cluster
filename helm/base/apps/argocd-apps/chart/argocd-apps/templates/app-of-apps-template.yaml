@@ -30,7 +30,7 @@ spec:
   syncPolicy:
     {{- if not .disableAutomated }}
     automated:
-      prune: false
+      prune: {{ default true .prune }}
       selfHeal: true
       allowEmpty: false
     {{- end }}

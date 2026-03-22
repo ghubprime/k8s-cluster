@@ -44,8 +44,8 @@ cephClusterSpec:
     prometheusEndpoint: http://rook-prometheus:9090
     prometheusEndpointSSLVerify: false
     # urlPrefix: /ceph-dashboard
-    port: 8080
-    ssl: false
+    port: 8443
+    ssl: true
   network:
     connections:
     provider: multus
@@ -53,13 +53,6 @@ cephClusterSpec:
       public: public-net
       cluster: cluster-net
   annotations:
-  #   all:
-  #   mon:
-  #   osd:
-  #   cleanup:
-  #   prepareosd:
-  #   # If no mgr annotations are set, prometheus scrape annotations will be set by default.
-  #   mgr:
     dashboard:
       omni-kube-service-exposer.sidero.dev/label: Ceph Dashboard
       omni-kube-service-exposer.sidero.dev/port: "50082"
@@ -70,19 +63,19 @@ cephClusterSpec:
       limits:
         memory: "1Gi"
       requests:
-        cpu: null
+        cpu: "100m"
         memory: "512Mi"
     mon:
       limits:
         memory: "2Gi"
       requests:
-        cpu: null
+        cpu: "250m"
         memory: "1Gi"
     osd:
       limits:
         memory: "4Gi"
       requests:
-        cpu: null
+        cpu: "500m"
         memory: "4Gi"
     prepareosd:
       # limits: It is not recommended to set limits on the OSD prepare job
@@ -94,37 +87,37 @@ cephClusterSpec:
       #         OSDs ; for larger devices 2Gi may be required.
       #         cf. https://github.com/rook/rook/pull/11103
       requests:
-        cpu: null
+        cpu: "100m"
         memory: "50Mi"
     mgr-sidecar:
       limits:
         memory: "100Mi"
       requests:
-        cpu: null
+        cpu: "50m"
         memory: "40Mi"
     crashcollector:
       limits:
         memory: "60Mi"
       requests:
-        cpu: null
+        cpu: "50m"
         memory: "60Mi"
     logcollector:
       limits:
         memory: "1Gi"
       requests:
-        cpu: null
+        cpu: "50m"
         memory: "100Mi"
     cleanup:
       limits:
         memory: "1Gi"
       requests:
-        cpu: null
+        cpu: "50m"
         memory: "100Mi"
     exporter:
       limits:
         memory: "128Mi"
       requests:
-        cpu: null
+        cpu: "50m"
         memory: "50Mi"
   priorityClassNames:
     mon: system-node-critical
@@ -144,7 +137,7 @@ cephBlockPools:
       annotations: {}
       labels: {}
       isDefault: true
-      reclaimPolicy: Delete
+      reclaimPolicy: Retain
       allowVolumeExpansion: true
       volumeBindingMode: "Immediate"
       mountOptions: []
@@ -209,7 +202,7 @@ cephFileSystems:
           limits:
             memory: "4Gi"
           requests:
-            cpu: null
+            cpu: "250m"
             memory: "4Gi"
         priorityClassName: system-node-critical
     storageClass:
@@ -255,7 +248,7 @@ cephObjectStores:
           limits:
             memory: "2Gi"
           requests:
-            cpu: null
+            cpu: "250m"
             memory: "1Gi"
         instances: 1
         priorityClassName: system-node-critical
@@ -264,7 +257,7 @@ cephObjectStores:
             limits:
               memory: "100Mi"
             requests:
-              cpu: null
+              cpu: "50m"
               memory: "40Mi"
     storageClass:
       enabled: true

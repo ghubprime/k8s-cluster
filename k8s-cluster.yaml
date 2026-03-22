@@ -43,11 +43,7 @@ patches:
             maxPods: 250
             shutdownGracePeriod: "600s"
             shutdownGracePeriodCriticalPods: "120s"
-        registries:
-          config:
-            git.somostechs.com:
-              tls:
-                insecureSkipVerify: true
+
         features:
           hostDNS:
             enabled: true
@@ -58,18 +54,15 @@ patches:
             - 1.us.pool.ntp.org
         sysctls:
           user.max_user_namespaces: "11255"
-  # - name: extramanifests
-  #   file: bootstrap/k8s-cluster-extramanifests.yaml
+
   - name: extramanifests-multus
     file: bootstrap/k8s-cluster-extramanifests-multus.yaml
-  # - name: extramanifests-cilium
-  #   file: bootstrap/k8s-cluster-extramanifests-cilium.yaml
+
   - name: extramanifests-gateway-api-crds
     file: bootstrap/k8s-cluster-extramanifests-gateway-api-crds.yaml    
   - name: extramanifests-argocd
     file: bootstrap/k8s-cluster-extramanifests-argocd.yaml
-  # - name: extramanifests-argocd-projects
-  #   file: bootstrap/k8s-cluster-extramanifests-argocd-projects.yaml
+
   - name: extramanifests-argocd-apps
     file: bootstrap/k8s-cluster-extramanifests-argocd-apps.yaml
 ---
