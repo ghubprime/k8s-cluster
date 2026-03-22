@@ -126,6 +126,7 @@ spec:
     useAllNodes: true
     useAllDevices: false
     deviceFilter: "^sd[c-d]$"
-    metadataDevice: "sdb"
+    config:
+      metadataDevice: "sdb"
   upgradeOSDRequiresHealthyPGs: false
   waitTimeoutForHealthyOSDInMinutes: 10
