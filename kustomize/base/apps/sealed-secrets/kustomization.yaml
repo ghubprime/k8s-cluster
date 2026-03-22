@@ -3,4 +3,6 @@ kind: Kustomization
 resources:
   - namespace.yaml
 
+# Trigger 3
+
 # Triggering GitHub Action manifest generation 2
