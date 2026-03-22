@@ -291,7 +291,7 @@ spec:
     server: https://kubernetes.default.svc
   project: default
   source:
-    path: kustomize/overlays/scots-lab/apps/sealed-secrets
+    path: manifests/scots-lab/apps/sealed-secrets
     repoURL: https://github.com/ghubprime/k8s-cluster.git
     targetRevision: HEAD
   syncPolicy:
