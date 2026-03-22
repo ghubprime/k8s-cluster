@@ -1,4 +1,4 @@
-﻿---
+---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
@@ -382,7 +382,6 @@ spec:
     storage: true
     subresources:
       status: {}
-
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
@@ -965,7 +964,6 @@ spec:
     storage: true
     subresources:
       status: {}
-
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
@@ -1168,7 +1166,6 @@ spec:
     storage: true
     subresources:
       status: {}
-
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
@@ -1424,7 +1421,6 @@ spec:
     storage: true
     subresources:
       status: {}
-
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
@@ -1579,7 +1575,6 @@ spec:
     storage: true
     subresources:
       status: {}
-
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
@@ -6580,7 +6575,6 @@ spec:
     storage: true
     subresources:
       status: {}
-
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
@@ -6722,7 +6716,6 @@ status:
     plural: ""
   conditions: []
   storedVersions: []
-
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
@@ -7358,7 +7351,6 @@ spec:
         type: object
     served: true
     storage: true
-
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
@@ -8069,7 +8061,6 @@ spec:
     storage: true
     subresources:
       status: {}
-
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
@@ -9820,7 +9811,6 @@ spec:
     storage: true
     subresources:
       status: {}
-
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
@@ -9982,7 +9972,6 @@ spec:
     storage: true
     subresources:
       status: {}
-
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
@@ -12135,7 +12124,6 @@ spec:
     storage: true
     subresources:
       status: {}
-
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
@@ -13068,7 +13056,6 @@ spec:
     storage: true
     subresources:
       status: {}
-
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
@@ -13177,7 +13164,6 @@ spec:
     storage: true
     subresources:
       status: {}
-
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
@@ -15237,7 +15223,7 @@ spec:
                       enabled:
                         description: |-
                           Deprecated: use protocol.enableAPIs instead.
-                          Whether to enable S3. This defaults to true (even if protocols.s3 is not present in the CRD). This maintains backwards compatibility â€“ by default S3 is enabled.
+                          Whether to enable S3. This defaults to true (even if protocols.s3 is not present in the CRD). This maintains backwards compatibility – by default S3 is enabled.
                         nullable: true
                         type: boolean
                     type: object
@@ -15537,7 +15523,6 @@ spec:
         specReplicasPath: .spec.gateway.instances
         statusReplicasPath: .status.replicas
       status: {}
-
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
@@ -15916,7 +15901,6 @@ spec:
     storage: true
     subresources:
       status: {}
-
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
@@ -16019,7 +16003,6 @@ spec:
     storage: true
     subresources:
       status: {}
-
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
@@ -16661,7 +16644,6 @@ spec:
     storage: true
     subresources:
       status: {}
-
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
@@ -17395,7 +17377,6 @@ spec:
     storage: true
     subresources:
       status: {}
-
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
@@ -17547,7 +17528,6 @@ status:
     plural: ""
   conditions: []
   storedVersions: []
-
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
@@ -17807,7 +17787,6 @@ status:
     plural: ""
   conditions: []
   storedVersions: []
-
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
@@ -32166,7 +32145,6 @@ status:
     plural: ""
   conditions: []
   storedVersions: []
-
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
@@ -32214,7 +32192,6 @@ spec:
     storage: true
     subresources:
       status: {}
-
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
@@ -32287,7 +32264,6 @@ spec:
     storage: true
     subresources:
       status: {}
-
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
@@ -46800,7 +46776,6 @@ status:
     plural: ""
   conditions: []
   storedVersions: []
-
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -46878,7 +46853,6 @@ spec:
         runAsNonRoot: true
       serviceAccountName: ceph-csi-controller-manager
       terminationGracePeriodSeconds: 10
-
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -46966,7 +46940,28 @@ spec:
         name: rook-config
       - emptyDir: {}
         name: default-config-dir
-
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: rook-ceph-deny-external-ingress
+  namespace: rook-ceph
+spec:
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: rook-ceph
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: kube-prometheus-system
+    ports:
+    - port: 9283
+      protocol: TCP
+  podSelector: {}
+  policyTypes:
+  - Ingress
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -46997,7 +46992,6 @@ rules:
   - cephconnections/status
   verbs:
   - get
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -47024,7 +47018,6 @@ rules:
   - cephconnections/status
   verbs:
   - get
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -47236,7 +47229,6 @@ rules:
   - get
   - list
   - watch
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -47304,7 +47296,6 @@ rules:
   - tokenreviews
   verbs:
   - create
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -47335,7 +47326,6 @@ rules:
   - clientprofilemappings/status
   verbs:
   - get
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -47362,7 +47352,6 @@ rules:
   - clientprofilemappings/status
   verbs:
   - get
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -47393,7 +47382,6 @@ rules:
   - clientprofiles/status
   verbs:
   - get
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -47420,7 +47408,6 @@ rules:
   - clientprofiles/status
   verbs:
   - get
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -47451,7 +47438,6 @@ rules:
   - drivers/status
   verbs:
   - get
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -47478,7 +47464,6 @@ rules:
   - drivers/status
   verbs:
   - get
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -47587,7 +47572,6 @@ rules:
   - patch
   - update
   - watch
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -47612,7 +47596,6 @@ rules:
   - subjectaccessreviews
   verbs:
   - create
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -47629,7 +47612,6 @@ rules:
   - /metrics
   verbs:
   - get
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -47777,7 +47759,6 @@ rules:
   - get
   - list
   - watch
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -47796,7 +47777,6 @@ rules:
   - nodes
   verbs:
   - get
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -47827,7 +47807,6 @@ rules:
   - operatorconfigs/status
   verbs:
   - get
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -47854,7 +47833,6 @@ rules:
   - operatorconfigs/status
   verbs:
   - get
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -48095,7 +48073,6 @@ rules:
   - get
   - list
   - watch
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -48176,7 +48153,6 @@ rules:
   - persistentvolumeclaims
   verbs:
   - get
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -48223,7 +48199,6 @@ rules:
   - serviceaccounts/token
   verbs:
   - create
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -48414,7 +48389,6 @@ rules:
   - tokenreviews
   verbs:
   - create
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -48472,7 +48446,6 @@ rules:
   - create
   - patch
   - update
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -48540,7 +48513,6 @@ rules:
   - tokenreviews
   verbs:
   - create
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -48763,7 +48735,6 @@ rules:
   - tokenreviews
   verbs:
   - create
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -48800,7 +48771,6 @@ rules:
   - create
   - update
   - delete
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -49005,7 +48975,6 @@ rules:
   - network-attachment-definitions
   verbs:
   - get
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -49058,7 +49027,6 @@ rules:
   - get
   - list
   - watch
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -49083,7 +49051,6 @@ rules:
   - get
   - list
   - watch
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -49150,7 +49117,6 @@ rules:
   - objectbuckets/finalizers
   verbs:
   - update
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -49174,7 +49140,6 @@ rules:
   verbs:
   - get
   - list
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -49267,7 +49232,6 @@ rules:
   - list
   - update
   - watch
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -49287,7 +49251,6 @@ subjects:
 - kind: ServiceAccount
   name: ceph-csi-cephfs-ctrlplugin-sa
   namespace: rook-ceph
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -49307,7 +49270,6 @@ subjects:
 - kind: ServiceAccount
   name: ceph-csi-cephfs-nodeplugin-sa
   namespace: rook-ceph
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -49327,7 +49289,6 @@ subjects:
 - kind: ServiceAccount
   name: ceph-csi-controller-manager
   namespace: rook-ceph
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -49347,7 +49308,6 @@ subjects:
 - kind: ServiceAccount
   name: ceph-csi-controller-manager
   namespace: rook-ceph
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -49367,7 +49327,6 @@ subjects:
 - kind: ServiceAccount
   name: ceph-csi-nfs-ctrlplugin-sa
   namespace: rook-ceph
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -49387,7 +49346,6 @@ subjects:
 - kind: ServiceAccount
   name: ceph-csi-nfs-nodeplugin-sa
   namespace: rook-ceph
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -49407,7 +49365,6 @@ subjects:
 - kind: ServiceAccount
   name: ceph-csi-rbd-ctrlplugin-sa
   namespace: rook-ceph
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -49427,7 +49384,6 @@ subjects:
 - kind: ServiceAccount
   name: ceph-csi-rbd-nodeplugin-sa
   namespace: rook-ceph
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -49451,7 +49407,6 @@ subjects:
 - kind: ServiceAccount
   name: rook-csi-cephfs-plugin-sa
   namespace: rook-ceph
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -49475,7 +49430,6 @@ subjects:
 - kind: ServiceAccount
   name: rook-csi-cephfs-provisioner-sa
   namespace: rook-ceph
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -49493,7 +49447,6 @@ subjects:
 - kind: ServiceAccount
   name: objectstorage-provisioner
   namespace: rook-ceph
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -49517,7 +49470,6 @@ subjects:
 - kind: ServiceAccount
   name: rook-csi-rbd-plugin-sa
   namespace: rook-ceph
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -49541,7 +49493,6 @@ subjects:
 - kind: ServiceAccount
   name: rook-csi-rbd-provisioner-sa
   namespace: rook-ceph
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -49565,7 +49516,6 @@ subjects:
 - kind: ServiceAccount
   name: rook-ceph-system
   namespace: rook-ceph
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -49589,7 +49539,6 @@ subjects:
 - kind: ServiceAccount
   name: rook-ceph-mgr
   namespace: rook-ceph
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -49613,7 +49562,6 @@ subjects:
 - kind: ServiceAccount
   name: rook-ceph-system
   namespace: rook-ceph
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -49637,7 +49585,6 @@ subjects:
 - kind: ServiceAccount
   name: rook-ceph-osd
   namespace: rook-ceph
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -49661,7 +49608,6 @@ subjects:
 - kind: ServiceAccount
   name: rook-ceph-system
   namespace: rook-ceph
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
@@ -49716,7 +49662,6 @@ rules:
   - daemonsets/finalizers
   verbs:
   - update
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
@@ -49760,7 +49705,6 @@ rules:
   - daemonsets/finalizers
   verbs:
   - update
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
@@ -49805,7 +49749,6 @@ rules:
   verbs:
   - create
   - patch
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
@@ -49860,7 +49803,6 @@ rules:
   - daemonsets/finalizers
   verbs:
   - update
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
@@ -49904,7 +49846,6 @@ rules:
   - daemonsets/finalizers
   verbs:
   - update
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
@@ -49933,7 +49874,6 @@ rules:
   - delete
   - update
   - create
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
@@ -49962,7 +49902,6 @@ rules:
   - delete
   - update
   - create
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
@@ -49992,7 +49931,6 @@ rules:
   - create
   - update
   - delete
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
@@ -50078,7 +50016,6 @@ rules:
   - persistentvolumeclaims
   verbs:
   - delete
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
@@ -50107,7 +50044,6 @@ rules:
   - create
   - update
   - delete
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
@@ -50134,7 +50070,6 @@ rules:
   - list
   - create
   - update
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
@@ -50181,7 +50116,6 @@ rules:
   - create
   - update
   - delete
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
@@ -50229,7 +50163,6 @@ rules:
   - update
   - delete
   - list
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
@@ -50298,7 +50231,6 @@ rules:
   verbs:
   - get
   - create
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -50319,7 +50251,6 @@ subjects:
 - kind: ServiceAccount
   name: ceph-csi-cephfs-ctrlplugin-sa
   namespace: rook-ceph
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -50340,7 +50271,6 @@ subjects:
 - kind: ServiceAccount
   name: ceph-csi-cephfs-nodeplugin-sa
   namespace: rook-ceph
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -50361,7 +50291,6 @@ subjects:
 - kind: ServiceAccount
   name: ceph-csi-controller-manager
   namespace: rook-ceph
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -50382,7 +50311,6 @@ subjects:
 - kind: ServiceAccount
   name: ceph-csi-rbd-ctrlplugin-sa
   namespace: rook-ceph
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -50403,7 +50331,6 @@ subjects:
 - kind: ServiceAccount
   name: ceph-csi-rbd-nodeplugin-sa
   namespace: rook-ceph
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -50428,7 +50355,6 @@ subjects:
 - kind: ServiceAccount
   name: rook-csi-cephfs-provisioner-sa
   namespace: rook-ceph
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -50453,7 +50379,6 @@ subjects:
 - kind: ServiceAccount
   name: rook-csi-rbd-provisioner-sa
   namespace: rook-ceph
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -50478,7 +50403,6 @@ subjects:
 - kind: ServiceAccount
   name: rook-ceph-system
   namespace: rook-ceph
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -50503,7 +50427,6 @@ subjects:
 - kind: ServiceAccount
   name: rook-ceph-cmd-reporter
   namespace: rook-ceph
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -50528,7 +50451,6 @@ subjects:
 - kind: ServiceAccount
   name: rook-ceph-mgr
   namespace: rook-ceph
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -50553,7 +50475,6 @@ subjects:
 - kind: ServiceAccount
   name: rook-ceph-mgr
   namespace: rook-ceph
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -50578,7 +50499,6 @@ subjects:
 - kind: ServiceAccount
   name: rook-ceph-system
   namespace: rook-ceph
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -50603,7 +50523,6 @@ subjects:
 - kind: ServiceAccount
   name: rook-ceph-mgr
   namespace: rook-ceph
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -50628,7 +50547,6 @@ subjects:
 - kind: ServiceAccount
   name: rook-ceph-osd
   namespace: rook-ceph
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -50653,7 +50571,6 @@ subjects:
 - kind: ServiceAccount
   name: rook-ceph-purge-osd
   namespace: rook-ceph
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -50678,7 +50595,6 @@ subjects:
 - kind: ServiceAccount
   name: rook-ceph-system
   namespace: rook-ceph
-
 ---
 apiVersion: v1
 data:
@@ -50911,15 +50827,14 @@ metadata:
     storage-backend: ceph
   name: rook-ceph-operator-config
   namespace: rook-ceph
-
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
   labels:
     name: rook-ceph
+    pod-security.kubernetes.io/enforce: privileged
   name: rook-ceph
-
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -50932,7 +50847,6 @@ metadata:
     helm.sh/chart: ceph-csi-operator-0.5.0
   name: ceph-csi-cephfs-ctrlplugin-sa
   namespace: rook-ceph
-
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -50945,7 +50859,6 @@ metadata:
     helm.sh/chart: ceph-csi-operator-0.5.0
   name: ceph-csi-cephfs-nodeplugin-sa
   namespace: rook-ceph
-
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -50958,7 +50871,6 @@ metadata:
     helm.sh/chart: ceph-csi-operator-0.5.0
   name: ceph-csi-controller-manager
   namespace: rook-ceph
-
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -50971,7 +50883,6 @@ metadata:
     helm.sh/chart: ceph-csi-operator-0.5.0
   name: ceph-csi-nfs-ctrlplugin-sa
   namespace: rook-ceph
-
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -50984,7 +50895,6 @@ metadata:
     helm.sh/chart: ceph-csi-operator-0.5.0
   name: ceph-csi-nfs-nodeplugin-sa
   namespace: rook-ceph
-
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -50997,7 +50907,6 @@ metadata:
     helm.sh/chart: ceph-csi-operator-0.5.0
   name: ceph-csi-rbd-ctrlplugin-sa
   namespace: rook-ceph
-
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -51010,7 +50919,6 @@ metadata:
     helm.sh/chart: ceph-csi-operator-0.5.0
   name: ceph-csi-rbd-nodeplugin-sa
   namespace: rook-ceph
-
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -51021,7 +50929,6 @@ metadata:
     app.kubernetes.io/part-of: container-object-storage-interface
   name: objectstorage-provisioner
   namespace: rook-ceph
-
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -51038,7 +50945,6 @@ metadata:
     storage-backend: ceph
   name: rook-ceph-cmd-reporter
   namespace: rook-ceph
-
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -51055,7 +50961,6 @@ metadata:
     storage-backend: ceph
   name: rook-ceph-default
   namespace: rook-ceph
-
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -51072,7 +50977,6 @@ metadata:
     storage-backend: ceph
   name: rook-ceph-mgr
   namespace: rook-ceph
-
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -51089,7 +50993,6 @@ metadata:
     storage-backend: ceph
   name: rook-ceph-nvmeof
   namespace: rook-ceph
-
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -51106,7 +51009,6 @@ metadata:
     storage-backend: ceph
   name: rook-ceph-osd
   namespace: rook-ceph
-
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -51123,7 +51025,6 @@ metadata:
     storage-backend: ceph
   name: rook-ceph-purge-osd
   namespace: rook-ceph
-
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -51140,7 +51041,6 @@ metadata:
     storage-backend: ceph
   name: rook-ceph-rgw
   namespace: rook-ceph
-
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -51157,7 +51057,6 @@ metadata:
     storage-backend: ceph
   name: rook-ceph-system
   namespace: rook-ceph
-
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -51174,7 +51073,6 @@ metadata:
     storage-backend: ceph
   name: rook-csi-cephfs-plugin-sa
   namespace: rook-ceph
-
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -51191,7 +51089,6 @@ metadata:
     storage-backend: ceph
   name: rook-csi-cephfs-provisioner-sa
   namespace: rook-ceph
-
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -51208,7 +51105,6 @@ metadata:
     storage-backend: ceph
   name: rook-csi-rbd-plugin-sa
   namespace: rook-ceph
-
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -51225,4 +51121,3 @@ metadata:
     storage-backend: ceph
   name: rook-csi-rbd-provisioner-sa
   namespace: rook-ceph
-

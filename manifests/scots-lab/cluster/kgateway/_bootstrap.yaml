@@ -1,4 +1,4 @@
-﻿---
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -97,7 +97,6 @@ spec:
           initialDelaySeconds: 0
           periodSeconds: 1
       serviceAccountName: kgateway
-
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
@@ -113,7 +112,6 @@ spec:
     name: http
     port: 80
     protocol: HTTP
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -310,7 +308,6 @@ rules:
   - get
   - list
   - watch
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -324,7 +321,6 @@ subjects:
 - kind: ServiceAccount
   name: kgateway
   namespace: kgateway-system
-
 ---
 apiVersion: v1
 kind: Service
@@ -349,7 +345,6 @@ spec:
     app.kubernetes.io/name: kgateway
     kgateway: kgateway
   type: ClusterIP
-
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -363,4 +358,3 @@ metadata:
     kgateway: kgateway
   name: kgateway
   namespace: kgateway-system
-

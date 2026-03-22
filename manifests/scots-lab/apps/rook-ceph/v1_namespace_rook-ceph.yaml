@@ -3,4 +3,5 @@ kind: Namespace
 metadata:
   labels:
     name: rook-ceph
+    pod-security.kubernetes.io/enforce: privileged
   name: rook-ceph

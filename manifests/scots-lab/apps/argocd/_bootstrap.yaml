@@ -1,4 +1,4 @@
-﻿---
+---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
@@ -5891,7 +5891,6 @@ spec:
     served: true
     storage: true
     subresources: {}
-
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
@@ -23619,7 +23618,6 @@ spec:
     storage: true
     subresources:
       status: {}
-
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
@@ -23989,7 +23987,6 @@ spec:
         type: object
     served: true
     storage: true
-
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -24273,7 +24270,6 @@ spec:
             path: ca.crt
           optional: true
           secretName: argocd-repo-server-tls
-
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -24360,7 +24356,6 @@ spec:
           defaultMode: 493
           name: argo-cd-argocd-redis-health-configmap
         name: health
-
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -24773,7 +24768,6 @@ spec:
             path: ca.crt
           optional: true
           secretName: argocd-repo-server-tls
-
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -25236,7 +25230,6 @@ spec:
           name: argocd-cmd-params-cm
           optional: true
         name: argocd-cmd-params-cm
-
 ---
 apiVersion: apps/v1
 kind: StatefulSet
@@ -25628,7 +25621,6 @@ spec:
           name: argocd-cmd-params-cm
           optional: true
         name: argocd-cmd-params-cm
-
 ---
 apiVersion: batch/v1
 kind: Job
@@ -25690,7 +25682,50 @@ spec:
       restartPolicy: OnFailure
       serviceAccountName: argo-cd-argocd-redis-secret-init
   ttlSecondsAfterFinished: 60
-
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: argocd-allow-apiserver
+  namespace: argocd
+spec:
+  ingress:
+  - ports:
+    - port: 8080
+      protocol: TCP
+    - port: 8443
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: argocd-server
+  policyTypes:
+  - Ingress
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: argocd-allow-internal
+  namespace: argocd
+spec:
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: argocd
+  podSelector: {}
+  policyTypes:
+  - Ingress
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: argocd-deny-all-ingress
+  namespace: argocd
+spec:
+  ingress: []
+  podSelector: {}
+  policyTypes:
+  - Ingress
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -25715,7 +25750,6 @@ rules:
   - '*'
   verbs:
   - '*'
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -25774,7 +25808,6 @@ rules:
   - workflows
   verbs:
   - create
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -25796,7 +25829,6 @@ subjects:
 - kind: ServiceAccount
   name: argocd-application-controller
   namespace: argocd
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -25818,7 +25850,6 @@ subjects:
 - kind: ServiceAccount
   name: argocd-server
   namespace: argocd
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
@@ -25872,7 +25903,6 @@ rules:
   - get
   - list
   - watch
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
@@ -25969,7 +25999,6 @@ rules:
   - patch
   - update
   - watch
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
@@ -26002,7 +26031,6 @@ rules:
   - secrets
   verbs:
   - create
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
@@ -26018,7 +26046,6 @@ metadata:
   name: argo-cd-argocd-repo-server
   namespace: argocd
 rules: null
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
@@ -26068,7 +26095,6 @@ rules:
   verbs:
   - create
   - list
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -26091,7 +26117,6 @@ subjects:
 - kind: ServiceAccount
   name: argocd-application-controller
   namespace: argocd
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -26114,7 +26139,6 @@ subjects:
 - kind: ServiceAccount
   name: argocd-applicationset-controller
   namespace: argocd
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -26139,7 +26163,6 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: argo-cd-argocd-redis-secret-init
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -26162,7 +26185,6 @@ subjects:
 - kind: ServiceAccount
   name: argo-cd-argocd-repo-server
   namespace: argocd
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -26185,7 +26207,6 @@ subjects:
 - kind: ServiceAccount
   name: argocd-server
   namespace: argocd
-
 ---
 apiVersion: v1
 data:
@@ -26227,7 +26248,6 @@ metadata:
     helm.sh/chart: argo-cd-9.0.5
   name: argo-cd-argocd-redis-health-configmap
   namespace: argocd
-
 ---
 apiVersion: v1
 data:
@@ -26345,7 +26365,6 @@ metadata:
     helm.sh/chart: argo-cd-9.0.5
   name: argocd-cm
   namespace: argocd
-
 ---
 apiVersion: v1
 data:
@@ -26379,7 +26398,6 @@ metadata:
     helm.sh/chart: argo-cd-9.0.5
   name: argocd-cmd-params-cm
   namespace: argocd
-
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -26393,7 +26411,6 @@ metadata:
     helm.sh/chart: argo-cd-9.0.5
   name: argocd-gpg-keys-cm
   namespace: argocd
-
 ---
 apiVersion: v1
 data:
@@ -26413,7 +26430,6 @@ metadata:
     helm.sh/chart: argo-cd-9.0.5
   name: argocd-rbac-cm
   namespace: argocd
-
 ---
 apiVersion: v1
 data:
@@ -26443,7 +26459,6 @@ metadata:
     helm.sh/chart: argo-cd-9.0.5
   name: argocd-ssh-known-hosts-cm
   namespace: argocd
-
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -26457,15 +26472,15 @@ metadata:
     helm.sh/chart: argo-cd-9.0.5
   name: argocd-tls-certs-cm
   namespace: argocd
-
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
   labels:
     name: argocd
+    pod-security.kubernetes.io/enforce: baseline
+    pod-security.kubernetes.io/warn: restricted
   name: argocd
-
 ---
 apiVersion: v1
 kind: Secret
@@ -26481,7 +26496,6 @@ metadata:
   name: argocd-secret
   namespace: argocd
 type: Opaque
-
 ---
 apiVersion: v1
 kind: Service
@@ -26505,7 +26519,6 @@ spec:
     app.kubernetes.io/instance: argo-cd
     app.kubernetes.io/name: argocd-applicationset-controller
   type: ClusterIP
-
 ---
 apiVersion: v1
 kind: Service
@@ -26528,7 +26541,6 @@ spec:
   selector:
     app.kubernetes.io/instance: argo-cd
     app.kubernetes.io/name: argocd-redis
-
 ---
 apiVersion: v1
 kind: Service
@@ -26552,7 +26564,6 @@ spec:
   selector:
     app.kubernetes.io/instance: argo-cd
     app.kubernetes.io/name: argocd-repo-server
-
 ---
 apiVersion: v1
 kind: Service
@@ -26587,7 +26598,6 @@ spec:
     app.kubernetes.io/name: argocd-server
   sessionAffinity: None
   type: ClusterIP
-
 ---
 apiVersion: v1
 automountServiceAccountToken: true
@@ -26603,7 +26613,6 @@ metadata:
     helm.sh/chart: argo-cd-9.0.5
   name: argocd-application-controller
   namespace: argocd
-
 ---
 apiVersion: v1
 automountServiceAccountToken: true
@@ -26619,7 +26628,6 @@ metadata:
     helm.sh/chart: argo-cd-9.0.5
   name: argocd-applicationset-controller
   namespace: argocd
-
 ---
 apiVersion: v1
 automountServiceAccountToken: true
@@ -26638,7 +26646,6 @@ metadata:
     helm.sh/chart: argo-cd-9.0.5
   name: argo-cd-argocd-redis-secret-init
   namespace: argocd
-
 ---
 apiVersion: v1
 automountServiceAccountToken: true
@@ -26654,7 +26661,6 @@ metadata:
     helm.sh/chart: argo-cd-9.0.5
   name: argo-cd-argocd-repo-server
   namespace: argocd
-
 ---
 apiVersion: v1
 automountServiceAccountToken: true
@@ -26670,4 +26676,3 @@ metadata:
     helm.sh/chart: argo-cd-9.0.5
   name: argocd-server
   namespace: argocd
-

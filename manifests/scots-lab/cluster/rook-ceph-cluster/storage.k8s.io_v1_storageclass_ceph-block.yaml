@@ -18,5 +18,5 @@ parameters:
   imageFormat: "2"
   pool: ceph-blockpool
 provisioner: rook-ceph.rbd.csi.ceph.com
-reclaimPolicy: Delete
+reclaimPolicy: Retain
 volumeBindingMode: Immediate

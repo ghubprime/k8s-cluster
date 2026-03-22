@@ -1,4 +1,4 @@
-﻿---
+---
 apiVersion: admissionregistration.k8s.io/v1
 kind: MutatingWebhookConfiguration
 metadata:
@@ -35,7 +35,6 @@ webhooks:
     - certificaterequests
   sideEffects: None
   timeoutSeconds: 30
-
 ---
 apiVersion: admissionregistration.k8s.io/v1
 kind: ValidatingWebhookConfiguration
@@ -81,7 +80,6 @@ webhooks:
     - '*/*'
   sideEffects: None
   timeoutSeconds: 30
-
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
@@ -409,7 +407,6 @@ spec:
     storage: true
     subresources:
       status: {}
-
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
@@ -1245,7 +1242,6 @@ spec:
     storage: true
     subresources:
       status: {}
-
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
@@ -1670,7 +1666,7 @@ spec:
                             description: |-
                               The IP address or hostname of an authoritative DNS server supporting
                               RFC2136 in the form host:port. If the host is an IPv6 address it must be
-                              enclosed in square brackets (e.g [2001:db8::1])Â ; port is optional.
+                              enclosed in square brackets (e.g [2001:db8::1]) ; port is optional.
                               This field is required.
                             type: string
                           protocol:
@@ -4730,7 +4726,6 @@ spec:
     storage: true
     subresources:
       status: {}
-
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
@@ -5272,7 +5267,7 @@ spec:
                                   description: |-
                                     The IP address or hostname of an authoritative DNS server supporting
                                     RFC2136 in the form host:port. If the host is an IPv6 address it must be
-                                    enclosed in square brackets (e.g [2001:db8::1])Â ; port is optional.
+                                    enclosed in square brackets (e.g [2001:db8::1]) ; port is optional.
                                     This field is required.
                                   type: string
                                 protocol:
@@ -8807,7 +8802,6 @@ spec:
     storage: true
     subresources:
       status: {}
-
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
@@ -9348,7 +9342,7 @@ spec:
                                   description: |-
                                     The IP address or hostname of an authoritative DNS server supporting
                                     RFC2136 in the form host:port. If the host is an IPv6 address it must be
-                                    enclosed in square brackets (e.g [2001:db8::1])Â ; port is optional.
+                                    enclosed in square brackets (e.g [2001:db8::1]) ; port is optional.
                                     This field is required.
                                   type: string
                                 protocol:
@@ -12883,7 +12877,6 @@ spec:
     storage: true
     subresources:
       status: {}
-
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
@@ -13166,7 +13159,6 @@ spec:
     storage: true
     subresources:
       status: {}
-
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -13250,7 +13242,6 @@ spec:
         seccompProfile:
           type: RuntimeDefault
       serviceAccountName: cert-manager
-
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -13317,7 +13308,6 @@ spec:
         seccompProfile:
           type: RuntimeDefault
       serviceAccountName: cert-manager-cainjector
-
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -13415,7 +13405,6 @@ spec:
         seccompProfile:
           type: RuntimeDefault
       serviceAccountName: cert-manager-webhook
-
 ---
 apiVersion: batch/v1
 kind: Job
@@ -13476,7 +13465,19 @@ spec:
         seccompProfile:
           type: RuntimeDefault
       serviceAccountName: cert-manager-startupapicheck
-
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  name: cloudflare-api-token-secret
+  namespace: cert-manager
+spec:
+  encryptedData:
+    api-token: AgC7NJwX1vNecOQjG3J58SaFIvMt2rjS0sM0LeBS+8IY/p7I66dSOA5W+X8EKpU6fXhUJDIR6iag2lniuKNvnjURaadaLnzXs5D8ek3ZFH0as9YHJl8gYyPnoRP6DrNA9iedM238cUQTkgDOJeHTY9F73VeSNp88zzC/YYJPzZ0js2VhGcZ/40Yd5fyAiieIKPVjt/5gCS3ZP5yoRU96xtDoNnK9v0RCxBLettbAaa9Dj8vpYBNR5/Hb5n1zDa7RyVQyGed0NXpk4I+NpZx+jMiNupHTedo4lHai6AX6mP/54iYuJPPAwV+NMJu3JMO4wHv3cd2WacW2gff8Qis8xhpB54qMk7qMdtP/YOMae7I4m1Eh29Gpx3YkTe6dTkG+UK1wPLV8Q9TYgbWJ4Xvnvt43/8HgRQADt8LfzXCg252zkTJ7AbREKiOb+EemV7kZJ4OE3jMI0svOoGZa5L25J4YyzYI3I5iaR01XSrlv0o+P2TXUzKn/SyrbLdSulDYi90jjxdFsJQFbPuVvwFnlBrfALwoBe9hrysv5u4YPddyq9RdR+pOMVPX4gNc+TDcONMcRB9Ww8dBshh0a5xnmZpRDKti95gAYy+pu7yhfmmpNU5G8nrJeouM8exmB+um3MVbwFu3Amh9AjKTYUwzO3CawfJCZKZRHKjA89upEOX3dDAXNCaKtYnLdZg80FurC7phUW5SZHZYBzx3lqLuYS/a1xP1ud8YveLP1E37PrnYS472NkLk6P4Fl+GMYGlmoH70vgpmgug==
+  template:
+    metadata:
+      name: cloudflare-api-token-secret
+      namespace: cert-manager
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
@@ -13500,7 +13501,6 @@ rules:
   - serviceaccounts/token
   verbs:
   - create
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -13523,7 +13523,6 @@ subjects:
 - kind: ServiceAccount
   name: cert-manager
   namespace: cert-manager
-
 ---
 apiVersion: v1
 kind: Service
@@ -13549,7 +13548,6 @@ spec:
     app.kubernetes.io/instance: cert-manager
     app.kubernetes.io/name: cert-manager
   type: ClusterIP
-
 ---
 apiVersion: v1
 kind: Service
@@ -13574,7 +13572,6 @@ spec:
     app.kubernetes.io/instance: cert-manager
     app.kubernetes.io/name: cainjector
   type: ClusterIP
-
 ---
 apiVersion: v1
 kind: Service
@@ -13604,7 +13601,6 @@ spec:
     app.kubernetes.io/instance: cert-manager
     app.kubernetes.io/name: webhook
   type: ClusterIP
-
 ---
 apiVersion: v1
 automountServiceAccountToken: true
@@ -13620,7 +13616,6 @@ metadata:
     helm.sh/chart: cert-manager-v1.19.1
   name: cert-manager
   namespace: cert-manager
-
 ---
 apiVersion: v1
 automountServiceAccountToken: true
@@ -13636,7 +13631,6 @@ metadata:
     helm.sh/chart: cert-manager-v1.19.1
   name: cert-manager-cainjector
   namespace: cert-manager
-
 ---
 apiVersion: v1
 automountServiceAccountToken: true
@@ -13656,7 +13650,6 @@ metadata:
     helm.sh/chart: cert-manager-v1.19.1
   name: cert-manager-startupapicheck
   namespace: cert-manager
-
 ---
 apiVersion: v1
 automountServiceAccountToken: true
@@ -13672,36 +13665,24 @@ metadata:
     helm.sh/chart: cert-manager-v1.19.1
   name: cert-manager-webhook
   namespace: cert-manager
-
 ---
-apiVersion: rbac.authorization.k8s.io/v1
-kind: Role
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
 metadata:
-  name: cert-manager-webhook-dynamic-serving
-  namespace: cert-manager
-rules:
-- apiGroups: [""]
-  resources: ["secrets"]
-  resourceNames: ["cert-manager-webhook-ca"]
-  verbs: ["get", "list", "watch", "update"]
-- apiGroups: [""]
-  resources: ["secrets"]
-  verbs: ["create"]
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
-metadata:
-  name: cert-manager-webhook-dynamic-serving
-  namespace: cert-manager
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: Role
-  name: cert-manager-webhook-dynamic-serving
-subjects:
-- kind: ServiceAccount
-  name: cert-manager-webhook
-  namespace: cert-manager
-
+  name: letsencrypt-prod
+spec:
+  acme:
+    email: scot.britton@yahoo.com
+    privateKeySecretRef:
+      name: letsencrypt-prod-account-key
+    server: https://acme-v02.api.letsencrypt.org/directory
+    solvers:
+    - dns01:
+        cloudflare:
+          apiTokenSecretRef:
+            key: api-token
+            name: cloudflare-api-token-secret
+          email: scot.britton@yahoo.com
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -13772,7 +13753,6 @@ rules:
   - watch
   - update
   - patch
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -13796,7 +13776,6 @@ rules:
   - get
   - list
   - watch
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -13868,7 +13847,6 @@ rules:
   verbs:
   - create
   - patch
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -13914,7 +13892,6 @@ rules:
   - subjectaccessreviews
   verbs:
   - create
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -14022,7 +13999,6 @@ rules:
   - get
   - list
   - watch
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -14071,7 +14047,6 @@ rules:
   verbs:
   - create
   - patch
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -14143,7 +14118,6 @@ rules:
   verbs:
   - create
   - patch
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -14192,7 +14166,6 @@ rules:
   verbs:
   - create
   - patch
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -14261,7 +14234,6 @@ rules:
   verbs:
   - create
   - patch
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -14307,7 +14279,6 @@ rules:
   - deletecollection
   - patch
   - update
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -14345,7 +14316,6 @@ rules:
   - get
   - list
   - watch
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -14367,7 +14337,6 @@ subjects:
 - kind: ServiceAccount
   name: cert-manager-cainjector
   namespace: cert-manager
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -14389,7 +14358,6 @@ subjects:
 - kind: ServiceAccount
   name: cert-manager
   namespace: cert-manager
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -14411,7 +14379,6 @@ subjects:
 - kind: ServiceAccount
   name: cert-manager
   namespace: cert-manager
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -14433,7 +14400,6 @@ subjects:
 - kind: ServiceAccount
   name: cert-manager
   namespace: cert-manager
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -14455,7 +14421,6 @@ subjects:
 - kind: ServiceAccount
   name: cert-manager
   namespace: cert-manager
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -14477,7 +14442,6 @@ subjects:
 - kind: ServiceAccount
   name: cert-manager
   namespace: cert-manager
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -14499,7 +14463,6 @@ subjects:
 - kind: ServiceAccount
   name: cert-manager
   namespace: cert-manager
-
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -14521,12 +14484,12 @@ subjects:
 - kind: ServiceAccount
   name: cert-manager
   namespace: cert-manager
-
 ---
 apiVersion: v1
 kind: Namespace
 metadata:
   labels:
     name: cert-manager
+    pod-security.kubernetes.io/enforce: baseline
+    pod-security.kubernetes.io/warn: restricted
   name: cert-manager
-

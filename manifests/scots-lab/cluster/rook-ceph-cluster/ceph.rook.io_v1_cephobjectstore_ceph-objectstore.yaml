@@ -18,7 +18,7 @@ spec:
         limits:
           memory: 100Mi
         requests:
-          cpu: null
+          cpu: 50m
           memory: 40Mi
     port: 80
     priorityClassName: system-node-critical
@@ -26,7 +26,7 @@ spec:
       limits:
         memory: 2Gi
       requests:
-        cpu: null
+        cpu: 250m
         memory: 1Gi
   metadataPool:
     deviceClass: ssd

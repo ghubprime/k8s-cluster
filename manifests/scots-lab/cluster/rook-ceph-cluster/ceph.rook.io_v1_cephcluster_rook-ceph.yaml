@@ -26,10 +26,10 @@ spec:
     disable: false
   dashboard:
     enabled: true
-    port: 8080
+    port: 8443
     prometheusEndpoint: http://rook-prometheus:9090
     prometheusEndpointSSLVerify: false
-    ssl: false
+    ssl: true
   dataDirHostPath: /var/lib/rook
   disruptionManagement:
     managePodBudgets: true
@@ -82,51 +82,59 @@ spec:
       limits:
         memory: 1Gi
       requests:
+        cpu: 50m
         memory: 100Mi
     crashcollector:
       limits:
         memory: 60Mi
       requests:
+        cpu: 50m
         memory: 60Mi
     exporter:
       limits:
         memory: 128Mi
       requests:
+        cpu: 50m
         memory: 50Mi
     logcollector:
       limits:
         memory: 1Gi
       requests:
+        cpu: 50m
         memory: 100Mi
     mgr:
       limits:
         memory: 1Gi
       requests:
+        cpu: 100m
         memory: 512Mi
     mgr-sidecar:
       limits:
         memory: 100Mi
       requests:
+        cpu: 50m
         memory: 40Mi
     mon:
       limits:
         memory: 2Gi
       requests:
+        cpu: 250m
         memory: 1Gi
     osd:
       limits:
         memory: 4Gi
       requests:
+        cpu: 500m
         memory: 4Gi
     prepareosd:
       requests:
+        cpu: 100m
         memory: 50Mi
   skipUpgradeChecks: false
   storage:
-    useAllNodes: true
+    deviceFilter: ^sd[c-d]$
+    metadataDevice: sdb
     useAllDevices: false
-    deviceFilter: "^sd[c-d]$"
-    config:
-      metadataDevice: "sdb"
+    useAllNodes: true
   upgradeOSDRequiresHealthyPGs: false
   waitTimeoutForHealthyOSDInMinutes: 10
