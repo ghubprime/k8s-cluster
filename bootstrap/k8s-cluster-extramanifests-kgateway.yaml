@@ -1,8 +1,0 @@
-cluster:
-  extraManifests:
-    - https://raw.githubusercontent.com/ghubprime/k8s-cluster/refs/heads/main/manifests/scots-lab/cluster/kgateway/apps_v1_deployment_kgateway.yaml
-    - https://raw.githubusercontent.com/ghubprime/k8s-cluster/refs/heads/main/manifests/scots-lab/cluster/kgateway/gateway.networking.k8s.io_v1_gateway_kgateway-http.yaml
-    - https://raw.githubusercontent.com/ghubprime/k8s-cluster/refs/heads/main/manifests/scots-lab/cluster/kgateway/rbac.authorization.k8s.io_v1_clusterrole_kgateway-kgateway-system.yaml
-    - https://raw.githubusercontent.com/ghubprime/k8s-cluster/refs/heads/main/manifests/scots-lab/cluster/kgateway/rbac.authorization.k8s.io_v1_clusterrolebinding_kgateway-role-kgateway-system.yaml
-    - https://raw.githubusercontent.com/ghubprime/k8s-cluster/refs/heads/main/manifests/scots-lab/cluster/kgateway/v1_service_kgateway.yaml
-    - https://raw.githubusercontent.com/ghubprime/k8s-cluster/refs/heads/main/manifests/scots-lab/cluster/kgateway/v1_serviceaccount_kgateway.yaml

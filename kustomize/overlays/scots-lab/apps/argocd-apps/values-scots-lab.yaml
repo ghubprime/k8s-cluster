@@ -18,12 +18,14 @@ argocdApplications:
     name: argocd
     namespace: argocd
     appCategory: apps
+    syncWave: "1"
   talos:
     disableAutomated: false
     disable: false
     name: talos
     namespace: talos-system
     appCategory: cluster
+    syncWave: "1"
   omni:
     repoURL: https://github.com/ghubprime/omni-infra.git
     path: "."
@@ -34,54 +36,63 @@ argocdApplications:
     directory:
       recurse: true
       include: "{manifests/*}"
-    appCategory: cluster 
+    appCategory: cluster
+    syncWave: "1"
   hostNetwork:
     disableAutomated: false
     disable: false
     name: host-network
     namespace: kube-system
     appCategory: infra
+    syncWave: "0"
   multus:
     disableAutomated: false
     disable: false
     name: multus
     namespace: kube-system
     appCategory: infra
+    syncWave: "0"
   whereabouts:
     disableAutomated: false
     disable: false
     name: whereabouts
     namespace: kube-system
     appCategory: infra
+    syncWave: "0"
   cilium:
     disableAutomated: false
     disable: false
     name: cilium
     namespace: kube-system
     appCategory: infra
+    syncWave: "0"
   gateway-api-crds:
     disableAutomated: false
     disable: false
     name: gateway-api-crds
     appCategory: cluster
+    syncWave: "-1"
   kube-prometheus-stack:
     disableAutomated: false
     disable: false
     name: kube-prometheus-stack
     namespace: kube-prometheus-system
     appCategory: monitoring
+    syncWave: "3"
   rook-ceph:
     disableAutomated: false
     disable: false
     name: rook-ceph
     namespace: rook-ceph
     appCategory: apps
+    syncWave: "1"
   rook-ceph-cluster:
     disableAutomated: false
     disable: false
     name: rook-ceph-cluster
     namespace: rook-ceph
     appCategory: cluster
+    syncWave: "2"
   argocdApps:
     disableAutomated: false
     disable: false
@@ -99,13 +110,16 @@ argocdApplications:
     name: cert-manager
     namespace: cert-manager
     appCategory: apps
+    syncWave: "1"
   kgateway-crds:
     disableAutomated: false
     disable: false
     name: kgateway-crds
     appCategory: cluster
+    syncWave: "-1"
   kgateway:
     disableAutomated: false
     disable: false
     name: kgateway
     appCategory: cluster
+    syncWave: "2"
