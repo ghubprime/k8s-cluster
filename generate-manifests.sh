@@ -36,8 +36,13 @@ while read RESOURCE; do
   if [ "$1" = "--force" ]; then
     CHANGES_LIST="forced"
   else
-    # FIX: Added '--' and wrapped the array in quotes so Git knows these are strictly file paths
-    CHANGES_LIST=$(git diff --staged --name-only HEAD -- "${RESOURCE_PATHS[@]}")
+    if [ "$CI" = "true" ]; then
+      # We are in GitHub Actions: Check changes in the latest commit
+      CHANGES_LIST=$(git diff --name-only HEAD~1 HEAD -- "${RESOURCE_PATHS[@]}")
+    else
+      # We are local: Check staged files
+      CHANGES_LIST=$(git diff --staged --name-only HEAD -- "${RESOURCE_PATHS[@]}")
+    fi
   fi
   if [ ! -z "$CHANGES_LIST" ]; then
     # cleanup existing manifests
