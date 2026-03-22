@@ -80,5 +80,4 @@ envoy:
         - NET_ADMIN
         - SYS_ADMIN
         - NET_BIND_SERVICE
-devices: br-ext
 policyCIDRMatchMode: nodes

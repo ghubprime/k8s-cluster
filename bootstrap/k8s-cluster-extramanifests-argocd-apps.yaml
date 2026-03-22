@@ -14,3 +14,5 @@ cluster:
     - https://raw.githubusercontent.com/ghubprime/k8s-cluster/refs/heads/main/manifests/scots-lab/apps/argocd-apps/argoproj.io_v1alpha1_application_rook-ceph-cluster-scots-lab.yaml
     - https://raw.githubusercontent.com/ghubprime/k8s-cluster/refs/heads/main/manifests/scots-lab/apps/argocd-apps/argoproj.io_v1alpha1_application_rook-ceph-scots-lab.yaml
     - https://raw.githubusercontent.com/ghubprime/k8s-cluster/refs/heads/main/manifests/scots-lab/apps/argocd-apps/argoproj.io_v1alpha1_application_talos-scots-lab.yaml
+    - https://raw.githubusercontent.com/ghubprime/k8s-cluster/refs/heads/main/manifests/scots-lab/apps/argocd-apps/argoproj.io_v1alpha1_application_whereabouts-scots-lab.yaml
+

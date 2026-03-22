@@ -62,8 +62,8 @@ patches:
   #   file: bootstrap/k8s-cluster-extramanifests.yaml
   - name: extramanifests-multus
     file: bootstrap/k8s-cluster-extramanifests-multus.yaml
-  - name: extramanifests-cilium
-    file: bootstrap/k8s-cluster-extramanifests-cilium.yaml
+  # - name: extramanifests-cilium
+  #   file: bootstrap/k8s-cluster-extramanifests-cilium.yaml
   - name: extramanifests-gateway-api-crds
     file: bootstrap/k8s-cluster-extramanifests-gateway-api-crds.yaml    
   - name: extramanifests-argocd
