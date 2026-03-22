@@ -3810,3 +3810,7 @@ authentication:
 enableInternalTrafficPolicy: true
 # -- Enable LoadBalancer IP Address Management
 enableLBIPAM: true
+
+ingressController:
+  enabled: true
+  loadbalancerMode: dedicated
