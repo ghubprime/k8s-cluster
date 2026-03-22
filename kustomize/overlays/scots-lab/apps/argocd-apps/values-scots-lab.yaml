@@ -130,3 +130,10 @@ argocdApplications:
     namespace: kube-system
     appCategory: apps
     syncWave: "1"
+  velero:
+    disableAutomated: false
+    disable: false
+    name: velero
+    namespace: velero
+    appCategory: apps
+    syncWave: "1"

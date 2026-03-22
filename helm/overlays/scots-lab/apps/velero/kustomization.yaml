@@ -1,0 +1,12 @@
+﻿apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../../../base/apps/velero/
+patches:
+  - target:
+      kind: HelmChartInflationGenerator
+      name: velero
+    patch: |-
+      - op: replace
+        path: /valuesFile
+        value: ../../../../../helm/overlays/scots-lab/apps/velero/values-scots-lab.yaml

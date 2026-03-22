@@ -10,3 +10,10 @@ resources:
   - bridge-vlan-cluster-net.yaml  
 generators:
   - ../../../../../helm/overlays/scots-lab/cluster/rook-ceph-cluster/
+patches:
+  - target:
+      kind: VolumeSnapshotClass
+    patch: |-
+      - op: add
+        path: /metadata/labels/velero.io~1csi-volumesnapshot-class
+        value: "true"

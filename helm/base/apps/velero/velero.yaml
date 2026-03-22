@@ -1,0 +1,13 @@
+﻿apiVersion: builtin
+kind: HelmChartInflationGenerator
+metadata:
+  name: velero
+name: velero
+repo: https://vmware-tanzu.github.io/helm-charts
+chartHome: ../../../../../charts
+releaseName: velero
+namespace: velero
+includeCRDs: true
+skipHooks: false
+version: 5.4.1
+valuesFile: values.yaml
