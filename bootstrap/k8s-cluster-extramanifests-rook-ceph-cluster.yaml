@@ -1,0 +1,25 @@
+cluster:
+  extraManifests:
+    - https://raw.githubusercontent.com/ghubprime/k8s-cluster/refs/heads/main/manifests/scots-lab/cluster/rook-ceph-cluster/apps_v1_deployment_rook-ceph-tools.yaml
+    - https://raw.githubusercontent.com/ghubprime/k8s-cluster/refs/heads/main/manifests/scots-lab/cluster/rook-ceph-cluster/ceph.rook.io_v1_cephblockpool_ceph-blockpool.yaml
+    - https://raw.githubusercontent.com/ghubprime/k8s-cluster/refs/heads/main/manifests/scots-lab/cluster/rook-ceph-cluster/ceph.rook.io_v1_cephblockpool_ceph-blockpool-bulk.yaml
+    - https://raw.githubusercontent.com/ghubprime/k8s-cluster/refs/heads/main/manifests/scots-lab/cluster/rook-ceph-cluster/ceph.rook.io_v1_cephcluster_rook-ceph.yaml
+    - https://raw.githubusercontent.com/ghubprime/k8s-cluster/refs/heads/main/manifests/scots-lab/cluster/rook-ceph-cluster/ceph.rook.io_v1_cephfilesystem_ceph-filesystem.yaml
+    - https://raw.githubusercontent.com/ghubprime/k8s-cluster/refs/heads/main/manifests/scots-lab/cluster/rook-ceph-cluster/ceph.rook.io_v1_cephfilesystemsubvolumegroup_ceph-filesystem-csi.yaml
+    - https://raw.githubusercontent.com/ghubprime/k8s-cluster/refs/heads/main/manifests/scots-lab/cluster/rook-ceph-cluster/ceph.rook.io_v1_cephobjectstore_ceph-objectstore.yaml
+    - https://raw.githubusercontent.com/ghubprime/k8s-cluster/refs/heads/main/manifests/scots-lab/cluster/rook-ceph-cluster/k8s.cni.cncf.io_v1_networkattachmentdefinition_cluster-net.yaml
+    - https://raw.githubusercontent.com/ghubprime/k8s-cluster/refs/heads/main/manifests/scots-lab/cluster/rook-ceph-cluster/k8s.cni.cncf.io_v1_networkattachmentdefinition_public-net.yaml
+    - https://raw.githubusercontent.com/ghubprime/k8s-cluster/refs/heads/main/manifests/scots-lab/cluster/rook-ceph-cluster/monitoring.coreos.com_v1_prometheus_rook-prometheus.yaml
+    - https://raw.githubusercontent.com/ghubprime/k8s-cluster/refs/heads/main/manifests/scots-lab/cluster/rook-ceph-cluster/monitoring.coreos.com_v1_prometheusrule_prometheus-ceph-rules.yaml
+    - https://raw.githubusercontent.com/ghubprime/k8s-cluster/refs/heads/main/manifests/scots-lab/cluster/rook-ceph-cluster/monitoring.coreos.com_v1_servicemonitor_rook-ceph-exporter.yaml
+    - https://raw.githubusercontent.com/ghubprime/k8s-cluster/refs/heads/main/manifests/scots-lab/cluster/rook-ceph-cluster/monitoring.coreos.com_v1_servicemonitor_rook-ceph-mgr.yaml
+    - https://raw.githubusercontent.com/ghubprime/k8s-cluster/refs/heads/main/manifests/scots-lab/cluster/rook-ceph-cluster/rbac.authorization.k8s.io_v1_clusterrole_prometheus.yaml
+    - https://raw.githubusercontent.com/ghubprime/k8s-cluster/refs/heads/main/manifests/scots-lab/cluster/rook-ceph-cluster/rbac.authorization.k8s.io_v1_clusterrole_prometheus-rules.yaml
+    - https://raw.githubusercontent.com/ghubprime/k8s-cluster/refs/heads/main/manifests/scots-lab/cluster/rook-ceph-cluster/rbac.authorization.k8s.io_v1_clusterrolebinding_prometheus.yaml
+    - https://raw.githubusercontent.com/ghubprime/k8s-cluster/refs/heads/main/manifests/scots-lab/cluster/rook-ceph-cluster/storage.k8s.io_v1_storageclass_ceph-block.yaml
+    - https://raw.githubusercontent.com/ghubprime/k8s-cluster/refs/heads/main/manifests/scots-lab/cluster/rook-ceph-cluster/storage.k8s.io_v1_storageclass_ceph-block-bulk.yaml
+    - https://raw.githubusercontent.com/ghubprime/k8s-cluster/refs/heads/main/manifests/scots-lab/cluster/rook-ceph-cluster/storage.k8s.io_v1_storageclass_ceph-bucket.yaml
+    - https://raw.githubusercontent.com/ghubprime/k8s-cluster/refs/heads/main/manifests/scots-lab/cluster/rook-ceph-cluster/storage.k8s.io_v1_storageclass_ceph-filesystem.yaml
+    - https://raw.githubusercontent.com/ghubprime/k8s-cluster/refs/heads/main/manifests/scots-lab/cluster/rook-ceph-cluster/v1_configmap_rook-config-override.yaml
+    - https://raw.githubusercontent.com/ghubprime/k8s-cluster/refs/heads/main/manifests/scots-lab/cluster/rook-ceph-cluster/v1_service_rook-prometheus.yaml
+    - https://raw.githubusercontent.com/ghubprime/k8s-cluster/refs/heads/main/manifests/scots-lab/cluster/rook-ceph-cluster/v1_serviceaccount_prometheus.yaml

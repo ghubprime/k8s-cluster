@@ -1,3 +1,16 @@
 cluster:
   extraManifests:
     - https://raw.githubusercontent.com/ghubprime/k8s-cluster/refs/heads/main/manifests/scots-lab/apps/argocd-apps/argoproj.io_v1alpha1_application_argocd-apps-scots-lab.yaml
+    - https://raw.githubusercontent.com/ghubprime/k8s-cluster/refs/heads/main/manifests/scots-lab/apps/argocd-apps/argoproj.io_v1alpha1_application_argocd-scots-lab.yaml
+    - https://raw.githubusercontent.com/ghubprime/k8s-cluster/refs/heads/main/manifests/scots-lab/apps/argocd-apps/argoproj.io_v1alpha1_application_cert-manager-scots-lab.yaml
+    - https://raw.githubusercontent.com/ghubprime/k8s-cluster/refs/heads/main/manifests/scots-lab/apps/argocd-apps/argoproj.io_v1alpha1_application_cilium-scots-lab.yaml
+    - https://raw.githubusercontent.com/ghubprime/k8s-cluster/refs/heads/main/manifests/scots-lab/apps/argocd-apps/argoproj.io_v1alpha1_application_gateway-api-crds-scots-lab.yaml
+    - https://raw.githubusercontent.com/ghubprime/k8s-cluster/refs/heads/main/manifests/scots-lab/apps/argocd-apps/argoproj.io_v1alpha1_application_host-network-scots-lab.yaml
+    - https://raw.githubusercontent.com/ghubprime/k8s-cluster/refs/heads/main/manifests/scots-lab/apps/argocd-apps/argoproj.io_v1alpha1_application_kgateway-crds-scots-lab.yaml
+    - https://raw.githubusercontent.com/ghubprime/k8s-cluster/refs/heads/main/manifests/scots-lab/apps/argocd-apps/argoproj.io_v1alpha1_application_kgateway-scots-lab.yaml
+    - https://raw.githubusercontent.com/ghubprime/k8s-cluster/refs/heads/main/manifests/scots-lab/apps/argocd-apps/argoproj.io_v1alpha1_application_kube-prometheus-stack-scots-lab.yaml
+    - https://raw.githubusercontent.com/ghubprime/k8s-cluster/refs/heads/main/manifests/scots-lab/apps/argocd-apps/argoproj.io_v1alpha1_application_multus-scots-lab.yaml
+    - https://raw.githubusercontent.com/ghubprime/k8s-cluster/refs/heads/main/manifests/scots-lab/apps/argocd-apps/argoproj.io_v1alpha1_application_omni-scots-lab.yaml
+    - https://raw.githubusercontent.com/ghubprime/k8s-cluster/refs/heads/main/manifests/scots-lab/apps/argocd-apps/argoproj.io_v1alpha1_application_rook-ceph-cluster-scots-lab.yaml
+    - https://raw.githubusercontent.com/ghubprime/k8s-cluster/refs/heads/main/manifests/scots-lab/apps/argocd-apps/argoproj.io_v1alpha1_application_rook-ceph-scots-lab.yaml
+    - https://raw.githubusercontent.com/ghubprime/k8s-cluster/refs/heads/main/manifests/scots-lab/apps/argocd-apps/argoproj.io_v1alpha1_application_talos-scots-lab.yaml

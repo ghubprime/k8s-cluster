@@ -44,6 +44,19 @@ while read RESOURCE; do
     # build new manifests
     kustomize build "$RESOURCE" --load-restrictor LoadRestrictionsNone --enable-helm --enable-alpha-plugins --enable-exec -o "$MANIFESTS_DST"
 
+    # Automatically generate the Talos bootstrap extramanifests index
+    APP_BASENAME=$(basename "$APP")
+    BOOTSTRAP_FILE="bootstrap/k8s-cluster-extramanifests-${APP_BASENAME}.yaml"
+    mkdir -p bootstrap
+    echo "cluster:" > "$BOOTSTRAP_FILE"
+    echo "  extraManifests:" >> "$BOOTSTRAP_FILE"
+    for f in "$MANIFESTS_DST"/*.yaml; do
+      if [ -f "$f" ]; then
+        FILENAME=$(basename "$f")
+        echo "    - https://raw.githubusercontent.com/ghubprime/k8s-cluster/refs/heads/main/${MANIFESTS_DST}/${FILENAME}" >> "$BOOTSTRAP_FILE"
+      fi
+    done
+
     # when run as commit hook, we should
     # add generated files to staging
     # git add "$MANIFESTS_DST"

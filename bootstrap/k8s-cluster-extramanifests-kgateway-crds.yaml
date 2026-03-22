@@ -1,0 +1,11 @@
+cluster:
+  extraManifests:
+    - https://raw.githubusercontent.com/ghubprime/k8s-cluster/refs/heads/main/manifests/scots-lab/cluster/kgateway-crds/apiextensions.k8s.io_v1_customresourcedefinition_backendconfigpolicies.gateway.kgateway.dev.yaml
+    - https://raw.githubusercontent.com/ghubprime/k8s-cluster/refs/heads/main/manifests/scots-lab/cluster/kgateway-crds/apiextensions.k8s.io_v1_customresourcedefinition_backends.gateway.kgateway.dev.yaml
+    - https://raw.githubusercontent.com/ghubprime/k8s-cluster/refs/heads/main/manifests/scots-lab/cluster/kgateway-crds/apiextensions.k8s.io_v1_customresourcedefinition_directresponses.gateway.kgateway.dev.yaml
+    - https://raw.githubusercontent.com/ghubprime/k8s-cluster/refs/heads/main/manifests/scots-lab/cluster/kgateway-crds/apiextensions.k8s.io_v1_customresourcedefinition_gatewayextensions.gateway.kgateway.dev.yaml
+    - https://raw.githubusercontent.com/ghubprime/k8s-cluster/refs/heads/main/manifests/scots-lab/cluster/kgateway-crds/apiextensions.k8s.io_v1_customresourcedefinition_gatewayparameters.gateway.kgateway.dev.yaml
+    - https://raw.githubusercontent.com/ghubprime/k8s-cluster/refs/heads/main/manifests/scots-lab/cluster/kgateway-crds/apiextensions.k8s.io_v1_customresourcedefinition_httplistenerpolicies.gateway.kgateway.dev.yaml
+    - https://raw.githubusercontent.com/ghubprime/k8s-cluster/refs/heads/main/manifests/scots-lab/cluster/kgateway-crds/apiextensions.k8s.io_v1_customresourcedefinition_listenerpolicies.gateway.kgateway.dev.yaml
+    - https://raw.githubusercontent.com/ghubprime/k8s-cluster/refs/heads/main/manifests/scots-lab/cluster/kgateway-crds/apiextensions.k8s.io_v1_customresourcedefinition_trafficpolicies.gateway.kgateway.dev.yaml
+    - https://raw.githubusercontent.com/ghubprime/k8s-cluster/refs/heads/main/manifests/scots-lab/cluster/kgateway-crds/v1_namespace_kgateway-system.yaml
