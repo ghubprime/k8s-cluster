@@ -123,3 +123,10 @@ argocdApplications:
     name: kgateway
     appCategory: cluster
     syncWave: "2"
+  sealedSecrets:
+    disableAutomated: false
+    disable: false
+    name: sealed-secrets
+    namespace: kube-system
+    appCategory: apps
+    syncWave: "1"

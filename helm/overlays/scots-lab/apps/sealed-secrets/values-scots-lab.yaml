@@ -1,0 +1,2 @@
+# Scoti-Lab environmental overrides for Sealed Secrets
+fullnameOverride: sealed-secrets-controller
