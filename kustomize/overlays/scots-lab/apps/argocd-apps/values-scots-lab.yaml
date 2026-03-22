@@ -40,7 +40,7 @@ argocdApplications:
     syncWave: "1"
   hostNetwork:
     disableAutomated: false
-    disable: false
+    disable: true
     name: host-network
     namespace: kube-system
     appCategory: infra
