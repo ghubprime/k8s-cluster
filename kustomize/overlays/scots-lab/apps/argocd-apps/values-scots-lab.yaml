@@ -93,6 +93,11 @@ argocdApplications:
     namespace: rook-ceph
     appCategory: cluster
     syncWave: "2"
+    ignoreDifferences:
+      - group: ceph.rook.io
+        kind: CephCluster
+        jsonPointers:
+          - /spec/storage/metadataDevice
   argocdApps:
     disableAutomated: false
     disable: false
