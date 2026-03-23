@@ -1,4 +1,4 @@
-﻿initContainers:
+initContainers:
   - name: velero-plugin-for-aws
     image: velero/velero-plugin-for-aws:v1.10.0
     volumeMounts:
@@ -22,3 +22,8 @@ configuration:
 credentials:
   useSecret: true
   existingSecret: velero-cloudflare-credentials
+
+kubectl:
+  image:
+    repository: docker.io/bitnami/kubectl
+    tag: 1.35.2
