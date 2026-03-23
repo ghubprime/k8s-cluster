@@ -25,5 +25,5 @@ credentials:
 
 kubectl:
   image:
-    repository: alpine/k8s
-    tag: 1.35.2
+    repository: docker.io/bitnami/kubectl
+    tag: latest
