@@ -1,0 +1,13 @@
+apiVersion: builtin
+kind: HelmChartInflationGenerator
+metadata:
+  name: keycloak
+name: keycloak
+repo: https://charts.bitnami.com/bitnami
+chartHome: ../../../../../charts
+releaseName: keycloak
+namespace: keycloak
+includeCRDs: true
+skipHooks: false
+version: 25.3.2
+valuesFile: values.yaml

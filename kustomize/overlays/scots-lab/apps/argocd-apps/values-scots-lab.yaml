@@ -142,3 +142,10 @@ argocdApplications:
     namespace: velero
     appCategory: apps
     syncWave: "1"
+  keycloak:
+    disableAutomated: false
+    disable: false
+    name: keycloak
+    namespace: keycloak
+    appCategory: apps
+    syncWave: "2"

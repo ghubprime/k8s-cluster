@@ -1,0 +1,19 @@
+# Keycloak values for scots-lab environment
+
+auth:
+  adminUser: admin
+  adminPassword: changeme-placeholder
+
+production: false
+
+postgresql:
+  enabled: true
+  primary:
+    persistence:
+      storageClass: "ceph-block"
+
+ingress:
+  enabled: true
+  ingressClassName: "cilium"
+  hostname: keycloak.proxy-us.srbii.com
+  tls: false
