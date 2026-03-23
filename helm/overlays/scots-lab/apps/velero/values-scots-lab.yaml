@@ -34,3 +34,12 @@ kubectl:
     tag: latest
 
 upgradeCRDs: false
+
+schedules:
+  daily-cluster-backup:
+    disabled: false
+    schedule: "0 2 * * *"
+    template:
+      ttl: "720h"
+      includedNamespaces:
+        - '*'
