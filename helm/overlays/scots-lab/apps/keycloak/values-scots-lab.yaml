@@ -2,7 +2,8 @@
 
 auth:
   adminUser: admin
-  adminPassword: changeme-placeholder
+  existingSecret: keycloak-admin-credentials
+  passwordSecretKey: admin-password
 
 production: false
 
