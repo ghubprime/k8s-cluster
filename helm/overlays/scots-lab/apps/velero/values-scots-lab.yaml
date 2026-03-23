@@ -19,6 +19,11 @@ configuration:
         region: auto
         s3ForcePathStyle: "true"
         s3Url: https://a51575eff9b7355d3dbdb591d77e6629.r2.cloudflarestorage.com
+  volumeSnapshotLocation:
+    - name: default
+      provider: aws
+      config:
+        region: auto
 credentials:
   useSecret: true
   existingSecret: velero-cloudflare-credentials
