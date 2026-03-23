@@ -1,3 +1,191 @@
+allowVolumeExpansion: true
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  annotations:
+    storageclass.kubernetes.io/is-default-class: "true"
+  name: ceph-block
+parameters:
+  clusterID: rook-ceph
+  csi.storage.k8s.io/controller-expand-secret-name: rook-csi-rbd-provisioner
+  csi.storage.k8s.io/controller-expand-secret-namespace: rook-ceph
+  csi.storage.k8s.io/fstype: ext4
+  csi.storage.k8s.io/node-stage-secret-name: rook-csi-rbd-node
+  csi.storage.k8s.io/node-stage-secret-namespace: rook-ceph
+  csi.storage.k8s.io/provisioner-secret-name: rook-csi-rbd-provisioner
+  csi.storage.k8s.io/provisioner-secret-namespace: rook-ceph
+  imageFeatures: layering
+  imageFormat: "2"
+  pool: ceph-blockpool
+provisioner: rook-ceph.rbd.csi.ceph.com
+reclaimPolicy: Retain
+volumeBindingMode: Immediate
+---
+allowVolumeExpansion: true
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  annotations:
+    storageclass.kubernetes.io/is-default-class: "false"
+  name: ceph-block-bulk
+parameters:
+  clusterID: rook-ceph
+  csi.storage.k8s.io/controller-expand-secret-name: rook-csi-rbd-provisioner
+  csi.storage.k8s.io/controller-expand-secret-namespace: rook-ceph
+  csi.storage.k8s.io/fstype: ext4
+  csi.storage.k8s.io/node-stage-secret-name: rook-csi-rbd-node
+  csi.storage.k8s.io/node-stage-secret-namespace: rook-ceph
+  csi.storage.k8s.io/provisioner-secret-name: rook-csi-rbd-provisioner
+  csi.storage.k8s.io/provisioner-secret-namespace: rook-ceph
+  imageFeatures: layering
+  imageFormat: "2"
+  pool: ceph-blockpool-bulk
+provisioner: rook-ceph.rbd.csi.ceph.com
+reclaimPolicy: Delete
+volumeBindingMode: Immediate
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: ceph-bucket
+parameters:
+  objectStoreName: ceph-objectstore
+  objectStoreNamespace: rook-ceph
+  region: us-west-1
+provisioner: rook-ceph.ceph.rook.io/bucket
+reclaimPolicy: Delete
+volumeBindingMode: Immediate
+---
+allowVolumeExpansion: true
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  annotations:
+    storageclass.kubernetes.io/is-default-class: "false"
+  name: ceph-filesystem
+parameters:
+  clusterID: rook-ceph
+  csi.storage.k8s.io/controller-expand-secret-name: rook-csi-cephfs-provisioner
+  csi.storage.k8s.io/controller-expand-secret-namespace: rook-ceph
+  csi.storage.k8s.io/fstype: ext4
+  csi.storage.k8s.io/node-stage-secret-name: rook-csi-cephfs-node
+  csi.storage.k8s.io/node-stage-secret-namespace: rook-ceph
+  csi.storage.k8s.io/provisioner-secret-name: rook-csi-cephfs-provisioner
+  csi.storage.k8s.io/provisioner-secret-namespace: rook-ceph
+  fsName: ceph-filesystem
+  pool: ceph-filesystem-data0
+provisioner: rook-ceph.cephfs.csi.ceph.com
+reclaimPolicy: Delete
+volumeBindingMode: Immediate
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: prometheus
+  namespace: rook-ceph
+---
+aggregationRule:
+  clusterRoleSelectors:
+  - matchLabels:
+      rbac.ceph.rook.io/aggregate-to-prometheus: "true"
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: prometheus
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - nodes
+  - services
+  - endpoints
+  - pods
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  verbs:
+  - get
+- nonResourceURLs:
+  - /metrics
+  verbs:
+  - get
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    rbac.ceph.rook.io/aggregate-to-prometheus: "true"
+  name: prometheus-rules
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - nodes
+  - services
+  - endpoints
+  - pods
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  verbs:
+  - get
+- nonResourceURLs:
+  - /metrics
+  verbs:
+  - get
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: prometheus
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: prometheus
+subjects:
+- kind: ServiceAccount
+  name: prometheus
+  namespace: rook-ceph
+---
+apiVersion: v1
+data:
+  config: |
+    [global]
+    osd_pool_default_size = 3
+    mon_warn_on_pool_no_redundancy = false
+
+    [mon]
+    mon_data_avail_warn = 15
+kind: ConfigMap
+metadata:
+  name: rook-config-override
+  namespace: rook-ceph
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rook-prometheus
+  namespace: rook-ceph
+spec:
+  ports:
+  - name: web
+    nodePort: 30900
+    port: 9090
+    protocol: TCP
+    targetPort: web
+  selector:
+    prometheus: rook-prometheus
+  type: NodePort
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -1572,192 +1760,3 @@ spec:
     matchLabels:
       app: rook-ceph-mgr
       rook_cluster: rook-ceph
----
-aggregationRule:
-  clusterRoleSelectors:
-  - matchLabels:
-      rbac.ceph.rook.io/aggregate-to-prometheus: "true"
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  name: prometheus
-rules:
-- apiGroups:
-  - ""
-  resources:
-  - nodes
-  - services
-  - endpoints
-  - pods
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - ""
-  resources:
-  - configmaps
-  verbs:
-  - get
-- nonResourceURLs:
-  - /metrics
-  verbs:
-  - get
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  labels:
-    rbac.ceph.rook.io/aggregate-to-prometheus: "true"
-  name: prometheus-rules
-rules:
-- apiGroups:
-  - ""
-  resources:
-  - nodes
-  - services
-  - endpoints
-  - pods
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - ""
-  resources:
-  - configmaps
-  verbs:
-  - get
-- nonResourceURLs:
-  - /metrics
-  verbs:
-  - get
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: prometheus
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: prometheus
-subjects:
-- kind: ServiceAccount
-  name: prometheus
-  namespace: rook-ceph
----
-allowVolumeExpansion: true
-apiVersion: storage.k8s.io/v1
-kind: StorageClass
-metadata:
-  annotations:
-    storageclass.kubernetes.io/is-default-class: "true"
-  name: ceph-block
-parameters:
-  clusterID: rook-ceph
-  csi.storage.k8s.io/controller-expand-secret-name: rook-csi-rbd-provisioner
-  csi.storage.k8s.io/controller-expand-secret-namespace: rook-ceph
-  csi.storage.k8s.io/fstype: ext4
-  csi.storage.k8s.io/node-stage-secret-name: rook-csi-rbd-node
-  csi.storage.k8s.io/node-stage-secret-namespace: rook-ceph
-  csi.storage.k8s.io/provisioner-secret-name: rook-csi-rbd-provisioner
-  csi.storage.k8s.io/provisioner-secret-namespace: rook-ceph
-  imageFeatures: layering
-  imageFormat: "2"
-  pool: ceph-blockpool
-provisioner: rook-ceph.rbd.csi.ceph.com
-reclaimPolicy: Retain
-volumeBindingMode: Immediate
----
-allowVolumeExpansion: true
-apiVersion: storage.k8s.io/v1
-kind: StorageClass
-metadata:
-  annotations:
-    storageclass.kubernetes.io/is-default-class: "false"
-  name: ceph-block-bulk
-parameters:
-  clusterID: rook-ceph
-  csi.storage.k8s.io/controller-expand-secret-name: rook-csi-rbd-provisioner
-  csi.storage.k8s.io/controller-expand-secret-namespace: rook-ceph
-  csi.storage.k8s.io/fstype: ext4
-  csi.storage.k8s.io/node-stage-secret-name: rook-csi-rbd-node
-  csi.storage.k8s.io/node-stage-secret-namespace: rook-ceph
-  csi.storage.k8s.io/provisioner-secret-name: rook-csi-rbd-provisioner
-  csi.storage.k8s.io/provisioner-secret-namespace: rook-ceph
-  imageFeatures: layering
-  imageFormat: "2"
-  pool: ceph-blockpool-bulk
-provisioner: rook-ceph.rbd.csi.ceph.com
-reclaimPolicy: Delete
-volumeBindingMode: Immediate
----
-apiVersion: storage.k8s.io/v1
-kind: StorageClass
-metadata:
-  name: ceph-bucket
-parameters:
-  objectStoreName: ceph-objectstore
-  objectStoreNamespace: rook-ceph
-  region: us-west-1
-provisioner: rook-ceph.ceph.rook.io/bucket
-reclaimPolicy: Delete
-volumeBindingMode: Immediate
----
-allowVolumeExpansion: true
-apiVersion: storage.k8s.io/v1
-kind: StorageClass
-metadata:
-  annotations:
-    storageclass.kubernetes.io/is-default-class: "false"
-  name: ceph-filesystem
-parameters:
-  clusterID: rook-ceph
-  csi.storage.k8s.io/controller-expand-secret-name: rook-csi-cephfs-provisioner
-  csi.storage.k8s.io/controller-expand-secret-namespace: rook-ceph
-  csi.storage.k8s.io/fstype: ext4
-  csi.storage.k8s.io/node-stage-secret-name: rook-csi-cephfs-node
-  csi.storage.k8s.io/node-stage-secret-namespace: rook-ceph
-  csi.storage.k8s.io/provisioner-secret-name: rook-csi-cephfs-provisioner
-  csi.storage.k8s.io/provisioner-secret-namespace: rook-ceph
-  fsName: ceph-filesystem
-  pool: ceph-filesystem-data0
-provisioner: rook-ceph.cephfs.csi.ceph.com
-reclaimPolicy: Delete
-volumeBindingMode: Immediate
----
-apiVersion: v1
-data:
-  config: |
-    [global]
-    osd_pool_default_size = 3
-    mon_warn_on_pool_no_redundancy = false
-
-    [mon]
-    mon_data_avail_warn = 15
-kind: ConfigMap
-metadata:
-  name: rook-config-override
-  namespace: rook-ceph
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: rook-prometheus
-  namespace: rook-ceph
-spec:
-  ports:
-  - name: web
-    nodePort: 30900
-    port: 9090
-    protocol: TCP
-    targetPort: web
-  selector:
-    prometheus: rook-prometheus
-  type: NodePort
----
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: prometheus
-  namespace: rook-ceph

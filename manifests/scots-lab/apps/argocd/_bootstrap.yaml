@@ -1,3 +1,11 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    name: argocd
+    pod-security.kubernetes.io/enforce: baseline
+    pod-security.kubernetes.io/warn: restricted
+  name: argocd
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
@@ -23988,6 +23996,947 @@ spec:
     served: true
     storage: true
 ---
+apiVersion: v1
+automountServiceAccountToken: true
+kind: ServiceAccount
+metadata:
+  annotations:
+    helm.sh/hook: pre-install,pre-upgrade
+    helm.sh/hook-delete-policy: before-hook-creation
+  labels:
+    app.kubernetes.io/component: redis-secret-init
+    app.kubernetes.io/instance: argo-cd
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: argocd-redis-secret-init
+    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/version: v3.1.9
+    helm.sh/chart: argo-cd-9.0.5
+  name: argo-cd-argocd-redis-secret-init
+  namespace: argocd
+---
+apiVersion: v1
+automountServiceAccountToken: true
+kind: ServiceAccount
+metadata:
+  labels:
+    app.kubernetes.io/component: repo-server
+    app.kubernetes.io/instance: argo-cd
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: argocd-repo-server
+    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/version: v3.1.9
+    helm.sh/chart: argo-cd-9.0.5
+  name: argo-cd-argocd-repo-server
+  namespace: argocd
+---
+apiVersion: v1
+automountServiceAccountToken: true
+kind: ServiceAccount
+metadata:
+  labels:
+    app.kubernetes.io/component: application-controller
+    app.kubernetes.io/instance: argo-cd
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: argocd-application-controller
+    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/version: v3.1.9
+    helm.sh/chart: argo-cd-9.0.5
+  name: argocd-application-controller
+  namespace: argocd
+---
+apiVersion: v1
+automountServiceAccountToken: true
+kind: ServiceAccount
+metadata:
+  labels:
+    app.kubernetes.io/component: applicationset-controller
+    app.kubernetes.io/instance: argo-cd
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: argocd-applicationset-controller
+    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/version: v3.1.9
+    helm.sh/chart: argo-cd-9.0.5
+  name: argocd-applicationset-controller
+  namespace: argocd
+---
+apiVersion: v1
+automountServiceAccountToken: true
+kind: ServiceAccount
+metadata:
+  labels:
+    app.kubernetes.io/component: server
+    app.kubernetes.io/instance: argo-cd
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: argocd-server
+    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/version: v3.1.9
+    helm.sh/chart: argo-cd-9.0.5
+  name: argocd-server
+  namespace: argocd
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  labels:
+    app.kubernetes.io/component: application-controller
+    app.kubernetes.io/instance: argo-cd
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: argocd-application-controller
+    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/version: v3.1.9
+    helm.sh/chart: argo-cd-9.0.5
+  name: argo-cd-argocd-application-controller
+  namespace: argocd
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  - configmaps
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - argoproj.io
+  resources:
+  - applications
+  - applicationsets
+  - appprojects
+  verbs:
+  - create
+  - get
+  - list
+  - watch
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
+  - list
+- apiGroups:
+  - apps
+  resources:
+  - deployments
+  verbs:
+  - get
+  - list
+  - watch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  labels:
+    app.kubernetes.io/component: applicationset-controller
+    app.kubernetes.io/instance: argo-cd
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: argocd-applicationset-controller
+    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/version: v3.1.9
+    helm.sh/chart: argo-cd-9.0.5
+  name: argo-cd-argocd-applicationset-controller
+  namespace: argocd
+rules:
+- apiGroups:
+  - argoproj.io
+  resources:
+  - applications
+  - applicationsets
+  - applicationsets/finalizers
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - argoproj.io
+  resources:
+  - applicationsets/status
+  verbs:
+  - get
+  - patch
+  - update
+- apiGroups:
+  - argoproj.io
+  resources:
+  - appprojects
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
+  - get
+  - list
+  - patch
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  verbs:
+  - create
+  - update
+  - delete
+  - get
+  - list
+  - patch
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - apps
+  - extensions
+  resources:
+  - deployments
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - coordination.k8s.io
+  resources:
+  - leases
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  annotations:
+    helm.sh/hook: pre-install,pre-upgrade
+    helm.sh/hook-delete-policy: before-hook-creation
+  labels:
+    app.kubernetes.io/component: redis-secret-init
+    app.kubernetes.io/instance: argo-cd
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: argocd-redis-secret-init
+    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/version: v3.1.9
+    helm.sh/chart: argo-cd-9.0.5
+  name: argo-cd-argocd-redis-secret-init
+  namespace: argocd
+rules:
+- apiGroups:
+  - ""
+  resourceNames:
+  - argocd-redis
+  resources:
+  - secrets
+  verbs:
+  - get
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - create
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  labels:
+    app.kubernetes.io/component: repo-server
+    app.kubernetes.io/instance: argo-cd
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: argocd-repo-server
+    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/version: v3.1.9
+    helm.sh/chart: argo-cd-9.0.5
+  name: argo-cd-argocd-repo-server
+  namespace: argocd
+rules: null
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  labels:
+    app.kubernetes.io/component: server
+    app.kubernetes.io/instance: argo-cd
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: argocd-server
+    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/version: v3.1.9
+    helm.sh/chart: argo-cd-9.0.5
+  name: argo-cd-argocd-server
+  namespace: argocd
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  - configmaps
+  verbs:
+  - create
+  - get
+  - list
+  - watch
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - argoproj.io
+  resources:
+  - applications
+  - applicationsets
+  - appprojects
+  verbs:
+  - create
+  - get
+  - list
+  - watch
+  - update
+  - delete
+  - patch
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
+  - list
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/component: application-controller
+    app.kubernetes.io/instance: argo-cd
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: argocd-application-controller
+    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/version: v3.1.9
+    helm.sh/chart: argo-cd-9.0.5
+  name: argo-cd-argocd-application-controller
+rules:
+- apiGroups:
+  - '*'
+  resources:
+  - '*'
+  verbs:
+  - '*'
+- nonResourceURLs:
+  - '*'
+  verbs:
+  - '*'
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/component: server
+    app.kubernetes.io/instance: argo-cd
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: argocd-server
+    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/version: v3.1.9
+    helm.sh/chart: argo-cd-9.0.5
+  name: argo-cd-argocd-server
+rules:
+- apiGroups:
+  - '*'
+  resources:
+  - '*'
+  verbs:
+  - delete
+  - get
+  - patch
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - list
+  - create
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  - pods/log
+  verbs:
+  - get
+- apiGroups:
+  - argoproj.io
+  resources:
+  - applications
+  - applicationsets
+  verbs:
+  - get
+  - list
+  - update
+  - watch
+- apiGroups:
+  - batch
+  resources:
+  - jobs
+  verbs:
+  - create
+- apiGroups:
+  - argoproj.io
+  resources:
+  - workflows
+  verbs:
+  - create
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  labels:
+    app.kubernetes.io/component: application-controller
+    app.kubernetes.io/instance: argo-cd
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: argocd-application-controller
+    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/version: v3.1.9
+    helm.sh/chart: argo-cd-9.0.5
+  name: argo-cd-argocd-application-controller
+  namespace: argocd
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: argo-cd-argocd-application-controller
+subjects:
+- kind: ServiceAccount
+  name: argocd-application-controller
+  namespace: argocd
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  labels:
+    app.kubernetes.io/component: applicationset-controller
+    app.kubernetes.io/instance: argo-cd
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: argocd-applicationset-controller
+    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/version: v3.1.9
+    helm.sh/chart: argo-cd-9.0.5
+  name: argo-cd-argocd-applicationset-controller
+  namespace: argocd
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: argo-cd-argocd-applicationset-controller
+subjects:
+- kind: ServiceAccount
+  name: argocd-applicationset-controller
+  namespace: argocd
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  annotations:
+    helm.sh/hook: pre-install,pre-upgrade
+    helm.sh/hook-delete-policy: before-hook-creation
+  labels:
+    app.kubernetes.io/component: redis-secret-init
+    app.kubernetes.io/instance: argo-cd
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: argocd-redis-secret-init
+    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/version: v3.1.9
+    helm.sh/chart: argo-cd-9.0.5
+  name: argo-cd-argocd-redis-secret-init
+  namespace: argocd
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: argo-cd-argocd-redis-secret-init
+subjects:
+- kind: ServiceAccount
+  name: argo-cd-argocd-redis-secret-init
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  labels:
+    app.kubernetes.io/component: repo-server
+    app.kubernetes.io/instance: argo-cd
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: argocd-repo-server
+    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/version: v3.1.9
+    helm.sh/chart: argo-cd-9.0.5
+  name: argo-cd-argocd-repo-server
+  namespace: argocd
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: argo-cd-argocd-repo-server
+subjects:
+- kind: ServiceAccount
+  name: argo-cd-argocd-repo-server
+  namespace: argocd
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  labels:
+    app.kubernetes.io/component: server
+    app.kubernetes.io/instance: argo-cd
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: argocd-server
+    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/version: v3.1.9
+    helm.sh/chart: argo-cd-9.0.5
+  name: argo-cd-argocd-server
+  namespace: argocd
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: argo-cd-argocd-server
+subjects:
+- kind: ServiceAccount
+  name: argocd-server
+  namespace: argocd
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  labels:
+    app.kubernetes.io/component: application-controller
+    app.kubernetes.io/instance: argo-cd
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: argocd-application-controller
+    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/version: v3.1.9
+    helm.sh/chart: argo-cd-9.0.5
+  name: argo-cd-argocd-application-controller
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: argo-cd-argocd-application-controller
+subjects:
+- kind: ServiceAccount
+  name: argocd-application-controller
+  namespace: argocd
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  labels:
+    app.kubernetes.io/component: server
+    app.kubernetes.io/instance: argo-cd
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: argocd-server
+    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/version: v3.1.9
+    helm.sh/chart: argo-cd-9.0.5
+  name: argo-cd-argocd-server
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: argo-cd-argocd-server
+subjects:
+- kind: ServiceAccount
+  name: argocd-server
+  namespace: argocd
+---
+apiVersion: v1
+data:
+  redis_liveness.sh: |
+    response=$(
+      redis-cli \
+        -a "${REDIS_PASSWORD}" --no-auth-warning \
+        -h localhost \
+        -p 6379 \
+        ping
+    )
+    if [ "$response" != "PONG" ] && [ "${response:0:7}" != "LOADING" ] ; then
+      echo "$response"
+      exit 1
+    fi
+    echo "response=$response"
+  redis_readiness.sh: |
+    response=$(
+      redis-cli \
+        -a "${REDIS_PASSWORD}" --no-auth-warning \
+        -h localhost \
+        -p 6379 \
+        ping
+    )
+    if [ "$response" != "PONG" ] ; then
+      echo "$response"
+      exit 1
+    fi
+    echo "response=$response"
+kind: ConfigMap
+metadata:
+  labels:
+    app.kubernetes.io/component: redis
+    app.kubernetes.io/instance: argo-cd
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: argocd-redis
+    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/version: v3.1.9
+    helm.sh/chart: argo-cd-9.0.5
+  name: argo-cd-argocd-redis-health-configmap
+  namespace: argocd
+---
+apiVersion: v1
+data:
+  admin.enabled: "true"
+  application.instanceLabelKey: argocd.argoproj.io/instance
+  application.sync.impersonation.enabled: "false"
+  exec.enabled: "false"
+  resource.customizations.ignoreResourceUpdates.ConfigMap: |
+    jqPathExpressions:
+      # Ignore the cluster-autoscaler status
+      - '.metadata.annotations."cluster-autoscaler.kubernetes.io/last-updated"'
+      # Ignore the annotation of the legacy Leases election
+      - '.metadata.annotations."control-plane.alpha.kubernetes.io/leader"'
+  resource.customizations.ignoreResourceUpdates.Endpoints: |
+    jsonPointers:
+      - /metadata
+      - /subsets
+  resource.customizations.ignoreResourceUpdates.all: |
+    jsonPointers:
+      - /status
+  resource.customizations.ignoreResourceUpdates.apps_ReplicaSet: |
+    jqPathExpressions:
+      - '.metadata.annotations."deployment.kubernetes.io/desired-replicas"'
+      - '.metadata.annotations."deployment.kubernetes.io/max-replicas"'
+      - '.metadata.annotations."rollout.argoproj.io/desired-replicas"'
+  resource.customizations.ignoreResourceUpdates.argoproj.io_Application: |
+    jqPathExpressions:
+      - '.metadata.annotations."notified.notifications.argoproj.io"'
+      - '.metadata.annotations."argocd.argoproj.io/refresh"'
+      - '.metadata.annotations."argocd.argoproj.io/hydrate"'
+      - '.operation'
+  resource.customizations.ignoreResourceUpdates.argoproj.io_Rollout: |
+    jqPathExpressions:
+      - '.metadata.annotations."notified.notifications.argoproj.io"'
+  resource.customizations.ignoreResourceUpdates.autoscaling_HorizontalPodAutoscaler: |
+    jqPathExpressions:
+      - '.metadata.annotations."autoscaling.alpha.kubernetes.io/behavior"'
+      - '.metadata.annotations."autoscaling.alpha.kubernetes.io/conditions"'
+      - '.metadata.annotations."autoscaling.alpha.kubernetes.io/metrics"'
+      - '.metadata.annotations."autoscaling.alpha.kubernetes.io/current-metrics"'
+  resource.customizations.ignoreResourceUpdates.discovery.k8s.io_EndpointSlice: |
+    jsonPointers:
+      - /metadata
+      - /endpoints
+      - /ports
+  resource.exclusions: |
+    ### Network resources created by the Kubernetes control plane and excluded to reduce the number of watched events and UI clutter
+    - apiGroups:
+      - ''
+      - discovery.k8s.io
+      kinds:
+      - Endpoints
+      - EndpointSlice
+    ### Internal Kubernetes resources excluded reduce the number of watched events
+    - apiGroups:
+      - coordination.k8s.io
+      kinds:
+      - Lease
+    ### Internal Kubernetes Authz/Authn resources excluded reduce the number of watched events
+    - apiGroups:
+      - authentication.k8s.io
+      - authorization.k8s.io
+      kinds:
+      - SelfSubjectReview
+      - TokenReview
+      - LocalSubjectAccessReview
+      - SelfSubjectAccessReview
+      - SelfSubjectRulesReview
+      - SubjectAccessReview
+    ### Intermediate Certificate Request excluded reduce the number of watched events
+    - apiGroups:
+      - certificates.k8s.io
+      kinds:
+      - CertificateSigningRequest
+    - apiGroups:
+      - cert-manager.io
+      kinds:
+      - CertificateRequest
+    ### Cilium internal resources excluded reduce the number of watched events and UI Clutter
+    - apiGroups:
+      - cilium.io
+      kinds:
+      - CiliumIdentity
+      - CiliumEndpoint
+      - CiliumEndpointSlice
+    ### Kyverno intermediate and reporting resources excluded reduce the number of watched events and improve performance
+    - apiGroups:
+      - kyverno.io
+      - reports.kyverno.io
+      - wgpolicyk8s.io
+      kinds:
+      - PolicyReport
+      - ClusterPolicyReport
+      - EphemeralReport
+      - ClusterEphemeralReport
+      - AdmissionReport
+      - ClusterAdmissionReport
+      - BackgroundScanReport
+      - ClusterBackgroundScanReport
+      - UpdateRequest
+  server.rbac.log.enforce.enable: "false"
+  statusbadge.enabled: "false"
+  timeout.hard.reconciliation: 0s
+  timeout.reconciliation: 180s
+  url: https://argocd.example.com
+kind: ConfigMap
+metadata:
+  labels:
+    app.kubernetes.io/component: server
+    app.kubernetes.io/instance: argo-cd
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: argocd-cm
+    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/version: v3.1.9
+    helm.sh/chart: argo-cd-9.0.5
+  name: argocd-cm
+  namespace: argocd
+---
+apiVersion: v1
+data:
+  applicationsetcontroller.enable.leader.election: "false"
+  applicationsetcontroller.log.format: text
+  applicationsetcontroller.log.level: info
+  commitserver.log.format: text
+  commitserver.log.level: info
+  controller.log.format: text
+  controller.log.level: info
+  dexserver.log.format: text
+  dexserver.log.level: info
+  notificationscontroller.log.format: text
+  notificationscontroller.log.level: info
+  redis.server: argo-cd-argocd-redis:6379
+  repo.server: argo-cd-argocd-repo-server:8081
+  reposerver.log.format: text
+  reposerver.log.level: info
+  server.log.format: text
+  server.log.level: info
+  server.repo.server.strict.tls: "false"
+kind: ConfigMap
+metadata:
+  labels:
+    app.kubernetes.io/component: server
+    app.kubernetes.io/instance: argo-cd
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: argocd-cmd-params-cm
+    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/version: v3.1.9
+    helm.sh/chart: argo-cd-9.0.5
+  name: argocd-cmd-params-cm
+  namespace: argocd
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    app.kubernetes.io/instance: argo-cd
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: argocd-gpg-keys-cm
+    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/version: v3.1.9
+    helm.sh/chart: argo-cd-9.0.5
+  name: argocd-gpg-keys-cm
+  namespace: argocd
+---
+apiVersion: v1
+data:
+  policy.csv: ""
+  policy.default: ""
+  policy.matchMode: glob
+  scopes: '[groups]'
+kind: ConfigMap
+metadata:
+  labels:
+    app.kubernetes.io/component: server
+    app.kubernetes.io/instance: argo-cd
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: argocd-rbac-cm
+    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/version: v3.1.9
+    helm.sh/chart: argo-cd-9.0.5
+  name: argocd-rbac-cm
+  namespace: argocd
+---
+apiVersion: v1
+data:
+  ssh_known_hosts: |
+    [ssh.github.com]:443 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBEmKSENjQEezOmxkZMy7opKgwFB9nkt5YRrYMjNuG5N87uRgg6CLrbo5wAdT/y6v0mKV0U2w0WZ2YB/++Tpockg=
+    [ssh.github.com]:443 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOMqqnkVzrm0SdG6UOoqKLsabgH5C9okWi0dh2l9GKJl
+    [ssh.github.com]:443 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCj7ndNxQowgcQnjshcLrqPEiiphnt+VTTvDP6mHBL9j1aNUkY4Ue1gvwnGLVlOhGeYrnZaMgRK6+PKCUXaDbC7qtbW8gIkhL7aGCsOr/C56SJMy/BCZfxd1nWzAOxSDPgVsmerOBYfNqltV9/hWCqBywINIR+5dIg6JTJ72pcEpEjcYgXkE2YEFXV1JHnsKgbLWNlhScqb2UmyRkQyytRLtL+38TGxkxCflmO+5Z8CSSNY7GidjMIZ7Q4zMjA2n1nGrlTDkzwDCsw+wqFPGQA179cnfGWOWRVruj16z6XyvxvjJwbz0wQZ75XK5tKSb7FNyeIEs4TT4jk+S4dhPeAUC5y+bDYirYgM4GC7uEnztnZyaVWQ7B381AK4Qdrwt51ZqExKbQpTUNn+EjqoTwvqNj4kqx5QUCI0ThS/YkOxJCXmPUWZbhjpCg56i+2aB6CmK2JGhn57K5mj0MNdBXA4/WnwH6XoPWJzK5Nyu2zB3nAZp+S5hpQs+p1vN1/wsjk=
+    bitbucket.org ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBPIQmuzMBuKdWeF4+a2sjSSpBK0iqitSQ+5BM9KhpexuGt20JpTVM7u5BDZngncgrqDMbWdxMWWOGtZ9UgbqgZE=
+    bitbucket.org ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIazEu89wgQZ4bqs3d63QSMzYVa0MuJ2e2gKTKqu+UUO
+    bitbucket.org ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDQeJzhupRu0u0cdegZIa8e86EG2qOCsIsD1Xw0xSeiPDlCr7kq97NLmMbpKTX6Esc30NuoqEEHCuc7yWtwp8dI76EEEB1VqY9QJq6vk+aySyboD5QF61I/1WeTwu+deCbgKMGbUijeXhtfbxSxm6JwGrXrhBdofTsbKRUsrN1WoNgUa8uqN1Vx6WAJw1JHPhglEGGHea6QICwJOAr/6mrui/oB7pkaWKHj3z7d1IC4KWLtY47elvjbaTlkN04Kc/5LFEirorGYVbt15kAUlqGM65pk6ZBxtaO3+30LVlORZkxOh+LKL/BvbZ/iRNhItLqNyieoQj/uh/7Iv4uyH/cV/0b4WDSd3DptigWq84lJubb9t/DnZlrJazxyDCulTmKdOR7vs9gMTo+uoIrPSb8ScTtvw65+odKAlBj59dhnVp9zd7QUojOpXlL62Aw56U4oO+FALuevvMjiWeavKhJqlR7i5n9srYcrNV7ttmDw7kf/97P5zauIhxcjX+xHv4M=
+    github.com ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBEmKSENjQEezOmxkZMy7opKgwFB9nkt5YRrYMjNuG5N87uRgg6CLrbo5wAdT/y6v0mKV0U2w0WZ2YB/++Tpockg=
+    github.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOMqqnkVzrm0SdG6UOoqKLsabgH5C9okWi0dh2l9GKJl
+    github.com ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCj7ndNxQowgcQnjshcLrqPEiiphnt+VTTvDP6mHBL9j1aNUkY4Ue1gvwnGLVlOhGeYrnZaMgRK6+PKCUXaDbC7qtbW8gIkhL7aGCsOr/C56SJMy/BCZfxd1nWzAOxSDPgVsmerOBYfNqltV9/hWCqBywINIR+5dIg6JTJ72pcEpEjcYgXkE2YEFXV1JHnsKgbLWNlhScqb2UmyRkQyytRLtL+38TGxkxCflmO+5Z8CSSNY7GidjMIZ7Q4zMjA2n1nGrlTDkzwDCsw+wqFPGQA179cnfGWOWRVruj16z6XyvxvjJwbz0wQZ75XK5tKSb7FNyeIEs4TT4jk+S4dhPeAUC5y+bDYirYgM4GC7uEnztnZyaVWQ7B381AK4Qdrwt51ZqExKbQpTUNn+EjqoTwvqNj4kqx5QUCI0ThS/YkOxJCXmPUWZbhjpCg56i+2aB6CmK2JGhn57K5mj0MNdBXA4/WnwH6XoPWJzK5Nyu2zB3nAZp+S5hpQs+p1vN1/wsjk=
+    gitlab.com ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBFSMqzJeV9rUzU4kWitGjeR4PWSa29SPqJ1fVkhtj3Hw9xjLVXVYrU9QlYWrOLXBpQ6KWjbjTDTdDkoohFzgbEY=
+    gitlab.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAfuCHKVTjquxvt6CM6tdG4SLp1Btn/nOeHHE5UOzRdf
+    gitlab.com ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCsj2bNKTBSpIYDEGk9KxsGh3mySTRgMtXL583qmBpzeQ+jqCMRgBqB98u3z++J1sKlXHWfM9dyhSevkMwSbhoR8XIq/U0tCNyokEi/ueaBMCvbcTHhO7FcwzY92WK4Yt0aGROY5qX2UKSeOvuP4D6TPqKF1onrSzH9bx9XUf2lEdWT/ia1NEKjunUqu1xOB/StKDHMoX4/OKyIzuS0q/T1zOATthvasJFoPrAjkohTyaDUz2LN5JoH839hViyEG82yB+MjcFV5MU3N1l1QL3cVUCh93xSaua1N85qivl+siMkPGbO5xR/En4iEY6K2XPASUEMaieWVNTRCtJ4S8H+9
+    ssh.dev.azure.com ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC7Hr1oTWqNqOlzGJOfGJ4NakVyIzf1rXYd4d7wo6jBlkLvCA4odBlL0mDUyZ0/QUfTTqeu+tm22gOsv+VrVTMk6vwRU75gY/y9ut5Mb3bR5BV58dKXyq9A9UeB5Cakehn5Zgm6x1mKoVyf+FFn26iYqXJRgzIZZcZ5V6hrE0Qg39kZm4az48o0AUbf6Sp4SLdvnuMa2sVNwHBboS7EJkm57XQPVU3/QpyNLHbWDdzwtrlS+ez30S3AdYhLKEOxAG8weOnyrtLJAUen9mTkol8oII1edf7mWWbWVf0nBmly21+nZcmCTISQBtdcyPaEno7fFQMDD26/s0lfKob4Kw8H
+    vs-ssh.visualstudio.com ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC7Hr1oTWqNqOlzGJOfGJ4NakVyIzf1rXYd4d7wo6jBlkLvCA4odBlL0mDUyZ0/QUfTTqeu+tm22gOsv+VrVTMk6vwRU75gY/y9ut5Mb3bR5BV58dKXyq9A9UeB5Cakehn5Zgm6x1mKoVyf+FFn26iYqXJRgzIZZcZ5V6hrE0Qg39kZm4az48o0AUbf6Sp4SLdvnuMa2sVNwHBboS7EJkm57XQPVU3/QpyNLHbWDdzwtrlS+ez30S3AdYhLKEOxAG8weOnyrtLJAUen9mTkol8oII1edf7mWWbWVf0nBmly21+nZcmCTISQBtdcyPaEno7fFQMDD26/s0lfKob4Kw8H
+kind: ConfigMap
+metadata:
+  labels:
+    app.kubernetes.io/instance: argo-cd
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: argocd-ssh-known-hosts-cm
+    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/version: v3.1.9
+    helm.sh/chart: argo-cd-9.0.5
+  name: argocd-ssh-known-hosts-cm
+  namespace: argocd
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    app.kubernetes.io/instance: argo-cd
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: argocd-tls-certs-cm
+    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/version: v3.1.9
+    helm.sh/chart: argo-cd-9.0.5
+  name: argocd-tls-certs-cm
+  namespace: argocd
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  labels:
+    app.kubernetes.io/component: server
+    app.kubernetes.io/instance: argo-cd
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: argocd-secret
+    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/version: v3.1.9
+    helm.sh/chart: argo-cd-9.0.5
+  name: argocd-secret
+  namespace: argocd
+type: Opaque
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/component: applicationset-controller
+    app.kubernetes.io/instance: argo-cd
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: argocd-applicationset-controller
+    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/version: v3.1.9
+    helm.sh/chart: argo-cd-9.0.5
+  name: argo-cd-argocd-applicationset-controller
+  namespace: argocd
+spec:
+  ports:
+  - name: http-webhook
+    port: 7000
+    targetPort: webhook
+  selector:
+    app.kubernetes.io/instance: argo-cd
+    app.kubernetes.io/name: argocd-applicationset-controller
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/component: redis
+    app.kubernetes.io/instance: argo-cd
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: argocd-redis
+    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/version: v3.1.9
+    helm.sh/chart: argo-cd-9.0.5
+  name: argo-cd-argocd-redis
+  namespace: argocd
+spec:
+  ports:
+  - name: redis
+    port: 6379
+    targetPort: redis
+  selector:
+    app.kubernetes.io/instance: argo-cd
+    app.kubernetes.io/name: argocd-redis
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/component: repo-server
+    app.kubernetes.io/instance: argo-cd
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: argocd-repo-server
+    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/version: v3.1.9
+    helm.sh/chart: argo-cd-9.0.5
+  name: argo-cd-argocd-repo-server
+  namespace: argocd
+spec:
+  ports:
+  - name: tcp-repo-server
+    port: 8081
+    protocol: TCP
+    targetPort: repo-server
+  selector:
+    app.kubernetes.io/instance: argo-cd
+    app.kubernetes.io/name: argocd-repo-server
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    omni-kube-service-exposer.sidero.dev/icon: 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
+    omni-kube-service-exposer.sidero.dev/label: Argo Dashboard
+    omni-kube-service-exposer.sidero.dev/port: "50081"
+    omni-kube-service-exposer.sidero.dev/prefix: argocd
+  labels:
+    app.kubernetes.io/component: server
+    app.kubernetes.io/instance: argo-cd
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: argocd-server
+    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/version: v3.1.9
+    helm.sh/chart: argo-cd-9.0.5
+  name: argo-cd-argocd-server
+  namespace: argocd
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 8080
+  - name: https
+    port: 443
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app.kubernetes.io/instance: argo-cd
+    app.kubernetes.io/name: argocd-server
+  sessionAffinity: None
+  type: ClusterIP
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -25726,953 +26675,3 @@ spec:
   podSelector: {}
   policyTypes:
   - Ingress
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  labels:
-    app.kubernetes.io/component: application-controller
-    app.kubernetes.io/instance: argo-cd
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: argocd-application-controller
-    app.kubernetes.io/part-of: argocd
-    app.kubernetes.io/version: v3.1.9
-    helm.sh/chart: argo-cd-9.0.5
-  name: argo-cd-argocd-application-controller
-rules:
-- apiGroups:
-  - '*'
-  resources:
-  - '*'
-  verbs:
-  - '*'
-- nonResourceURLs:
-  - '*'
-  verbs:
-  - '*'
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  labels:
-    app.kubernetes.io/component: server
-    app.kubernetes.io/instance: argo-cd
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: argocd-server
-    app.kubernetes.io/part-of: argocd
-    app.kubernetes.io/version: v3.1.9
-    helm.sh/chart: argo-cd-9.0.5
-  name: argo-cd-argocd-server
-rules:
-- apiGroups:
-  - '*'
-  resources:
-  - '*'
-  verbs:
-  - delete
-  - get
-  - patch
-- apiGroups:
-  - ""
-  resources:
-  - events
-  verbs:
-  - list
-  - create
-- apiGroups:
-  - ""
-  resources:
-  - pods
-  - pods/log
-  verbs:
-  - get
-- apiGroups:
-  - argoproj.io
-  resources:
-  - applications
-  - applicationsets
-  verbs:
-  - get
-  - list
-  - update
-  - watch
-- apiGroups:
-  - batch
-  resources:
-  - jobs
-  verbs:
-  - create
-- apiGroups:
-  - argoproj.io
-  resources:
-  - workflows
-  verbs:
-  - create
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  labels:
-    app.kubernetes.io/component: application-controller
-    app.kubernetes.io/instance: argo-cd
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: argocd-application-controller
-    app.kubernetes.io/part-of: argocd
-    app.kubernetes.io/version: v3.1.9
-    helm.sh/chart: argo-cd-9.0.5
-  name: argo-cd-argocd-application-controller
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: argo-cd-argocd-application-controller
-subjects:
-- kind: ServiceAccount
-  name: argocd-application-controller
-  namespace: argocd
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  labels:
-    app.kubernetes.io/component: server
-    app.kubernetes.io/instance: argo-cd
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: argocd-server
-    app.kubernetes.io/part-of: argocd
-    app.kubernetes.io/version: v3.1.9
-    helm.sh/chart: argo-cd-9.0.5
-  name: argo-cd-argocd-server
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: argo-cd-argocd-server
-subjects:
-- kind: ServiceAccount
-  name: argocd-server
-  namespace: argocd
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: Role
-metadata:
-  labels:
-    app.kubernetes.io/component: application-controller
-    app.kubernetes.io/instance: argo-cd
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: argocd-application-controller
-    app.kubernetes.io/part-of: argocd
-    app.kubernetes.io/version: v3.1.9
-    helm.sh/chart: argo-cd-9.0.5
-  name: argo-cd-argocd-application-controller
-  namespace: argocd
-rules:
-- apiGroups:
-  - ""
-  resources:
-  - secrets
-  - configmaps
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - argoproj.io
-  resources:
-  - applications
-  - applicationsets
-  - appprojects
-  verbs:
-  - create
-  - get
-  - list
-  - watch
-  - update
-  - patch
-  - delete
-- apiGroups:
-  - ""
-  resources:
-  - events
-  verbs:
-  - create
-  - list
-- apiGroups:
-  - apps
-  resources:
-  - deployments
-  verbs:
-  - get
-  - list
-  - watch
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: Role
-metadata:
-  labels:
-    app.kubernetes.io/component: applicationset-controller
-    app.kubernetes.io/instance: argo-cd
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: argocd-applicationset-controller
-    app.kubernetes.io/part-of: argocd
-    app.kubernetes.io/version: v3.1.9
-    helm.sh/chart: argo-cd-9.0.5
-  name: argo-cd-argocd-applicationset-controller
-  namespace: argocd
-rules:
-- apiGroups:
-  - argoproj.io
-  resources:
-  - applications
-  - applicationsets
-  - applicationsets/finalizers
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
-- apiGroups:
-  - argoproj.io
-  resources:
-  - applicationsets/status
-  verbs:
-  - get
-  - patch
-  - update
-- apiGroups:
-  - argoproj.io
-  resources:
-  - appprojects
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - ""
-  resources:
-  - events
-  verbs:
-  - create
-  - get
-  - list
-  - patch
-  - watch
-- apiGroups:
-  - ""
-  resources:
-  - configmaps
-  verbs:
-  - create
-  - update
-  - delete
-  - get
-  - list
-  - patch
-  - watch
-- apiGroups:
-  - ""
-  resources:
-  - secrets
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - apps
-  - extensions
-  resources:
-  - deployments
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - coordination.k8s.io
-  resources:
-  - leases
-  verbs:
-  - create
-  - delete
-  - get
-  - list
-  - patch
-  - update
-  - watch
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: Role
-metadata:
-  annotations:
-    helm.sh/hook: pre-install,pre-upgrade
-    helm.sh/hook-delete-policy: before-hook-creation
-  labels:
-    app.kubernetes.io/component: redis-secret-init
-    app.kubernetes.io/instance: argo-cd
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: argocd-redis-secret-init
-    app.kubernetes.io/part-of: argocd
-    app.kubernetes.io/version: v3.1.9
-    helm.sh/chart: argo-cd-9.0.5
-  name: argo-cd-argocd-redis-secret-init
-  namespace: argocd
-rules:
-- apiGroups:
-  - ""
-  resourceNames:
-  - argocd-redis
-  resources:
-  - secrets
-  verbs:
-  - get
-- apiGroups:
-  - ""
-  resources:
-  - secrets
-  verbs:
-  - create
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: Role
-metadata:
-  labels:
-    app.kubernetes.io/component: repo-server
-    app.kubernetes.io/instance: argo-cd
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: argocd-repo-server
-    app.kubernetes.io/part-of: argocd
-    app.kubernetes.io/version: v3.1.9
-    helm.sh/chart: argo-cd-9.0.5
-  name: argo-cd-argocd-repo-server
-  namespace: argocd
-rules: null
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: Role
-metadata:
-  labels:
-    app.kubernetes.io/component: server
-    app.kubernetes.io/instance: argo-cd
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: argocd-server
-    app.kubernetes.io/part-of: argocd
-    app.kubernetes.io/version: v3.1.9
-    helm.sh/chart: argo-cd-9.0.5
-  name: argo-cd-argocd-server
-  namespace: argocd
-rules:
-- apiGroups:
-  - ""
-  resources:
-  - secrets
-  - configmaps
-  verbs:
-  - create
-  - get
-  - list
-  - watch
-  - update
-  - patch
-  - delete
-- apiGroups:
-  - argoproj.io
-  resources:
-  - applications
-  - applicationsets
-  - appprojects
-  verbs:
-  - create
-  - get
-  - list
-  - watch
-  - update
-  - delete
-  - patch
-- apiGroups:
-  - ""
-  resources:
-  - events
-  verbs:
-  - create
-  - list
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
-metadata:
-  labels:
-    app.kubernetes.io/component: application-controller
-    app.kubernetes.io/instance: argo-cd
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: argocd-application-controller
-    app.kubernetes.io/part-of: argocd
-    app.kubernetes.io/version: v3.1.9
-    helm.sh/chart: argo-cd-9.0.5
-  name: argo-cd-argocd-application-controller
-  namespace: argocd
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: Role
-  name: argo-cd-argocd-application-controller
-subjects:
-- kind: ServiceAccount
-  name: argocd-application-controller
-  namespace: argocd
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
-metadata:
-  labels:
-    app.kubernetes.io/component: applicationset-controller
-    app.kubernetes.io/instance: argo-cd
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: argocd-applicationset-controller
-    app.kubernetes.io/part-of: argocd
-    app.kubernetes.io/version: v3.1.9
-    helm.sh/chart: argo-cd-9.0.5
-  name: argo-cd-argocd-applicationset-controller
-  namespace: argocd
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: Role
-  name: argo-cd-argocd-applicationset-controller
-subjects:
-- kind: ServiceAccount
-  name: argocd-applicationset-controller
-  namespace: argocd
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
-metadata:
-  annotations:
-    helm.sh/hook: pre-install,pre-upgrade
-    helm.sh/hook-delete-policy: before-hook-creation
-  labels:
-    app.kubernetes.io/component: redis-secret-init
-    app.kubernetes.io/instance: argo-cd
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: argocd-redis-secret-init
-    app.kubernetes.io/part-of: argocd
-    app.kubernetes.io/version: v3.1.9
-    helm.sh/chart: argo-cd-9.0.5
-  name: argo-cd-argocd-redis-secret-init
-  namespace: argocd
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: Role
-  name: argo-cd-argocd-redis-secret-init
-subjects:
-- kind: ServiceAccount
-  name: argo-cd-argocd-redis-secret-init
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
-metadata:
-  labels:
-    app.kubernetes.io/component: repo-server
-    app.kubernetes.io/instance: argo-cd
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: argocd-repo-server
-    app.kubernetes.io/part-of: argocd
-    app.kubernetes.io/version: v3.1.9
-    helm.sh/chart: argo-cd-9.0.5
-  name: argo-cd-argocd-repo-server
-  namespace: argocd
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: Role
-  name: argo-cd-argocd-repo-server
-subjects:
-- kind: ServiceAccount
-  name: argo-cd-argocd-repo-server
-  namespace: argocd
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
-metadata:
-  labels:
-    app.kubernetes.io/component: server
-    app.kubernetes.io/instance: argo-cd
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: argocd-server
-    app.kubernetes.io/part-of: argocd
-    app.kubernetes.io/version: v3.1.9
-    helm.sh/chart: argo-cd-9.0.5
-  name: argo-cd-argocd-server
-  namespace: argocd
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: Role
-  name: argo-cd-argocd-server
-subjects:
-- kind: ServiceAccount
-  name: argocd-server
-  namespace: argocd
----
-apiVersion: v1
-data:
-  redis_liveness.sh: |
-    response=$(
-      redis-cli \
-        -a "${REDIS_PASSWORD}" --no-auth-warning \
-        -h localhost \
-        -p 6379 \
-        ping
-    )
-    if [ "$response" != "PONG" ] && [ "${response:0:7}" != "LOADING" ] ; then
-      echo "$response"
-      exit 1
-    fi
-    echo "response=$response"
-  redis_readiness.sh: |
-    response=$(
-      redis-cli \
-        -a "${REDIS_PASSWORD}" --no-auth-warning \
-        -h localhost \
-        -p 6379 \
-        ping
-    )
-    if [ "$response" != "PONG" ] ; then
-      echo "$response"
-      exit 1
-    fi
-    echo "response=$response"
-kind: ConfigMap
-metadata:
-  labels:
-    app.kubernetes.io/component: redis
-    app.kubernetes.io/instance: argo-cd
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: argocd-redis
-    app.kubernetes.io/part-of: argocd
-    app.kubernetes.io/version: v3.1.9
-    helm.sh/chart: argo-cd-9.0.5
-  name: argo-cd-argocd-redis-health-configmap
-  namespace: argocd
----
-apiVersion: v1
-data:
-  admin.enabled: "true"
-  application.instanceLabelKey: argocd.argoproj.io/instance
-  application.sync.impersonation.enabled: "false"
-  exec.enabled: "false"
-  resource.customizations.ignoreResourceUpdates.ConfigMap: |
-    jqPathExpressions:
-      # Ignore the cluster-autoscaler status
-      - '.metadata.annotations."cluster-autoscaler.kubernetes.io/last-updated"'
-      # Ignore the annotation of the legacy Leases election
-      - '.metadata.annotations."control-plane.alpha.kubernetes.io/leader"'
-  resource.customizations.ignoreResourceUpdates.Endpoints: |
-    jsonPointers:
-      - /metadata
-      - /subsets
-  resource.customizations.ignoreResourceUpdates.all: |
-    jsonPointers:
-      - /status
-  resource.customizations.ignoreResourceUpdates.apps_ReplicaSet: |
-    jqPathExpressions:
-      - '.metadata.annotations."deployment.kubernetes.io/desired-replicas"'
-      - '.metadata.annotations."deployment.kubernetes.io/max-replicas"'
-      - '.metadata.annotations."rollout.argoproj.io/desired-replicas"'
-  resource.customizations.ignoreResourceUpdates.argoproj.io_Application: |
-    jqPathExpressions:
-      - '.metadata.annotations."notified.notifications.argoproj.io"'
-      - '.metadata.annotations."argocd.argoproj.io/refresh"'
-      - '.metadata.annotations."argocd.argoproj.io/hydrate"'
-      - '.operation'
-  resource.customizations.ignoreResourceUpdates.argoproj.io_Rollout: |
-    jqPathExpressions:
-      - '.metadata.annotations."notified.notifications.argoproj.io"'
-  resource.customizations.ignoreResourceUpdates.autoscaling_HorizontalPodAutoscaler: |
-    jqPathExpressions:
-      - '.metadata.annotations."autoscaling.alpha.kubernetes.io/behavior"'
-      - '.metadata.annotations."autoscaling.alpha.kubernetes.io/conditions"'
-      - '.metadata.annotations."autoscaling.alpha.kubernetes.io/metrics"'
-      - '.metadata.annotations."autoscaling.alpha.kubernetes.io/current-metrics"'
-  resource.customizations.ignoreResourceUpdates.discovery.k8s.io_EndpointSlice: |
-    jsonPointers:
-      - /metadata
-      - /endpoints
-      - /ports
-  resource.exclusions: |
-    ### Network resources created by the Kubernetes control plane and excluded to reduce the number of watched events and UI clutter
-    - apiGroups:
-      - ''
-      - discovery.k8s.io
-      kinds:
-      - Endpoints
-      - EndpointSlice
-    ### Internal Kubernetes resources excluded reduce the number of watched events
-    - apiGroups:
-      - coordination.k8s.io
-      kinds:
-      - Lease
-    ### Internal Kubernetes Authz/Authn resources excluded reduce the number of watched events
-    - apiGroups:
-      - authentication.k8s.io
-      - authorization.k8s.io
-      kinds:
-      - SelfSubjectReview
-      - TokenReview
-      - LocalSubjectAccessReview
-      - SelfSubjectAccessReview
-      - SelfSubjectRulesReview
-      - SubjectAccessReview
-    ### Intermediate Certificate Request excluded reduce the number of watched events
-    - apiGroups:
-      - certificates.k8s.io
-      kinds:
-      - CertificateSigningRequest
-    - apiGroups:
-      - cert-manager.io
-      kinds:
-      - CertificateRequest
-    ### Cilium internal resources excluded reduce the number of watched events and UI Clutter
-    - apiGroups:
-      - cilium.io
-      kinds:
-      - CiliumIdentity
-      - CiliumEndpoint
-      - CiliumEndpointSlice
-    ### Kyverno intermediate and reporting resources excluded reduce the number of watched events and improve performance
-    - apiGroups:
-      - kyverno.io
-      - reports.kyverno.io
-      - wgpolicyk8s.io
-      kinds:
-      - PolicyReport
-      - ClusterPolicyReport
-      - EphemeralReport
-      - ClusterEphemeralReport
-      - AdmissionReport
-      - ClusterAdmissionReport
-      - BackgroundScanReport
-      - ClusterBackgroundScanReport
-      - UpdateRequest
-  server.rbac.log.enforce.enable: "false"
-  statusbadge.enabled: "false"
-  timeout.hard.reconciliation: 0s
-  timeout.reconciliation: 180s
-  url: https://argocd.example.com
-kind: ConfigMap
-metadata:
-  labels:
-    app.kubernetes.io/component: server
-    app.kubernetes.io/instance: argo-cd
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: argocd-cm
-    app.kubernetes.io/part-of: argocd
-    app.kubernetes.io/version: v3.1.9
-    helm.sh/chart: argo-cd-9.0.5
-  name: argocd-cm
-  namespace: argocd
----
-apiVersion: v1
-data:
-  applicationsetcontroller.enable.leader.election: "false"
-  applicationsetcontroller.log.format: text
-  applicationsetcontroller.log.level: info
-  commitserver.log.format: text
-  commitserver.log.level: info
-  controller.log.format: text
-  controller.log.level: info
-  dexserver.log.format: text
-  dexserver.log.level: info
-  notificationscontroller.log.format: text
-  notificationscontroller.log.level: info
-  redis.server: argo-cd-argocd-redis:6379
-  repo.server: argo-cd-argocd-repo-server:8081
-  reposerver.log.format: text
-  reposerver.log.level: info
-  server.log.format: text
-  server.log.level: info
-  server.repo.server.strict.tls: "false"
-kind: ConfigMap
-metadata:
-  labels:
-    app.kubernetes.io/component: server
-    app.kubernetes.io/instance: argo-cd
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: argocd-cmd-params-cm
-    app.kubernetes.io/part-of: argocd
-    app.kubernetes.io/version: v3.1.9
-    helm.sh/chart: argo-cd-9.0.5
-  name: argocd-cmd-params-cm
-  namespace: argocd
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  labels:
-    app.kubernetes.io/instance: argo-cd
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: argocd-gpg-keys-cm
-    app.kubernetes.io/part-of: argocd
-    app.kubernetes.io/version: v3.1.9
-    helm.sh/chart: argo-cd-9.0.5
-  name: argocd-gpg-keys-cm
-  namespace: argocd
----
-apiVersion: v1
-data:
-  policy.csv: ""
-  policy.default: ""
-  policy.matchMode: glob
-  scopes: '[groups]'
-kind: ConfigMap
-metadata:
-  labels:
-    app.kubernetes.io/component: server
-    app.kubernetes.io/instance: argo-cd
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: argocd-rbac-cm
-    app.kubernetes.io/part-of: argocd
-    app.kubernetes.io/version: v3.1.9
-    helm.sh/chart: argo-cd-9.0.5
-  name: argocd-rbac-cm
-  namespace: argocd
----
-apiVersion: v1
-data:
-  ssh_known_hosts: |
-    [ssh.github.com]:443 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBEmKSENjQEezOmxkZMy7opKgwFB9nkt5YRrYMjNuG5N87uRgg6CLrbo5wAdT/y6v0mKV0U2w0WZ2YB/++Tpockg=
-    [ssh.github.com]:443 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOMqqnkVzrm0SdG6UOoqKLsabgH5C9okWi0dh2l9GKJl
-    [ssh.github.com]:443 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCj7ndNxQowgcQnjshcLrqPEiiphnt+VTTvDP6mHBL9j1aNUkY4Ue1gvwnGLVlOhGeYrnZaMgRK6+PKCUXaDbC7qtbW8gIkhL7aGCsOr/C56SJMy/BCZfxd1nWzAOxSDPgVsmerOBYfNqltV9/hWCqBywINIR+5dIg6JTJ72pcEpEjcYgXkE2YEFXV1JHnsKgbLWNlhScqb2UmyRkQyytRLtL+38TGxkxCflmO+5Z8CSSNY7GidjMIZ7Q4zMjA2n1nGrlTDkzwDCsw+wqFPGQA179cnfGWOWRVruj16z6XyvxvjJwbz0wQZ75XK5tKSb7FNyeIEs4TT4jk+S4dhPeAUC5y+bDYirYgM4GC7uEnztnZyaVWQ7B381AK4Qdrwt51ZqExKbQpTUNn+EjqoTwvqNj4kqx5QUCI0ThS/YkOxJCXmPUWZbhjpCg56i+2aB6CmK2JGhn57K5mj0MNdBXA4/WnwH6XoPWJzK5Nyu2zB3nAZp+S5hpQs+p1vN1/wsjk=
-    bitbucket.org ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBPIQmuzMBuKdWeF4+a2sjSSpBK0iqitSQ+5BM9KhpexuGt20JpTVM7u5BDZngncgrqDMbWdxMWWOGtZ9UgbqgZE=
-    bitbucket.org ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIazEu89wgQZ4bqs3d63QSMzYVa0MuJ2e2gKTKqu+UUO
-    bitbucket.org ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDQeJzhupRu0u0cdegZIa8e86EG2qOCsIsD1Xw0xSeiPDlCr7kq97NLmMbpKTX6Esc30NuoqEEHCuc7yWtwp8dI76EEEB1VqY9QJq6vk+aySyboD5QF61I/1WeTwu+deCbgKMGbUijeXhtfbxSxm6JwGrXrhBdofTsbKRUsrN1WoNgUa8uqN1Vx6WAJw1JHPhglEGGHea6QICwJOAr/6mrui/oB7pkaWKHj3z7d1IC4KWLtY47elvjbaTlkN04Kc/5LFEirorGYVbt15kAUlqGM65pk6ZBxtaO3+30LVlORZkxOh+LKL/BvbZ/iRNhItLqNyieoQj/uh/7Iv4uyH/cV/0b4WDSd3DptigWq84lJubb9t/DnZlrJazxyDCulTmKdOR7vs9gMTo+uoIrPSb8ScTtvw65+odKAlBj59dhnVp9zd7QUojOpXlL62Aw56U4oO+FALuevvMjiWeavKhJqlR7i5n9srYcrNV7ttmDw7kf/97P5zauIhxcjX+xHv4M=
-    github.com ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBEmKSENjQEezOmxkZMy7opKgwFB9nkt5YRrYMjNuG5N87uRgg6CLrbo5wAdT/y6v0mKV0U2w0WZ2YB/++Tpockg=
-    github.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOMqqnkVzrm0SdG6UOoqKLsabgH5C9okWi0dh2l9GKJl
-    github.com ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCj7ndNxQowgcQnjshcLrqPEiiphnt+VTTvDP6mHBL9j1aNUkY4Ue1gvwnGLVlOhGeYrnZaMgRK6+PKCUXaDbC7qtbW8gIkhL7aGCsOr/C56SJMy/BCZfxd1nWzAOxSDPgVsmerOBYfNqltV9/hWCqBywINIR+5dIg6JTJ72pcEpEjcYgXkE2YEFXV1JHnsKgbLWNlhScqb2UmyRkQyytRLtL+38TGxkxCflmO+5Z8CSSNY7GidjMIZ7Q4zMjA2n1nGrlTDkzwDCsw+wqFPGQA179cnfGWOWRVruj16z6XyvxvjJwbz0wQZ75XK5tKSb7FNyeIEs4TT4jk+S4dhPeAUC5y+bDYirYgM4GC7uEnztnZyaVWQ7B381AK4Qdrwt51ZqExKbQpTUNn+EjqoTwvqNj4kqx5QUCI0ThS/YkOxJCXmPUWZbhjpCg56i+2aB6CmK2JGhn57K5mj0MNdBXA4/WnwH6XoPWJzK5Nyu2zB3nAZp+S5hpQs+p1vN1/wsjk=
-    gitlab.com ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBFSMqzJeV9rUzU4kWitGjeR4PWSa29SPqJ1fVkhtj3Hw9xjLVXVYrU9QlYWrOLXBpQ6KWjbjTDTdDkoohFzgbEY=
-    gitlab.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAfuCHKVTjquxvt6CM6tdG4SLp1Btn/nOeHHE5UOzRdf
-    gitlab.com ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCsj2bNKTBSpIYDEGk9KxsGh3mySTRgMtXL583qmBpzeQ+jqCMRgBqB98u3z++J1sKlXHWfM9dyhSevkMwSbhoR8XIq/U0tCNyokEi/ueaBMCvbcTHhO7FcwzY92WK4Yt0aGROY5qX2UKSeOvuP4D6TPqKF1onrSzH9bx9XUf2lEdWT/ia1NEKjunUqu1xOB/StKDHMoX4/OKyIzuS0q/T1zOATthvasJFoPrAjkohTyaDUz2LN5JoH839hViyEG82yB+MjcFV5MU3N1l1QL3cVUCh93xSaua1N85qivl+siMkPGbO5xR/En4iEY6K2XPASUEMaieWVNTRCtJ4S8H+9
-    ssh.dev.azure.com ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC7Hr1oTWqNqOlzGJOfGJ4NakVyIzf1rXYd4d7wo6jBlkLvCA4odBlL0mDUyZ0/QUfTTqeu+tm22gOsv+VrVTMk6vwRU75gY/y9ut5Mb3bR5BV58dKXyq9A9UeB5Cakehn5Zgm6x1mKoVyf+FFn26iYqXJRgzIZZcZ5V6hrE0Qg39kZm4az48o0AUbf6Sp4SLdvnuMa2sVNwHBboS7EJkm57XQPVU3/QpyNLHbWDdzwtrlS+ez30S3AdYhLKEOxAG8weOnyrtLJAUen9mTkol8oII1edf7mWWbWVf0nBmly21+nZcmCTISQBtdcyPaEno7fFQMDD26/s0lfKob4Kw8H
-    vs-ssh.visualstudio.com ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC7Hr1oTWqNqOlzGJOfGJ4NakVyIzf1rXYd4d7wo6jBlkLvCA4odBlL0mDUyZ0/QUfTTqeu+tm22gOsv+VrVTMk6vwRU75gY/y9ut5Mb3bR5BV58dKXyq9A9UeB5Cakehn5Zgm6x1mKoVyf+FFn26iYqXJRgzIZZcZ5V6hrE0Qg39kZm4az48o0AUbf6Sp4SLdvnuMa2sVNwHBboS7EJkm57XQPVU3/QpyNLHbWDdzwtrlS+ez30S3AdYhLKEOxAG8weOnyrtLJAUen9mTkol8oII1edf7mWWbWVf0nBmly21+nZcmCTISQBtdcyPaEno7fFQMDD26/s0lfKob4Kw8H
-kind: ConfigMap
-metadata:
-  labels:
-    app.kubernetes.io/instance: argo-cd
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: argocd-ssh-known-hosts-cm
-    app.kubernetes.io/part-of: argocd
-    app.kubernetes.io/version: v3.1.9
-    helm.sh/chart: argo-cd-9.0.5
-  name: argocd-ssh-known-hosts-cm
-  namespace: argocd
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  labels:
-    app.kubernetes.io/instance: argo-cd
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: argocd-tls-certs-cm
-    app.kubernetes.io/part-of: argocd
-    app.kubernetes.io/version: v3.1.9
-    helm.sh/chart: argo-cd-9.0.5
-  name: argocd-tls-certs-cm
-  namespace: argocd
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  labels:
-    name: argocd
-    pod-security.kubernetes.io/enforce: baseline
-    pod-security.kubernetes.io/warn: restricted
-  name: argocd
----
-apiVersion: v1
-kind: Secret
-metadata:
-  labels:
-    app.kubernetes.io/component: server
-    app.kubernetes.io/instance: argo-cd
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: argocd-secret
-    app.kubernetes.io/part-of: argocd
-    app.kubernetes.io/version: v3.1.9
-    helm.sh/chart: argo-cd-9.0.5
-  name: argocd-secret
-  namespace: argocd
-type: Opaque
----
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
-    app.kubernetes.io/component: applicationset-controller
-    app.kubernetes.io/instance: argo-cd
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: argocd-applicationset-controller
-    app.kubernetes.io/part-of: argocd
-    app.kubernetes.io/version: v3.1.9
-    helm.sh/chart: argo-cd-9.0.5
-  name: argo-cd-argocd-applicationset-controller
-  namespace: argocd
-spec:
-  ports:
-  - name: http-webhook
-    port: 7000
-    targetPort: webhook
-  selector:
-    app.kubernetes.io/instance: argo-cd
-    app.kubernetes.io/name: argocd-applicationset-controller
-  type: ClusterIP
----
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
-    app.kubernetes.io/component: redis
-    app.kubernetes.io/instance: argo-cd
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: argocd-redis
-    app.kubernetes.io/part-of: argocd
-    app.kubernetes.io/version: v3.1.9
-    helm.sh/chart: argo-cd-9.0.5
-  name: argo-cd-argocd-redis
-  namespace: argocd
-spec:
-  ports:
-  - name: redis
-    port: 6379
-    targetPort: redis
-  selector:
-    app.kubernetes.io/instance: argo-cd
-    app.kubernetes.io/name: argocd-redis
----
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
-    app.kubernetes.io/component: repo-server
-    app.kubernetes.io/instance: argo-cd
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: argocd-repo-server
-    app.kubernetes.io/part-of: argocd
-    app.kubernetes.io/version: v3.1.9
-    helm.sh/chart: argo-cd-9.0.5
-  name: argo-cd-argocd-repo-server
-  namespace: argocd
-spec:
-  ports:
-  - name: tcp-repo-server
-    port: 8081
-    protocol: TCP
-    targetPort: repo-server
-  selector:
-    app.kubernetes.io/instance: argo-cd
-    app.kubernetes.io/name: argocd-repo-server
----
-apiVersion: v1
-kind: Service
-metadata:
-  annotations:
-    omni-kube-service-exposer.sidero.dev/icon: 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
-    omni-kube-service-exposer.sidero.dev/label: Argo Dashboard
-    omni-kube-service-exposer.sidero.dev/port: "50081"
-    omni-kube-service-exposer.sidero.dev/prefix: argocd
-  labels:
-    app.kubernetes.io/component: server
-    app.kubernetes.io/instance: argo-cd
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: argocd-server
-    app.kubernetes.io/part-of: argocd
-    app.kubernetes.io/version: v3.1.9
-    helm.sh/chart: argo-cd-9.0.5
-  name: argo-cd-argocd-server
-  namespace: argocd
-spec:
-  ports:
-  - name: http
-    port: 80
-    protocol: TCP
-    targetPort: 8080
-  - name: https
-    port: 443
-    protocol: TCP
-    targetPort: 8080
-  selector:
-    app.kubernetes.io/instance: argo-cd
-    app.kubernetes.io/name: argocd-server
-  sessionAffinity: None
-  type: ClusterIP
----
-apiVersion: v1
-automountServiceAccountToken: true
-kind: ServiceAccount
-metadata:
-  labels:
-    app.kubernetes.io/component: application-controller
-    app.kubernetes.io/instance: argo-cd
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: argocd-application-controller
-    app.kubernetes.io/part-of: argocd
-    app.kubernetes.io/version: v3.1.9
-    helm.sh/chart: argo-cd-9.0.5
-  name: argocd-application-controller
-  namespace: argocd
----
-apiVersion: v1
-automountServiceAccountToken: true
-kind: ServiceAccount
-metadata:
-  labels:
-    app.kubernetes.io/component: applicationset-controller
-    app.kubernetes.io/instance: argo-cd
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: argocd-applicationset-controller
-    app.kubernetes.io/part-of: argocd
-    app.kubernetes.io/version: v3.1.9
-    helm.sh/chart: argo-cd-9.0.5
-  name: argocd-applicationset-controller
-  namespace: argocd
----
-apiVersion: v1
-automountServiceAccountToken: true
-kind: ServiceAccount
-metadata:
-  annotations:
-    helm.sh/hook: pre-install,pre-upgrade
-    helm.sh/hook-delete-policy: before-hook-creation
-  labels:
-    app.kubernetes.io/component: redis-secret-init
-    app.kubernetes.io/instance: argo-cd
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: argocd-redis-secret-init
-    app.kubernetes.io/part-of: argocd
-    app.kubernetes.io/version: v3.1.9
-    helm.sh/chart: argo-cd-9.0.5
-  name: argo-cd-argocd-redis-secret-init
-  namespace: argocd
----
-apiVersion: v1
-automountServiceAccountToken: true
-kind: ServiceAccount
-metadata:
-  labels:
-    app.kubernetes.io/component: repo-server
-    app.kubernetes.io/instance: argo-cd
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: argocd-repo-server
-    app.kubernetes.io/part-of: argocd
-    app.kubernetes.io/version: v3.1.9
-    helm.sh/chart: argo-cd-9.0.5
-  name: argo-cd-argocd-repo-server
-  namespace: argocd
----
-apiVersion: v1
-automountServiceAccountToken: true
-kind: ServiceAccount
-metadata:
-  labels:
-    app.kubernetes.io/component: server
-    app.kubernetes.io/instance: argo-cd
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: argocd-server
-    app.kubernetes.io/part-of: argocd
-    app.kubernetes.io/version: v3.1.9
-    helm.sh/chart: argo-cd-9.0.5
-  name: argocd-server
-  namespace: argocd

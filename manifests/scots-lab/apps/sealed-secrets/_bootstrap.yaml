@@ -1,3 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: sealed-secrets
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
@@ -168,6 +172,237 @@ spec:
     subresources:
       status: {}
 ---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    app.kubernetes.io/instance: sealed-secrets
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: sealed-secrets
+    app.kubernetes.io/part-of: sealed-secrets
+    app.kubernetes.io/version: 0.27.1
+    helm.sh/chart: sealed-secrets-2.16.1
+  name: sealed-secrets-controller
+  namespace: sealed-secrets
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  labels:
+    app.kubernetes.io/instance: sealed-secrets
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: sealed-secrets
+    app.kubernetes.io/part-of: sealed-secrets
+    app.kubernetes.io/version: 0.27.1
+    helm.sh/chart: sealed-secrets-2.16.1
+  name: sealed-secrets-controller-key-admin
+  namespace: sealed-secrets
+rules:
+- apiGroups:
+  - ""
+  resourceNames:
+  - sealed-secrets-key
+  resources:
+  - secrets
+  verbs:
+  - get
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - create
+  - list
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  labels:
+    app.kubernetes.io/instance: sealed-secrets
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: sealed-secrets
+    app.kubernetes.io/part-of: sealed-secrets
+    app.kubernetes.io/version: 0.27.1
+    helm.sh/chart: sealed-secrets-2.16.1
+  name: sealed-secrets-controller-service-proxier
+  namespace: sealed-secrets
+rules:
+- apiGroups:
+  - ""
+  resourceNames:
+  - sealed-secrets-controller
+  resources:
+  - services
+  verbs:
+  - get
+- apiGroups:
+  - ""
+  resourceNames:
+  - 'http:sealed-secrets-controller:'
+  - http:sealed-secrets-controller:http
+  - sealed-secrets-controller
+  resources:
+  - services/proxy
+  verbs:
+  - create
+  - get
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/instance: sealed-secrets
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: sealed-secrets
+    app.kubernetes.io/part-of: sealed-secrets
+    app.kubernetes.io/version: 0.27.1
+    helm.sh/chart: sealed-secrets-2.16.1
+  name: secrets-unsealer
+rules:
+- apiGroups:
+  - bitnami.com
+  resources:
+  - sealedsecrets
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - bitnami.com
+  resources:
+  - sealedsecrets/status
+  verbs:
+  - update
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - get
+  - list
+  - create
+  - update
+  - delete
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
+  - patch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  labels:
+    app.kubernetes.io/instance: sealed-secrets
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: sealed-secrets
+    app.kubernetes.io/part-of: sealed-secrets
+    app.kubernetes.io/version: 0.27.1
+    helm.sh/chart: sealed-secrets-2.16.1
+  name: sealed-secrets-controller-key-admin
+  namespace: sealed-secrets
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: sealed-secrets-controller-key-admin
+subjects:
+- apiGroup: ""
+  kind: ServiceAccount
+  name: sealed-secrets-controller
+  namespace: sealed-secrets
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  labels:
+    app.kubernetes.io/instance: sealed-secrets
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: sealed-secrets
+    app.kubernetes.io/part-of: sealed-secrets
+    app.kubernetes.io/version: 0.27.1
+    helm.sh/chart: sealed-secrets-2.16.1
+  name: sealed-secrets-controller-service-proxier
+  namespace: sealed-secrets
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: sealed-secrets-controller-service-proxier
+subjects:
+- apiGroup: rbac.authorization.k8s.io
+  kind: Group
+  name: system:authenticated
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  labels:
+    app.kubernetes.io/instance: sealed-secrets
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: sealed-secrets
+    app.kubernetes.io/part-of: sealed-secrets
+    app.kubernetes.io/version: 0.27.1
+    helm.sh/chart: sealed-secrets-2.16.1
+  name: sealed-secrets-controller
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: secrets-unsealer
+subjects:
+- apiGroup: ""
+  kind: ServiceAccount
+  name: sealed-secrets-controller
+  namespace: sealed-secrets
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/instance: sealed-secrets
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: sealed-secrets
+    app.kubernetes.io/part-of: sealed-secrets
+    app.kubernetes.io/version: 0.27.1
+    helm.sh/chart: sealed-secrets-2.16.1
+  name: sealed-secrets-controller
+  namespace: sealed-secrets
+spec:
+  ports:
+  - name: http
+    nodePort: null
+    port: 8080
+    targetPort: http
+  selector:
+    app.kubernetes.io/instance: sealed-secrets
+    app.kubernetes.io/name: sealed-secrets
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/component: metrics
+    app.kubernetes.io/instance: sealed-secrets
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: sealed-secrets
+    app.kubernetes.io/part-of: sealed-secrets
+    app.kubernetes.io/version: 0.27.1
+    helm.sh/chart: sealed-secrets-2.16.1
+  name: sealed-secrets-controller-metrics
+  namespace: sealed-secrets
+spec:
+  ports:
+  - name: metrics
+    nodePort: null
+    port: 8081
+    targetPort: metrics
+  selector:
+    app.kubernetes.io/instance: sealed-secrets
+    app.kubernetes.io/name: sealed-secrets
+  type: ClusterIP
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -245,239 +480,3 @@ spec:
       volumes:
       - emptyDir: {}
         name: tmp
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  labels:
-    app.kubernetes.io/instance: sealed-secrets
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: sealed-secrets
-    app.kubernetes.io/part-of: sealed-secrets
-    app.kubernetes.io/version: 0.27.1
-    helm.sh/chart: sealed-secrets-2.16.1
-  name: secrets-unsealer
-rules:
-- apiGroups:
-  - bitnami.com
-  resources:
-  - sealedsecrets
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - bitnami.com
-  resources:
-  - sealedsecrets/status
-  verbs:
-  - update
-- apiGroups:
-  - ""
-  resources:
-  - secrets
-  verbs:
-  - get
-  - list
-  - create
-  - update
-  - delete
-  - watch
-- apiGroups:
-  - ""
-  resources:
-  - events
-  verbs:
-  - create
-  - patch
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  labels:
-    app.kubernetes.io/instance: sealed-secrets
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: sealed-secrets
-    app.kubernetes.io/part-of: sealed-secrets
-    app.kubernetes.io/version: 0.27.1
-    helm.sh/chart: sealed-secrets-2.16.1
-  name: sealed-secrets-controller
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: secrets-unsealer
-subjects:
-- apiGroup: ""
-  kind: ServiceAccount
-  name: sealed-secrets-controller
-  namespace: sealed-secrets
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: Role
-metadata:
-  labels:
-    app.kubernetes.io/instance: sealed-secrets
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: sealed-secrets
-    app.kubernetes.io/part-of: sealed-secrets
-    app.kubernetes.io/version: 0.27.1
-    helm.sh/chart: sealed-secrets-2.16.1
-  name: sealed-secrets-controller-key-admin
-  namespace: sealed-secrets
-rules:
-- apiGroups:
-  - ""
-  resourceNames:
-  - sealed-secrets-key
-  resources:
-  - secrets
-  verbs:
-  - get
-- apiGroups:
-  - ""
-  resources:
-  - secrets
-  verbs:
-  - create
-  - list
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: Role
-metadata:
-  labels:
-    app.kubernetes.io/instance: sealed-secrets
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: sealed-secrets
-    app.kubernetes.io/part-of: sealed-secrets
-    app.kubernetes.io/version: 0.27.1
-    helm.sh/chart: sealed-secrets-2.16.1
-  name: sealed-secrets-controller-service-proxier
-  namespace: sealed-secrets
-rules:
-- apiGroups:
-  - ""
-  resourceNames:
-  - sealed-secrets-controller
-  resources:
-  - services
-  verbs:
-  - get
-- apiGroups:
-  - ""
-  resourceNames:
-  - 'http:sealed-secrets-controller:'
-  - http:sealed-secrets-controller:http
-  - sealed-secrets-controller
-  resources:
-  - services/proxy
-  verbs:
-  - create
-  - get
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
-metadata:
-  labels:
-    app.kubernetes.io/instance: sealed-secrets
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: sealed-secrets
-    app.kubernetes.io/part-of: sealed-secrets
-    app.kubernetes.io/version: 0.27.1
-    helm.sh/chart: sealed-secrets-2.16.1
-  name: sealed-secrets-controller-key-admin
-  namespace: sealed-secrets
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: Role
-  name: sealed-secrets-controller-key-admin
-subjects:
-- apiGroup: ""
-  kind: ServiceAccount
-  name: sealed-secrets-controller
-  namespace: sealed-secrets
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
-metadata:
-  labels:
-    app.kubernetes.io/instance: sealed-secrets
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: sealed-secrets
-    app.kubernetes.io/part-of: sealed-secrets
-    app.kubernetes.io/version: 0.27.1
-    helm.sh/chart: sealed-secrets-2.16.1
-  name: sealed-secrets-controller-service-proxier
-  namespace: sealed-secrets
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: Role
-  name: sealed-secrets-controller-service-proxier
-subjects:
-- apiGroup: rbac.authorization.k8s.io
-  kind: Group
-  name: system:authenticated
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: sealed-secrets
----
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
-    app.kubernetes.io/instance: sealed-secrets
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: sealed-secrets
-    app.kubernetes.io/part-of: sealed-secrets
-    app.kubernetes.io/version: 0.27.1
-    helm.sh/chart: sealed-secrets-2.16.1
-  name: sealed-secrets-controller
-  namespace: sealed-secrets
-spec:
-  ports:
-  - name: http
-    nodePort: null
-    port: 8080
-    targetPort: http
-  selector:
-    app.kubernetes.io/instance: sealed-secrets
-    app.kubernetes.io/name: sealed-secrets
-  type: ClusterIP
----
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
-    app.kubernetes.io/component: metrics
-    app.kubernetes.io/instance: sealed-secrets
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: sealed-secrets
-    app.kubernetes.io/part-of: sealed-secrets
-    app.kubernetes.io/version: 0.27.1
-    helm.sh/chart: sealed-secrets-2.16.1
-  name: sealed-secrets-controller-metrics
-  namespace: sealed-secrets
-spec:
-  ports:
-  - name: metrics
-    nodePort: null
-    port: 8081
-    targetPort: metrics
-  selector:
-    app.kubernetes.io/instance: sealed-secrets
-    app.kubernetes.io/name: sealed-secrets
-  type: ClusterIP
----
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  labels:
-    app.kubernetes.io/instance: sealed-secrets
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: sealed-secrets
-    app.kubernetes.io/part-of: sealed-secrets
-    app.kubernetes.io/version: 0.27.1
-    helm.sh/chart: sealed-secrets-2.16.1
-  name: sealed-secrets-controller
-  namespace: sealed-secrets
