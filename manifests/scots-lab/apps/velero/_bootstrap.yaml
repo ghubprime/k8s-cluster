@@ -3385,7 +3385,7 @@ spec:
   config:
     region: auto
     s3ForcePathStyle: "true"
-    s3Url: https://a51575eff9b7355d3dbdb591d77e6629.r2.cloudflarestorage.com
+    s3Url: https://aab050132afef4697a7615977f90aa61.r2.cloudflarestorage.com
   objectStorage:
     bucket: homelab-velero-backups
   provider: aws
