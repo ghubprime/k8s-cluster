@@ -51,19 +51,9 @@ while read RESOURCE; do
     # create output directory if it does not exist
     mkdir -p "$MANIFESTS_DST"
 
-    # build new manifests
-    kustomize build "$RESOURCE" --load-restrictor LoadRestrictionsNone --enable-helm --enable-alpha-plugins --enable-exec -o "$MANIFESTS_DST"
-
-    # Concatenate all manifests into a single bootstrap file for Talos extraManifests
+    # build new manifests directly into a single multi-document file to avoid OS filename constraints (like NTFS colons)
     BOOTSTRAP_SINGLE="${MANIFESTS_DST}/_bootstrap.yaml"
-    > "$BOOTSTRAP_SINGLE"
-    for f in "$MANIFESTS_DST"/*.yaml; do
-      [ "$(basename "$f")" = "_bootstrap.yaml" ] && continue
-      if [ -f "$f" ]; then
-        echo "---" >> "$BOOTSTRAP_SINGLE"
-        cat "$f" >> "$BOOTSTRAP_SINGLE"
-      fi
-    done
+    kustomize build "$RESOURCE" --load-restrictor LoadRestrictionsNone --enable-helm --enable-alpha-plugins --enable-exec > "$BOOTSTRAP_SINGLE"
 
     # Generate the Talos bootstrap extramanifests index (single URL per app)
     APP_BASENAME=$(basename "$APP")

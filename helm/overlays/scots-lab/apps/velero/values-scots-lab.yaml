@@ -1,0 +1,24 @@
+﻿initContainers:
+  - name: velero-plugin-for-aws
+    image: velero/velero-plugin-for-aws:v1.10.0
+    volumeMounts:
+      - mountPath: /target
+        name: plugins
+  - name: velero-plugin-for-csi
+    image: velero/velero-plugin-for-csi:v0.7.1
+    volumeMounts:
+      - mountPath: /target
+        name: plugins
+configuration:
+  features: EnableCSI
+  backupStorageLocation:
+    - name: default
+      provider: aws
+      bucket: homelab-velero-backups
+      config:
+        region: auto
+        s3ForcePathStyle: "true"
+        s3Url: https://a51575eff9b7355d3dbdb591d77e6629.r2.cloudflarestorage.com
+credentials:
+  useSecret: true
+  existingSecret: velero-cloudflare-credentials

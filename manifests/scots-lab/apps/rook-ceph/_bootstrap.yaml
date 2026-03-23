@@ -46972,15 +46972,19 @@ metadata:
     app.kubernetes.io/name: ceph-csi
     app.kubernetes.io/version: v0.5.0
     helm.sh/chart: ceph-csi-operator-0.5.0
-  name: ceph-csi-cephconnection-viewer-role
+  name: ceph-csi-cephconnections-editor-role
 rules:
 - apiGroups:
   - csi.ceph.io
   resources:
   - cephconnections
   verbs:
+  - create
+  - delete
   - get
   - list
+  - patch
+  - update
   - watch
 - apiGroups:
   - csi.ceph.io
@@ -46998,19 +47002,15 @@ metadata:
     app.kubernetes.io/name: ceph-csi
     app.kubernetes.io/version: v0.5.0
     helm.sh/chart: ceph-csi-operator-0.5.0
-  name: ceph-csi-cephconnections-editor-role
+  name: ceph-csi-cephconnection-viewer-role
 rules:
 - apiGroups:
   - csi.ceph.io
   resources:
   - cephconnections
   verbs:
-  - create
-  - delete
   - get
   - list
-  - patch
-  - update
   - watch
 - apiGroups:
   - csi.ceph.io
@@ -47306,32 +47306,6 @@ metadata:
     app.kubernetes.io/name: ceph-csi
     app.kubernetes.io/version: v0.5.0
     helm.sh/chart: ceph-csi-operator-0.5.0
-  name: ceph-csi-clientprofile-viewer-role
-rules:
-- apiGroups:
-  - csi.ceph.io
-  resources:
-  - clientprofiles
-  verbs:
-  - get
-  - list
-  - watch
-- apiGroups:
-  - csi.ceph.io
-  resources:
-  - clientprofiles/status
-  verbs:
-  - get
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  labels:
-    app.kubernetes.io/instance: rook-ceph
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: ceph-csi
-    app.kubernetes.io/version: v0.5.0
-    helm.sh/chart: ceph-csi-operator-0.5.0
   name: ceph-csi-clientprofilemapping-editor-role
 rules:
 - apiGroups:
@@ -47401,6 +47375,32 @@ rules:
   - list
   - patch
   - update
+  - watch
+- apiGroups:
+  - csi.ceph.io
+  resources:
+  - clientprofiles/status
+  verbs:
+  - get
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/instance: rook-ceph
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: ceph-csi
+    app.kubernetes.io/version: v0.5.0
+    helm.sh/chart: ceph-csi-operator-0.5.0
+  name: ceph-csi-clientprofile-viewer-role
+rules:
+- apiGroups:
+  - csi.ceph.io
+  resources:
+  - clientprofiles
+  verbs:
+  - get
+  - list
   - watch
 - apiGroups:
   - csi.ceph.io
@@ -50030,32 +50030,6 @@ metadata:
     helm.sh/chart: rook-ceph-v1.19.2
     operator: rook
     storage-backend: ceph
-  name: rook-ceph-monitoring-mgr
-  namespace: rook-ceph
-rules:
-- apiGroups:
-  - monitoring.coreos.com
-  resources:
-  - servicemonitors
-  verbs:
-  - get
-  - list
-  - create
-  - update
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: Role
-metadata:
-  labels:
-    app.kubernetes.io/created-by: helm
-    app.kubernetes.io/instance: rook-ceph
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: rook-ceph
-    app.kubernetes.io/part-of: rook-ceph-operator
-    app.kubernetes.io/version: v1.19.2
-    helm.sh/chart: rook-ceph-v1.19.2
-    operator: rook
-    storage-backend: ceph
   name: rook-ceph-monitoring
   namespace: rook-ceph
 rules:
@@ -50070,6 +50044,32 @@ rules:
   - create
   - update
   - delete
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  labels:
+    app.kubernetes.io/created-by: helm
+    app.kubernetes.io/instance: rook-ceph
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: rook-ceph
+    app.kubernetes.io/part-of: rook-ceph-operator
+    app.kubernetes.io/version: v1.19.2
+    helm.sh/chart: rook-ceph-v1.19.2
+    operator: rook
+    storage-backend: ceph
+  name: rook-ceph-monitoring-mgr
+  namespace: rook-ceph
+rules:
+- apiGroups:
+  - monitoring.coreos.com
+  resources:
+  - servicemonitors
+  verbs:
+  - get
+  - list
+  - create
+  - update
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
@@ -50441,60 +50441,36 @@ metadata:
     helm.sh/chart: rook-ceph-v1.19.2
     operator: rook
     storage-backend: ceph
+  name: rook-ceph-mgr
+  namespace: rook-ceph
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: rook-ceph-mgr
+subjects:
+- kind: ServiceAccount
+  name: rook-ceph-mgr
+  namespace: rook-ceph
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  labels:
+    app.kubernetes.io/created-by: helm
+    app.kubernetes.io/instance: rook-ceph
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: rook-ceph
+    app.kubernetes.io/part-of: rook-ceph-operator
+    app.kubernetes.io/version: v1.19.2
+    helm.sh/chart: rook-ceph-v1.19.2
+    operator: rook
+    storage-backend: ceph
   name: rook-ceph-mgr-system
   namespace: rook-ceph
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
   name: rook-ceph-mgr-system
-subjects:
-- kind: ServiceAccount
-  name: rook-ceph-mgr
-  namespace: rook-ceph
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
-metadata:
-  labels:
-    app.kubernetes.io/created-by: helm
-    app.kubernetes.io/instance: rook-ceph
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: rook-ceph
-    app.kubernetes.io/part-of: rook-ceph-operator
-    app.kubernetes.io/version: v1.19.2
-    helm.sh/chart: rook-ceph-v1.19.2
-    operator: rook
-    storage-backend: ceph
-  name: rook-ceph-mgr
-  namespace: rook-ceph
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: Role
-  name: rook-ceph-mgr
-subjects:
-- kind: ServiceAccount
-  name: rook-ceph-mgr
-  namespace: rook-ceph
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
-metadata:
-  labels:
-    app.kubernetes.io/created-by: helm
-    app.kubernetes.io/instance: rook-ceph
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: rook-ceph
-    app.kubernetes.io/part-of: rook-ceph-operator
-    app.kubernetes.io/version: v1.19.2
-    helm.sh/chart: rook-ceph-v1.19.2
-    operator: rook
-    storage-backend: ceph
-  name: rook-ceph-monitoring-mgr
-  namespace: rook-ceph
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: Role
-  name: rook-ceph-monitoring-mgr
 subjects:
 - kind: ServiceAccount
   name: rook-ceph-mgr
@@ -50522,6 +50498,30 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: rook-ceph-system
+  namespace: rook-ceph
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  labels:
+    app.kubernetes.io/created-by: helm
+    app.kubernetes.io/instance: rook-ceph
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: rook-ceph
+    app.kubernetes.io/part-of: rook-ceph-operator
+    app.kubernetes.io/version: v1.19.2
+    helm.sh/chart: rook-ceph-v1.19.2
+    operator: rook
+    storage-backend: ceph
+  name: rook-ceph-monitoring-mgr
+  namespace: rook-ceph
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: rook-ceph-monitoring-mgr
+subjects:
+- kind: ServiceAccount
+  name: rook-ceph-mgr
   namespace: rook-ceph
 ---
 apiVersion: rbac.authorization.k8s.io/v1
