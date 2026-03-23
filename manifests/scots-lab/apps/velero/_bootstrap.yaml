@@ -3459,7 +3459,7 @@ spec:
         - cp `which sh` /tmp && cp `which kubectl` /tmp
         command:
         - /bin/sh
-        image: registry.k8s.io/kubectl:v1.35.2
+        image: alpine/k8s:1.35.2
         imagePullPolicy: IfNotPresent
         name: kubectl
         volumeMounts:
