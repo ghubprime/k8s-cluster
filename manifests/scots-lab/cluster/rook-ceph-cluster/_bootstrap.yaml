@@ -584,21 +584,10 @@ metadata:
   name: cluster-net
   namespace: rook-ceph
 spec:
-  config: |-
-    {
-      "cniVersion": "0.3.1",
-      "name": "cluster-net",
-      "type": "bridge",
-      "bridge": "br-ext",
-      "vlan": 3100,
-      "ipam": {
-        "type": "whereabouts",
-        "range": "10.20.0.0/16",
-        "exclude": [
-          "10.20.0.0/24"
-        ]
-      }
-    }
+  config: "{\n  \"cniVersion\": \"0.3.1\",\n  \"name\": \"cluster-net\",\n  \"type\":
+    \"bridge\",\n  \"bridge\": \"br-ext\",\n  \n  \"ipam\": {\n    \"type\": \"whereabouts\",\n
+    \   \"range\": \"10.20.0.0/16\",\n    \"exclude\": [\n      \"10.20.0.0/24\"\n
+    \   ]\n  }\n}"
 ---
 apiVersion: k8s.cni.cncf.io/v1
 kind: NetworkAttachmentDefinition
@@ -606,22 +595,10 @@ metadata:
   name: public-net
   namespace: rook-ceph
 spec:
-  config: |-
-    {
-      "cniVersion": "0.3.1",
-      "name": "public-net",
-      "type": "bridge",
-      "bridge": "br-ext",
-      "vlan": 3000,
-      "ipam": {
-        "type": "whereabouts",
-        "range": "10.10.0.0/16",
-        "exclude": [
-          "10.10.0.0/24"
-        ],
-        "gateway": "10.10.255.254"
-      }
-    }
+  config: "{\n  \"cniVersion\": \"0.3.1\",\n  \"name\": \"public-net\",\n  \"type\":
+    \"bridge\",\n  \"bridge\": \"br-ext\",\n  \n  \"ipam\": {\n    \"type\": \"whereabouts\",\n
+    \   \"range\": \"10.10.0.0/16\",\n    \"exclude\": [\n      \"10.10.0.0/24\"\n
+    \   ],\n    \"gateway\": \"10.10.255.254\"\n  }\n}"
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: Prometheus

@@ -70,8 +70,8 @@ metadata:
 ---
 apiVersion: v1
 data:
-  password: ZGJVeUNOQnRURA==
-  postgres-password: Y25wWEhTbmFNQw==
+  password: VGc4cWdFTGNOOQ==
+  postgres-password: QUN0NkdCQTNsWg==
 kind: Secret
 metadata:
   labels:
