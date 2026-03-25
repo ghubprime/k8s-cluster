@@ -47,11 +47,7 @@ cephClusterSpec:
     port: 7000
     ssl: false
   network:
-    connections:
-    provider: multus
-    selectors:
-      public: public-net
-      cluster: cluster-net
+    hostNetwork: true
   annotations:
     dashboard:
       omni-kube-service-exposer.sidero.dev/label: Ceph Dashboard
