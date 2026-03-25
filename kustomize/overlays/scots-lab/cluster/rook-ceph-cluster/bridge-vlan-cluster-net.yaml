@@ -10,7 +10,7 @@ spec:
       "name": "cluster-net",
       "type": "bridge",
       "bridge": "br-ext",
-      "vlan": 3100,
+      
       "ipam": {
         "type": "whereabouts",
         "range": "10.20.0.0/16",
