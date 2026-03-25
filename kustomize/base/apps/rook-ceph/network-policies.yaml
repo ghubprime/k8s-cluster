@@ -19,3 +19,21 @@ spec:
       ports:
         - port: 9283
           protocol: TCP
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: rook-ceph-allow-dashboard
+  namespace: rook-ceph
+spec:
+  podSelector:
+    matchLabels:
+      app: rook-ceph-mgr
+  policyTypes:
+    - Ingress
+  ingress:
+    - ports:
+        - port: 7000
+          protocol: TCP
+        - port: 8443
+          protocol: TCP
