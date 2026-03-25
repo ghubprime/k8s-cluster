@@ -51102,6 +51102,24 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
+  name: rook-ceph-allow-dashboard
+  namespace: rook-ceph
+spec:
+  ingress:
+  - ports:
+    - port: 7000
+      protocol: TCP
+    - port: 8443
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: rook-ceph-mgr
+  policyTypes:
+  - Ingress
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
   name: rook-ceph-deny-external-ingress
   namespace: rook-ceph
 spec:
