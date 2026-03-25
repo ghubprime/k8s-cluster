@@ -585,9 +585,9 @@ metadata:
   namespace: rook-ceph
 spec:
   config: "{\n  \"cniVersion\": \"0.3.1\",\n  \"name\": \"cluster-net\",\n  \"type\":
-    \"macvlan\",\n  \"master\": \"enp2s0\",\n  \"mode\": \"bridge\",\n  \n  \"ipam\":
-    {\n    \"type\": \"whereabouts\",\n    \"range\": \"10.20.0.0/16\",\n    \"exclude\":
-    [\n      \"10.20.0.0/24\"\n    ]\n  }\n}"
+    \"bridge\",\n  \"bridge\": \"br-ext\",\n  \n  \"ipam\": {\n    \"type\": \"whereabouts\",\n
+    \   \"range\": \"10.20.0.0/16\",\n    \"exclude\": [\n      \"10.20.0.0/24\"\n
+    \   ]\n  }\n}"
 ---
 apiVersion: k8s.cni.cncf.io/v1
 kind: NetworkAttachmentDefinition
@@ -596,9 +596,9 @@ metadata:
   namespace: rook-ceph
 spec:
   config: "{\n  \"cniVersion\": \"0.3.1\",\n  \"name\": \"public-net\",\n  \"type\":
-    \"macvlan\",\n  \"master\": \"enp2s0\",\n  \"mode\": \"bridge\",\n  \n  \"ipam\":
-    {\n    \"type\": \"whereabouts\",\n    \"range\": \"10.10.0.0/16\",\n    \"exclude\":
-    [\n      \"10.10.0.0/24\"\n    ],\n    \"gateway\": \"10.10.255.254\"\n  }\n}"
+    \"bridge\",\n  \"bridge\": \"br-ext\",\n  \n  \"ipam\": {\n    \"type\": \"whereabouts\",\n
+    \   \"range\": \"10.10.0.0/16\",\n    \"exclude\": [\n      \"10.10.0.0/24\"\n
+    \   ],\n    \"gateway\": \"10.10.255.254\"\n  }\n}"
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: Prometheus
