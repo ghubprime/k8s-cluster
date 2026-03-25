@@ -431,10 +431,13 @@ spec:
   monitoring:
     enabled: true
   network:
-    provider: multus
-    selectors:
-      cluster: cluster-net
-      public: public-net
+    connections:
+      compression:
+        enabled: false
+      encryption:
+        enabled: false
+      requireMsgr2: false
+    hostNetwork: true
   priorityClassNames:
     mgr: system-node-critical
     mon: system-node-critical
