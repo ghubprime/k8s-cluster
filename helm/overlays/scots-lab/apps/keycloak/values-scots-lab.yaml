@@ -24,7 +24,7 @@ http:
 # Proxy mode for behind reverse-proxy
 proxy:
   enabled: true
-  mode: edge
+  mode: forwarded
   http:
     enabled: true
 
