@@ -1,0 +1,13 @@
+apiVersion: builtin
+kind: HelmChartInflationGenerator
+metadata:
+  name: vaultwarden
+name: vaultwarden
+repo: https://guerzon.github.io/vaultwarden
+chartHome: ../../../../../charts
+releaseName: vaultwarden
+namespace: vaultwarden
+includeCRDs: true
+skipHooks: false
+version: 0.25.4
+valuesFile: values.yaml

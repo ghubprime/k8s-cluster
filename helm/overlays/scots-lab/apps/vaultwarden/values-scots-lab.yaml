@@ -1,0 +1,53 @@
+# Vaultwarden values for scots-lab environment
+# Uses guerzon/vaultwarden chart with official Docker Hub image
+
+image:
+  registry: docker.io
+  repository: vaultwarden/server
+  tag: "1.34.1-alpine"
+  pullPolicy: IfNotPresent
+
+replicas: 1
+
+# Domain - empty for now (no public exposure)
+domain: ""
+
+# Disable open signups - admin creates accounts via admin panel
+signupsAllowed: false
+signupsVerify: true
+
+# Admin panel token from SealedSecret
+adminToken:
+  existingSecret: "vaultwarden-admin-token"
+  existingSecretKey: "admin-token"
+
+# Ingress disabled - access via kubectl port-forward over Tailscale
+ingress:
+  enabled: false
+
+# Persistent storage on Ceph
+storage:
+  data:
+    name: "vaultwarden-data"
+    size: "5Gi"
+    class: "ceph-block"
+
+# Database - default SQLite (stored in /data/db.sqlite3)
+database:
+  type: default
+
+# Resource limits for homelab
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+# Service - ClusterIP only (no external exposure)
+service:
+  type: ClusterIP
+
+# Web vault enabled
+webVaultEnabled: true

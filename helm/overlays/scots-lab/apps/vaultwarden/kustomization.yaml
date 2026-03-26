@@ -1,0 +1,14 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../../../base/apps/vaultwarden/
+
+patches:
+  - target:
+      kind: HelmChartInflationGenerator
+      name: vaultwarden
+    patch: |-
+      - op: replace
+        path: /valuesFile
+        value: ../../../../../helm/overlays/scots-lab/apps/vaultwarden/values-scots-lab.yaml
