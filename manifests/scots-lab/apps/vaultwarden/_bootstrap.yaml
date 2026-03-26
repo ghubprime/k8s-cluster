@@ -283,7 +283,7 @@ spec:
       name: vaultwarden-data
     spec:
       accessModes:
-      - null
+      - ReadWriteOnce
       resources:
         requests:
           storage: 5Gi
