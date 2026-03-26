@@ -1,0 +1,1 @@
+Error: couldn't execute function: fork/exec ./plugins/generate-cluster-config.sh: permission denied
