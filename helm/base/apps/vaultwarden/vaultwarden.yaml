@@ -7,7 +7,7 @@ repo: https://guerzon.github.io/vaultwarden
 chartHome: ../../../../../charts
 releaseName: vaultwarden
 namespace: vaultwarden
-includeCRDs: true
+includeCRDs: false
 skipHooks: false
 version: 0.35.1
 valuesFile: values.yaml
