@@ -132,22 +132,22 @@ spec:
         - /opt/keycloak/bin/kc.sh
         env:
         - name: KC_HTTP_RELATIVE_PATH
-          value: /auth
+          value: /
         - name: KC_CACHE
           value: ispn
         - name: KC_CACHE_STACK
           value: jdbc-ping
         - name: KC_PROXY_HEADERS
-          value: forwarded
+          value: edge
         - name: KC_HTTP_ENABLED
           value: "true"
         - name: KC_METRICS_ENABLED
           value: "true"
         - name: KC_HEALTH_ENABLED
           value: "true"
-        - name: KEYCLOAK_ADMIN
+        - name: KC_BOOTSTRAP_ADMIN_USERNAME
           value: admin
-        - name: KEYCLOAK_ADMIN_PASSWORD
+        - name: KC_BOOTSTRAP_ADMIN_PASSWORD
           valueFrom:
             secretKeyRef:
               key: admin-password
@@ -157,7 +157,7 @@ spec:
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
-            path: /auth/health/live
+            path: /health/live
             port: http-internal
             scheme: HTTP
           initialDelaySeconds: 0
@@ -175,7 +175,7 @@ spec:
           protocol: TCP
         readinessProbe:
           httpGet:
-            path: /auth/health/ready
+            path: /health/ready
             port: http-internal
             scheme: HTTP
           initialDelaySeconds: 10
@@ -193,7 +193,7 @@ spec:
         startupProbe:
           failureThreshold: 60
           httpGet:
-            path: /auth/health
+            path: /health
             port: http-internal
             scheme: HTTP
           initialDelaySeconds: 15
