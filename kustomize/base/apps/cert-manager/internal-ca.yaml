@@ -1,0 +1,31 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: scots-lab-selfsigned-issuer
+spec:
+  selfSigned: {}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: scots-lab-ca
+  namespace: cert-manager
+spec:
+  isCA: true
+  commonName: scots-lab-ca
+  secretName: scots-lab-ca-secret
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+  issuerRef:
+    name: scots-lab-selfsigned-issuer
+    kind: ClusterIssuer
+    group: cert-manager.io
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: scots-lab-ca-issuer
+spec:
+  ca:
+    secretName: scots-lab-ca-secret
