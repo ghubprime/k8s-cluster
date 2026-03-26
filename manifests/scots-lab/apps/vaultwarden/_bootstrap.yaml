@@ -108,7 +108,7 @@ data:
   DATA_FOLDER: /data
   DATABASE_MAX_CONNS: "10"
   DB_CONNECTION_RETRIES: "15"
-  DOMAIN: ""
+  DOMAIN: http://vaultwarden.scots-lab.local
   EMAIL_CHANGE_ALLOWED: "true"
   EMERGENCY_ACCESS_ALLOWED: "true"
   EMERGENCY_NOTIFICATION_REMINDER_SCHEDULE: 0 3 * * * *
@@ -218,7 +218,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: dbefb84d6f94f8743325b1193df5da8838ad947c
+        checksum/config: c0aa99cc190872501872f58c99a9d77b67e1cf99
         checksum/secret: 3a6ca17493d82c815f0e16b05b768b5c66f657cc
       labels:
         app.kubernetes.io/component: vaultwarden
