@@ -9,5 +9,5 @@ releaseName: vaultwarden
 namespace: vaultwarden
 includeCRDs: false
 skipHooks: false
-version: 0.35.11
+version: 0.35.1
 valuesFile: values.yaml
