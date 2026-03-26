@@ -13,7 +13,7 @@ replicas: 1
 domain: "http://localhost:8080"
 
 # Disable open signups - admin creates accounts via admin panel
-signupsAllowed: false
+signupsAllowed: true # TEMPORARY: Enabled to allow initial admin to create first Personal Vault
 signupsVerify: true
 
 # Admin panel token from SealedSecret
