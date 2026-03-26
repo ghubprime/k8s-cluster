@@ -1,2 +1,0 @@
-Error: Error: chart "vaultwarden" version "0.35.11" not found in https://guerzon.github.io/vaultwarden repository
-: unable to run: 'helm pull --untar --untardir /home/runner/work/k8s-cluster/k8s-cluster/charts/vaultwarden-0.35.11 --repo https://guerzon.github.io/vaultwarden vaultwarden --version 0.35.11' with env=[HELM_CONFIG_HOME=/tmp/kustomize-helm-4193749572/helm HELM_CACHE_HOME=/tmp/kustomize-helm-4193749572/helm/.cache HELM_DATA_HOME=/tmp/kustomize-helm-4193749572/helm/.data] (is 'helm' installed?): exit status 1
