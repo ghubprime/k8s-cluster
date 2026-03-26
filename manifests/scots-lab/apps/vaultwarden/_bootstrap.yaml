@@ -108,7 +108,7 @@ data:
   DATA_FOLDER: /data
   DATABASE_MAX_CONNS: "10"
   DB_CONNECTION_RETRIES: "15"
-  DOMAIN: http://vaultwarden.scots-lab.local
+  DOMAIN: http://localhost:8080
   EMAIL_CHANGE_ALLOWED: "true"
   EMERGENCY_ACCESS_ALLOWED: "true"
   EMERGENCY_NOTIFICATION_REMINDER_SCHEDULE: 0 3 * * * *
@@ -218,7 +218,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: c0aa99cc190872501872f58c99a9d77b67e1cf99
+        checksum/config: a7bf8bac1987fe8a5494fc0ecca60c28a1007f9a
         checksum/secret: 3a6ca17493d82c815f0e16b05b768b5c66f657cc
       labels:
         app.kubernetes.io/component: vaultwarden
@@ -235,7 +235,7 @@ spec:
         envFrom:
         - configMapRef:
             name: vaultwarden
-        image: docker.io/vaultwarden/server:1.34.1-alpine
+        image: docker.io/vaultwarden/server:1.35.4-alpine
         imagePullPolicy: IfNotPresent
         livenessProbe:
           failureThreshold: 10
