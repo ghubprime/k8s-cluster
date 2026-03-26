@@ -343,6 +343,21 @@ spec:
           periodSeconds: 1
       serviceAccountName: kgateway
 ---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: scots-lab-wildcard-tls
+  namespace: kgateway-system
+spec:
+  commonName: '*.scots-lab.local'
+  dnsNames:
+  - '*.scots-lab.local'
+  - scots-lab.local
+  issuerRef:
+    kind: ClusterIssuer
+    name: scots-lab-ca-issuer
+  secretName: scots-lab-wildcard-tls
+---
 apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
 metadata:
@@ -357,3 +372,14 @@ spec:
     name: http
     port: 80
     protocol: HTTP
+  - allowedRoutes:
+      namespaces:
+        from: All
+    hostname: '*.scots-lab.local'
+    name: https
+    port: 443
+    protocol: HTTPS
+    tls:
+      certificateRefs:
+      - name: scots-lab-wildcard-tls
+      mode: Terminate

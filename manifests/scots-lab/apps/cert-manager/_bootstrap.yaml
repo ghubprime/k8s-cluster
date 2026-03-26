@@ -14691,6 +14691,23 @@ spec:
       namespace: cert-manager
 ---
 apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: scots-lab-ca
+  namespace: cert-manager
+spec:
+  commonName: scots-lab-ca
+  isCA: true
+  issuerRef:
+    group: cert-manager.io
+    kind: ClusterIssuer
+    name: scots-lab-selfsigned-issuer
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+  secretName: scots-lab-ca-secret
+---
+apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
   name: letsencrypt-prod
@@ -14707,6 +14724,21 @@ spec:
             key: api-token
             name: cloudflare-api-token-secret
           email: scot.britton@yahoo.com
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: scots-lab-ca-issuer
+spec:
+  ca:
+    secretName: scots-lab-ca-secret
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: scots-lab-selfsigned-issuer
+spec:
+  selfSigned: {}
 ---
 apiVersion: admissionregistration.k8s.io/v1
 kind: MutatingWebhookConfiguration
