@@ -4,13 +4,13 @@
 image:
   registry: docker.io
   repository: vaultwarden/server
-  tag: "1.34.1-alpine"
+  tag: "1.35.4-alpine"
   pullPolicy: IfNotPresent
 
 replicas: 1
 
 # Domain - needs to be a valid URL even if not publicly exposed
-domain: "http://vaultwarden.scots-lab.local"
+domain: "http://localhost:8080"
 
 # Disable open signups - admin creates accounts via admin panel
 signupsAllowed: false
