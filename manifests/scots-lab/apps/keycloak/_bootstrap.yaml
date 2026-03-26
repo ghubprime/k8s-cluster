@@ -138,7 +138,7 @@ spec:
         - name: KC_CACHE_STACK
           value: jdbc-ping
         - name: KC_PROXY_HEADERS
-          value: edge
+          value: forwarded
         - name: KC_HTTP_ENABLED
           value: "true"
         - name: KC_METRICS_ENABLED
