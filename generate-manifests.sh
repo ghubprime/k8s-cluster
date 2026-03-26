@@ -53,7 +53,7 @@ while read RESOURCE; do
 
     # build new manifests directly into a single multi-document file to avoid OS filename constraints (like NTFS colons)
     BOOTSTRAP_SINGLE="${MANIFESTS_DST}/_bootstrap.yaml"
-    kustomize build "$RESOURCE" --load-restrictor LoadRestrictionsNone --enable-helm --enable-alpha-plugins --enable-exec > "$BOOTSTRAP_SINGLE"
+    kustomize build "$RESOURCE" --load-restrictor LoadRestrictionsNone --enable-helm --enable-alpha-plugins --enable-exec > "$BOOTSTRAP_SINGLE" 2> "${MANIFESTS_DST}/kustomize_error.log"
 
     # Generate the Talos bootstrap extramanifests index (single URL per app)
     APP_BASENAME=$(basename "$APP")
