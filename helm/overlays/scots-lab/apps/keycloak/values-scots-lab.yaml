@@ -1,20 +1,42 @@
 # Keycloak values for scots-lab environment
+# Uses codecentric/keycloakx chart with official quay.io image
 
-auth:
-  adminUser: admin
-  existingSecret: keycloak-admin-credentials
-  passwordSecretKey: admin-password
+image:
+  tag: "26.5.5"
 
-production: false
+# Start in development mode (built-in H2 database, no external PostgreSQL required)
+# For production, switch to 'start' and configure external database
+command:
+  - "/opt/keycloak/bin/kc.sh"
+args:
+  - "start-dev"
 
-postgresql:
-  enabled: true
-  primary:
-    persistence:
-      storageClass: "ceph-block"
+# Admin credentials from SealedSecret
+extraEnv: |
+  - name: KEYCLOAK_ADMIN
+    value: admin
+  - name: KEYCLOAK_ADMIN_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: keycloak-admin-credentials
+        key: admin-password
 
+# Resource limits for homelab
+resources:
+  requests:
+    cpu: 250m
+    memory: 512Mi
+  limits:
+    cpu: 1000m
+    memory: 1Gi
+
+# Ingress via Cilium
 ingress:
   enabled: true
   ingressClassName: "cilium"
-  hostname: keycloak.proxy-us.srbii.com
-  tls: false
+  rules:
+    - host: keycloak.proxy-us.srbii.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
