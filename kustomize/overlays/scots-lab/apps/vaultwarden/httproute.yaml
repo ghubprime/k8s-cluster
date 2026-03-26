@@ -1,5 +1,6 @@
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
+# CI trigger
 metadata:
   name: vaultwarden-route
   namespace: vaultwarden
