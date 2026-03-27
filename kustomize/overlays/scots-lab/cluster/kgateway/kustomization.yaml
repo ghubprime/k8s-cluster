@@ -3,6 +3,5 @@ kind: Kustomization
 resources:
   - ../../../../base/cluster/kgateway/
   - kgateway-http.yaml
-  - extauth-policy.yaml
 generators:
   - ../../../../../helm/overlays/scots-lab/cluster/kgateway/
