@@ -7,7 +7,7 @@ name: kgateway
 # rely on local chart in chartHome by using a dummy https repo URL to trick Kustomize caching algorithm.
 repo: https://dummy.local/charts
 # rely on local chart in chartHome.
-chartHome: ../../../../charts
+chartHome: ../../../../../charts
 releaseName: kgateway
 namespace: kgateway-system
 includeCRDs: true
