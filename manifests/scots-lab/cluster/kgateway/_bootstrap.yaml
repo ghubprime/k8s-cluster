@@ -358,6 +358,23 @@ spec:
     name: scots-lab-ca-issuer
   secretName: scots-lab-wildcard-tls
 ---
+apiVersion: gateway.kgateway.dev/v1alpha1
+kind: ExtAuthPolicy
+metadata:
+  name: crowdsec-bouncer
+  namespace: kgateway-system
+spec:
+  extAuth:
+    grpc:
+      backendRef:
+        name: crowdsec-bouncer-envoy
+        namespace: crowdsec
+        port: 8081
+  targetRef:
+    group: gateway.networking.k8s.io
+    kind: Gateway
+    name: kgateway-http
+---
 apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
 metadata:
