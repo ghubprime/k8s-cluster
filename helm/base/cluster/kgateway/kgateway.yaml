@@ -3,7 +3,8 @@ kind: HelmChartInflationGenerator
 metadata:
   name: kgateway
 name: kgateway
-repo: oci://cr.kgateway.dev/kgateway-dev/charts
+# OCI repo pulls fail in Kustomize Helm wrappers on GitHub Actions;
+# rely on local chart in chartHome.
 chartHome: ../../../../../charts
 releaseName: kgateway
 namespace: kgateway-system
