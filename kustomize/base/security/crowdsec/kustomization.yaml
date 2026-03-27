@@ -4,4 +4,4 @@ namespace: crowdsec
 resources:
   - kubernetes-bouncer.yaml
   - envoy-bouncer.yaml
-  - kgateway-policy.yaml
+  - native-policy.yaml
