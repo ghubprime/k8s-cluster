@@ -1,9 +1,6 @@
 apiVersion: builtin
 kind: HelmChartInflationGenerator
-metadata:
-  name: kube-prometheus-stack
 name: kube-prometheus-stack
-repo: https://prometheus-community.github.io/helm-charts
 chartHome: ../../../../../charts/kube-prometheus-stack-72.6.3
 releaseName: kube-prometheus-stack
 #namespace: prometheus
