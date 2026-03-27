@@ -130,7 +130,7 @@ data:
   ROCKET_WORKERS: "10"
   SENDS_ALLOWED: "true"
   SHOW_PASSWORD_HINT: "false"
-  SIGNUPS_ALLOWED: "true"
+  SIGNUPS_ALLOWED: "false"
   SIGNUPS_VERIFY: "true"
   TRASH_AUTO_DELETE_DAYS: ""
   WEB_VAULT_ENABLED: "true"
@@ -218,7 +218,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: daf11c785870b3e3c1fda08d337edd6ec842b1ff
+        checksum/config: a7bf8bac1987fe8a5494fc0ecca60c28a1007f9a
         checksum/secret: 3a6ca17493d82c815f0e16b05b768b5c66f657cc
       labels:
         app.kubernetes.io/component: vaultwarden
