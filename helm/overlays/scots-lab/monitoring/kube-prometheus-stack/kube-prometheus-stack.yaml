@@ -2,4 +2,4 @@ apiVersion: builtin
 kind: HelmChartInflationGenerator
 metadata:
   name: kube-prometheus-stack
-valuesFile: ../../../../../helm/overlays/scots-lab/monitoring/kube-prometheus-stack/values-scots-lab.yaml
+valuesFile: values-scots-lab.yaml

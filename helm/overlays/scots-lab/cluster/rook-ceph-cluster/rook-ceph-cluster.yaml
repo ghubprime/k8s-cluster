@@ -2,4 +2,4 @@ apiVersion: builtin
 kind: HelmChartInflationGenerator
 metadata:
   name: rook-ceph-cluster
-valuesFile: ../../../../../helm/overlays/scots-lab/cluster/rook-ceph-cluster/values-scots-lab.yaml
+valuesFile: values-scots-lab.yaml

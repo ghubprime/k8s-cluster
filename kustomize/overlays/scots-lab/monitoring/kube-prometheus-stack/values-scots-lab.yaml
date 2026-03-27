@@ -1,3 +1,55 @@
+# kube-prometheus-stack values for Talos and dynamic discovery
+defaultRules:
+  create: true
+  rules:
+    kubeScheduler: false
+    kubeProxy: false
+    kubeControllerManager: false
+    etcd: false
+
+kubeControllerManager:
+  enabled: false
+
+kubeScheduler:
+  enabled: false
+
+kubeProxy:
+  enabled: false
+
+kubeEtcd:
+  enabled: false
+
+prometheus:
+  prometheusSpec:
+    # Discover all PodMonitors and ServiceMonitors without needing matching labels
+    podMonitorSelectorNilUsesHelmValues: false
+    serviceMonitorSelectorNilUsesHelmValues: false
+    probeSelectorNilUsesHelmValues: false
+    ruleSelectorNilUsesHelmValues: false
+    retention: 15d
+    retentionSize: 20GB
+    scrapeConfigSelectorNilUsesHelmValues: false
+    # Required for Talos/kubelet certs if they are self-signed or have host mismatches
+    # But usually not strictly needed with metrics-server if correctly provisioned.
+    # Leaving standard.
+
+alertmanager:
+  alertmanagerSpec:
+    replicas: 1
+
+grafana:
+  enabled: true
+  adminPassword: "admin" # To be replaced by sealed-secrets or real config if needed. We'll leave it as default or let the user change it.
+
+kube-state-metrics:
+  enabled: true
+  metricLabelsAllowlist:
+    - pods=[*]
+    - nodes=[*]
+
+prometheus-node-exporter:
+  hostRootFsMount:
+    enabled: true
 namespaceOverride: kube-prometheus-system
 alertmanager:
   namespaceOverride: kube-prometheus-system
