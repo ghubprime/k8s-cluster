@@ -2,4 +2,4 @@ apiVersion: builtin
 kind: HelmChartInflationGenerator
 metadata:
   name: kgateway
-valuesFile: values-scots-lab.yaml
+valuesFile: ../../../../../helm/overlays/scots-lab/cluster/kgateway/values-scots-lab.yaml
