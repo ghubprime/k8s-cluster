@@ -4,6 +4,8 @@ metadata:
   name: kgateway
 name: kgateway
 # OCI repo pulls fail in Kustomize Helm wrappers on GitHub Actions;
+# rely on local chart in chartHome by using a dummy https repo URL to trick Kustomize caching algorithm.
+repo: https://dummy.local/charts
 # rely on local chart in chartHome.
 chartHome: ../../../../../charts
 releaseName: kgateway
