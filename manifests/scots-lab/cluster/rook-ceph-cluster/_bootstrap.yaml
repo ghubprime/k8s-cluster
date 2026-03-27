@@ -9,6 +9,8 @@ parameters:
   clusterID: rook-ceph
   csi.storage.k8s.io/controller-expand-secret-name: rook-csi-rbd-provisioner
   csi.storage.k8s.io/controller-expand-secret-namespace: rook-ceph
+  csi.storage.k8s.io/controller-publish-secret-name: rook-csi-rbd-provisioner
+  csi.storage.k8s.io/controller-publish-secret-namespace: rook-ceph
   csi.storage.k8s.io/fstype: ext4
   csi.storage.k8s.io/node-stage-secret-name: rook-csi-rbd-node
   csi.storage.k8s.io/node-stage-secret-namespace: rook-ceph
@@ -17,29 +19,6 @@ parameters:
   imageFeatures: layering
   imageFormat: "2"
   pool: ceph-blockpool
-provisioner: rook-ceph.rbd.csi.ceph.com
-reclaimPolicy: Retain
-volumeBindingMode: Immediate
----
-allowVolumeExpansion: true
-apiVersion: storage.k8s.io/v1
-kind: StorageClass
-metadata:
-  annotations:
-    storageclass.kubernetes.io/is-default-class: "false"
-  name: ceph-block-bulk
-parameters:
-  clusterID: rook-ceph
-  csi.storage.k8s.io/controller-expand-secret-name: rook-csi-rbd-provisioner
-  csi.storage.k8s.io/controller-expand-secret-namespace: rook-ceph
-  csi.storage.k8s.io/fstype: ext4
-  csi.storage.k8s.io/node-stage-secret-name: rook-csi-rbd-node
-  csi.storage.k8s.io/node-stage-secret-namespace: rook-ceph
-  csi.storage.k8s.io/provisioner-secret-name: rook-csi-rbd-provisioner
-  csi.storage.k8s.io/provisioner-secret-namespace: rook-ceph
-  imageFeatures: layering
-  imageFormat: "2"
-  pool: ceph-blockpool-bulk
 provisioner: rook-ceph.rbd.csi.ceph.com
 reclaimPolicy: Delete
 volumeBindingMode: Immediate
@@ -51,7 +30,7 @@ metadata:
 parameters:
   objectStoreName: ceph-objectstore
   objectStoreNamespace: rook-ceph
-  region: us-west-1
+  region: us-east-1
 provisioner: rook-ceph.ceph.rook.io/bucket
 reclaimPolicy: Delete
 volumeBindingMode: Immediate
@@ -67,6 +46,8 @@ parameters:
   clusterID: rook-ceph
   csi.storage.k8s.io/controller-expand-secret-name: rook-csi-cephfs-provisioner
   csi.storage.k8s.io/controller-expand-secret-namespace: rook-ceph
+  csi.storage.k8s.io/controller-publish-secret-name: rook-csi-cephfs-provisioner
+  csi.storage.k8s.io/controller-publish-secret-namespace: rook-ceph
   csi.storage.k8s.io/fstype: ext4
   csi.storage.k8s.io/node-stage-secret-name: rook-csi-cephfs-node
   csi.storage.k8s.io/node-stage-secret-namespace: rook-ceph
@@ -158,20 +139,6 @@ subjects:
   namespace: rook-ceph
 ---
 apiVersion: v1
-data:
-  config: |
-    [global]
-    osd_pool_default_size = 3
-    mon_warn_on_pool_no_redundancy = false
-
-    [mon]
-    mon_data_avail_warn = 15
-kind: ConfigMap
-metadata:
-  name: rook-config-override
-  namespace: rook-ceph
----
-apiVersion: v1
 kind: Service
 metadata:
   name: rook-prometheus
@@ -187,176 +154,12 @@ spec:
     prometheus: rook-prometheus
   type: NodePort
 ---
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  labels:
-    app: rook-ceph-tools
-  name: rook-ceph-tools
-  namespace: rook-ceph
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: rook-ceph-tools
-  template:
-    metadata:
-      labels:
-        app: rook-ceph-tools
-    spec:
-      containers:
-      - command:
-        - /bin/bash
-        - -c
-        - |
-          # Replicate the script from toolbox.sh inline so the ceph image
-          # can be run directly, instead of requiring the rook toolbox
-          CEPH_CONFIG="/etc/ceph/ceph.conf"
-          MON_CONFIG="/etc/rook/mon-endpoints"
-          KEYRING_FILE="/etc/ceph/keyring"
-          CONFIG_OVERRIDE="/etc/rook-config-override/config"
-
-          # create a ceph config file in its default location so ceph/rados tools can be used
-          # without specifying any arguments
-          write_endpoints() {
-            endpoints=$(cat ${MON_CONFIG})
-
-            # filter out the mon names
-            # external cluster can have numbers or hyphens in mon names, handling them in regex
-            # shellcheck disable=SC2001
-            mon_endpoints=$(echo "${endpoints}"| sed 's/[a-z0-9_-]\+=//g')
-
-            DATE=$(date)
-            echo "$DATE writing mon endpoints to ${CEPH_CONFIG}: ${endpoints}"
-              cat <<EOF > ${CEPH_CONFIG}
-          [global]
-          mon_host = ${mon_endpoints}
-
-          [client.admin]
-          keyring = ${KEYRING_FILE}
-          EOF
-
-            # Merge the config override if it exists and is not empty
-            if [ -f "${CONFIG_OVERRIDE}" ] && [ -s "${CONFIG_OVERRIDE}" ]; then
-              echo "$DATE merging config override from ${CONFIG_OVERRIDE}"
-              echo "" >> ${CEPH_CONFIG}
-              cat ${CONFIG_OVERRIDE} >> ${CEPH_CONFIG}
-            fi
-          }
-
-          # watch the endpoints config file and update if the mon endpoints ever change
-          watch_endpoints() {
-            # get the timestamp for the target of the soft link
-            real_path=$(realpath ${MON_CONFIG})
-            initial_time=$(stat -c %Z "${real_path}")
-            while true; do
-              real_path=$(realpath ${MON_CONFIG})
-              latest_time=$(stat -c %Z "${real_path}")
-
-              if [[ "${latest_time}" != "${initial_time}" ]]; then
-                write_endpoints
-                initial_time=${latest_time}
-              fi
-
-              sleep 10
-            done
-          }
-
-          # read the secret from an env var (for backward compatibility), or from the secret file
-          ceph_secret=${ROOK_CEPH_SECRET}
-          if [[ "$ceph_secret" == "" ]]; then
-            ceph_secret=$(cat /var/lib/rook-ceph-mon/secret.keyring)
-          fi
-
-          # create the keyring file
-          cat <<EOF > ${KEYRING_FILE}
-          [${ROOK_CEPH_USERNAME}]
-          key = ${ceph_secret}
-          EOF
-
-          # write the initial config file
-          write_endpoints
-
-          # continuously update the mon endpoints if they fail over
-          watch_endpoints
-        env:
-        - name: ROOK_CEPH_USERNAME
-          valueFrom:
-            secretKeyRef:
-              key: ceph-username
-              name: rook-ceph-mon
-        image: quay.io/ceph/ceph:v20.2.0
-        imagePullPolicy: IfNotPresent
-        name: rook-ceph-tools
-        resources:
-          limits:
-            memory: 1Gi
-          requests:
-            memory: 128Mi
-        securityContext:
-          capabilities:
-            drop:
-            - ALL
-          runAsGroup: 2016
-          runAsNonRoot: true
-          runAsUser: 2016
-        tty: true
-        volumeMounts:
-        - mountPath: /etc/ceph
-          name: ceph-config
-        - mountPath: /etc/rook
-          name: mon-endpoint-volume
-        - mountPath: /var/lib/rook-ceph-mon
-          name: ceph-admin-secret
-        - mountPath: /etc/rook-config-override
-          name: rook-config-override
-          readOnly: true
-      dnsPolicy: ClusterFirstWithHostNet
-      serviceAccountName: rook-ceph-default
-      tolerations:
-      - effect: NoExecute
-        key: node.kubernetes.io/unreachable
-        operator: Exists
-        tolerationSeconds: 5
-      volumes:
-      - name: ceph-admin-secret
-        secret:
-          items:
-          - key: ceph-secret
-            path: secret.keyring
-          optional: false
-          secretName: rook-ceph-mon
-      - configMap:
-          items:
-          - key: data
-            path: mon-endpoints
-          name: rook-ceph-mon-endpoints
-        name: mon-endpoint-volume
-      - configMap:
-          name: rook-config-override
-          optional: true
-        name: rook-config-override
-      - emptyDir: {}
-        name: ceph-config
----
 apiVersion: ceph.rook.io/v1
 kind: CephBlockPool
 metadata:
   name: ceph-blockpool
   namespace: rook-ceph
 spec:
-  deviceClass: hdd
-  failureDomain: host
-  replicated:
-    size: 3
----
-apiVersion: ceph.rook.io/v1
-kind: CephBlockPool
-metadata:
-  name: ceph-blockpool-bulk
-  namespace: rook-ceph
-spec:
-  deviceClass: hdd
   failureDomain: host
   replicated:
     size: 3
@@ -367,16 +170,9 @@ metadata:
   name: rook-ceph
   namespace: rook-ceph
 spec:
-  annotations:
-    dashboard:
-      omni-kube-service-exposer.sidero.dev/icon: H4sICGfoVmgAA2NlcGhfbG9nb19pY29uXzE3MDQwNi5zdmcAZVbtTmQ3DH2VaPr7hsR24qQCpJbfPMRo2GWQZrurgpZ9/J7jXDqoFZIJSa4/jo9PuH39+Zx+fbv89Xp3OL+9/fj95ub9/T2/a/7+9/ONlFJucOOQ3l+e3s53h26HdP7y8nx+W+ufL1/e//z+6+6waRZJm2VLvWd35S/VcUhfXy6Xu8NvX4uJPR3ub38c387p6e7w2Gp28dRa9qmnTbKJbzUrXI2q+Nutw2EVGJW+ZZkd502zDmc8lSS5jLG1LMWS5dIdd3vvCbELnJV8Xfc8xkPruRRJFV8kQ7JdkvKOliwjlmfE0QdcGNzmGaLr/gVXMhFfj9JyH2nZEj+MM1LEqSfUVluqeY6GJDV818F8Z08tVzXWwxvNB6rqw3ClNGPFGqGmoEjHjmJn81ycFjG2SVAqPsWHFUCJczV7Y/VwJ7mZ4G5FkDYJZVPZ8gRQ1RoXnr23owJpABCWFVTkBwgrsfU/uD/TsuuU4A1kr1bj25aWXadAe5QO1zL6g1TeZQFCkKKTBABAl7bWZ0ShGx9p2d0No4/IRB/Mc+tsPSABX6QAfxKtkRIWqdDFrGnZ5YIp+J5PpFh3ey1SVxxPCrzHbuN4Q72SAqAT4POO+9YVAJuiLaBF4Ksp8EVDzbFdpwFd7ZZGVjSKLUIM9Kjoo05675Jro0+d6IGwZW600sh5QAfjpLh0iUOJIRiES7lGbwYcCiEEqTS3SlzbRLHZNswd8nMcMTZsJZtKJ/kc2fm45IL6CkpXpGClnTLA7cFDqeShVUwHuMtw0uSICjACyy6aY0Jri3HHPoLYbtcpwnXOY3MWqiyvDdREEgtBnOy+oSi0i1XKIIhksRVS3XTEbI8jM1m8LERAeoxJYzJDd7tOsQ+WIwCH14xJz7gxP9/ArEhszt1+cp3C9Ynyow7HzKlBEZhvZMXpXIllDnnYD9eAL0oKIOpu/4WDA0M42FX4A7iFlAJhAkpNAWW2CeHgViWiuTWPPgTfm1zQMCLUMFXOBh4rOJXCLFKjxRgONvkEDlB0wo8GabmCMJMfhWwYFForzi3SuSPLYBYBYJZDNLYdfoZ40JOZgp8XVuwhLP8fPbS+d5LTwMkJwi6zwEDyaPZgqadCAjdqUV1yEIIv5DAIKjSUrMIrpYEtxbkaFwQOVWOqpBE7249SMpCiWWmgY50qZwAB26a73Se8gnoDOi3xje/2A0jFkEB31r592HWKd6FwluD+hAo6SWlOSS8hvFAKCENwerTIq8y07If4DIx7FqjfOq8pzPXU8kqr7fZD04at834iJchNQzNxGwAj6UiNZJMyBwCROSw8u5KgVGuUxvRQGiNHgHbFRNMVk/+A6VREgImhxrMJzeB8YZ6CR1QPNIGtEWiSc/RL4WPBltVdc/A33yOqVzQWwrnaiq5SGEZQPVjA128sQpChhdIDx1HzdL7o4GfQibQFnYKI8RrN9omIId3TF2OVjH3E+1M7bmLg5MTnCRPcOWekeJV9Hfb1uhOzs++vNf9vwOm+jv1j3/PdH9PteqaHm/tb/iN1/w8KodprcAkAAA=="
-      omni-kube-service-exposer.sidero.dev/label: Ceph Dashboard
-      omni-kube-service-exposer.sidero.dev/port: "50082"
-      omni-kube-service-exposer.sidero.dev/prefix: cephdash
   cephVersion:
     allowUnsupported: false
-    image: quay.io/ceph/ceph:v20.2.0
-    imagePullPolicy: IfNotPresent
+    image: quay.io/ceph/ceph:v19.2.3
   cleanupPolicy:
     allowUninstallWithVolumes: false
     confirmation: ""
@@ -389,10 +185,7 @@ spec:
     disable: false
   dashboard:
     enabled: true
-    port: 7000
-    prometheusEndpoint: http://rook-prometheus:9090
-    prometheusEndpointSSLVerify: false
-    ssl: false
+    ssl: true
   dataDirHostPath: /var/lib/rook
   disruptionManagement:
     managePodBudgets: true
@@ -420,11 +213,9 @@ spec:
     maxLogSize: 500M
     periodicity: daily
   mgr:
-    allowMultiplePerNode: true
+    allowMultiplePerNode: false
     count: 2
-    modules:
-    - enabled: true
-      name: rook
+    modules: null
   mon:
     allowMultiplePerNode: false
     count: 3
@@ -437,9 +228,8 @@ spec:
       encryption:
         enabled: false
       requireMsgr2: false
-    hostNetwork: true
   priorityClassNames:
-    mgr: system-node-critical
+    mgr: system-cluster-critical
     mon: system-node-critical
     osd: system-node-critical
   removeOSDsIfOutAndSafeToRemove: false
@@ -448,13 +238,13 @@ spec:
       limits:
         memory: 1Gi
       requests:
-        cpu: 50m
+        cpu: 500m
         memory: 100Mi
     crashcollector:
       limits:
         memory: 60Mi
       requests:
-        cpu: 50m
+        cpu: 100m
         memory: 60Mi
     exporter:
       limits:
@@ -466,41 +256,39 @@ spec:
       limits:
         memory: 1Gi
       requests:
-        cpu: 50m
+        cpu: 100m
         memory: 100Mi
     mgr:
       limits:
         memory: 1Gi
       requests:
-        cpu: 100m
+        cpu: 500m
         memory: 512Mi
     mgr-sidecar:
       limits:
         memory: 100Mi
       requests:
-        cpu: 50m
+        cpu: 100m
         memory: 40Mi
     mon:
       limits:
         memory: 2Gi
       requests:
-        cpu: 250m
+        cpu: 1000m
         memory: 1Gi
     osd:
       limits:
         memory: 4Gi
       requests:
-        cpu: 500m
+        cpu: 1000m
         memory: 4Gi
     prepareosd:
       requests:
-        cpu: 100m
+        cpu: 500m
         memory: 50Mi
   skipUpgradeChecks: false
   storage:
-    deviceFilter: ^sd[c-d]$
-    metadataDevice: sdb
-    useAllDevices: false
+    useAllDevices: true
     useAllNodes: true
   upgradeOSDRequiresHealthyPGs: false
   waitTimeoutForHealthyOSDInMinutes: 10
@@ -512,25 +300,22 @@ metadata:
   namespace: rook-ceph
 spec:
   dataPools:
-  - deviceClass: hdd
-    failureDomain: host
+  - failureDomain: host
     name: data0
     replicated:
       size: 3
   metadataPool:
-    deviceClass: hdd
-    failureDomain: host
     replicated:
       size: 3
   metadataServer:
     activeCount: 1
     activeStandby: true
-    priorityClassName: system-node-critical
+    priorityClassName: system-cluster-critical
     resources:
       limits:
         memory: 4Gi
       requests:
-        cpu: 250m
+        cpu: 1000m
         memory: 4Gi
 ---
 apiVersion: ceph.rook.io/v1
@@ -551,31 +336,23 @@ metadata:
   namespace: rook-ceph
 spec:
   dataPool:
-    deviceClass: hdd
+    erasureCoded:
+      codingChunks: 1
+      dataChunks: 2
     failureDomain: host
     parameters:
       bulk: "true"
-    replicated:
-      size: 3
   gateway:
     instances: 1
-    opsLogSidecar:
-      resources:
-        limits:
-          memory: 100Mi
-        requests:
-          cpu: 50m
-          memory: 40Mi
     port: 80
-    priorityClassName: system-node-critical
+    priorityClassName: system-cluster-critical
     resources:
       limits:
         memory: 2Gi
       requests:
-        cpu: 250m
+        cpu: 1000m
         memory: 1Gi
   metadataPool:
-    deviceClass: hdd
     failureDomain: host
     replicated:
       size: 3
