@@ -1,0 +1,11 @@
+extAuth:
+  enabled: true
+
+# Depending on exact chart structure, it could also be nested under glooGateway or similar:
+kgateway:
+  extAuth:
+    enabled: true
+    
+glooGateway:
+  extAuth:
+    enabled: true
