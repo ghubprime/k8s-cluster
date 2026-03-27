@@ -1,0 +1,324 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: vaultwarden
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+    app.kubernetes.io/component: vaultwarden
+    app.kubernetes.io/instance: vaultwarden
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: vaultwarden
+    app.kubernetes.io/version: 1.35.4
+    helm.sh/chart: vaultwarden-0.35.1
+  name: vaultwarden-svc
+  namespace: vaultwarden
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  labels:
+    app.kubernetes.io/component: vaultwarden
+    app.kubernetes.io/instance: vaultwarden
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: vaultwarden
+    app.kubernetes.io/version: 1.35.4
+    helm.sh/chart: vaultwarden-0.35.1
+  name: vaultwarden
+  namespace: vaultwarden
+rules:
+- apiGroups:
+  - extensions
+  - apps
+  resources:
+  - deployments
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - pods/exec
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - pods/log
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - get
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  labels:
+    app.kubernetes.io/component: vaultwarden
+    app.kubernetes.io/instance: vaultwarden
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: vaultwarden
+    app.kubernetes.io/version: 1.35.4
+    helm.sh/chart: vaultwarden-0.35.1
+  name: vaultwarden
+  namespace: vaultwarden
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: vaultwarden
+subjects:
+- kind: ServiceAccount
+  name: vaultwarden-svc
+---
+apiVersion: v1
+data:
+  ADMIN_RATELIMIT_MAX_BURST: "3"
+  ADMIN_RATELIMIT_SECONDS: "300"
+  DATA_FOLDER: /data
+  DATABASE_MAX_CONNS: "10"
+  DB_CONNECTION_RETRIES: "15"
+  DOMAIN: http://localhost:8080
+  EMAIL_CHANGE_ALLOWED: "true"
+  EMERGENCY_ACCESS_ALLOWED: "true"
+  EMERGENCY_NOTIFICATION_REMINDER_SCHEDULE: 0 3 * * * *
+  EMERGENCY_REQUEST_TIMEOUT_SCHEDULE: 0 7 * * * *
+  EXTENDED_LOGGING: "true"
+  ICON_BLACKLIST_NON_GLOBAL_IPS: "true"
+  ICON_REDIRECT_CODE: "302"
+  ICON_SERVICE: internal
+  INVITATION_EXPIRATION_HOURS: "120"
+  INVITATION_ORG_NAME: Vaultwarden
+  INVITATIONS_ALLOWED: "true"
+  IP_HEADER: X-Real-IP
+  LOG_TIMESTAMP_FORMAT: '%Y-%m-%d %H:%M:%S.%3f'
+  ORG_EVENTS_ENABLED: "false"
+  ORG_GROUPS_ENABLED: "false"
+  REQUIRE_DEVICE_EMAIL: "false"
+  ROCKET_ADDRESS: 0.0.0.0
+  ROCKET_PORT: "8080"
+  ROCKET_WORKERS: "10"
+  SENDS_ALLOWED: "true"
+  SHOW_PASSWORD_HINT: "false"
+  SIGNUPS_ALLOWED: "false"
+  SIGNUPS_VERIFY: "true"
+  TRASH_AUTO_DELETE_DAYS: ""
+  WEB_VAULT_ENABLED: "true"
+kind: ConfigMap
+metadata:
+  labels:
+    app.kubernetes.io/component: vaultwarden
+    app.kubernetes.io/instance: vaultwarden
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: vaultwarden
+    app.kubernetes.io/version: 1.35.4
+    helm.sh/chart: vaultwarden-0.35.1
+  name: vaultwarden
+  namespace: vaultwarden
+---
+apiVersion: v1
+data:
+  DUO_SKEY: ""
+  PUSH_INSTALLATION_ID: ""
+  PUSH_INSTALLATION_KEY: ""
+  SMTP_PASSWORD: ""
+  SMTP_USERNAME: ""
+  YUBICO_SECRET_KEY: ""
+kind: Secret
+metadata:
+  labels:
+    app.kubernetes.io/component: vaultwarden
+    app.kubernetes.io/instance: vaultwarden
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: vaultwarden
+    app.kubernetes.io/version: 1.35.4
+    helm.sh/chart: vaultwarden-0.35.1
+  name: vaultwarden
+  namespace: vaultwarden
+type: Opaque
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/component: vaultwarden
+    app.kubernetes.io/instance: vaultwarden
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: vaultwarden
+    app.kubernetes.io/version: 1.35.4
+    helm.sh/chart: vaultwarden-0.35.1
+  name: vaultwarden
+  namespace: vaultwarden
+spec:
+  ipFamilyPolicy: SingleStack
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app.kubernetes.io/component: vaultwarden
+    app.kubernetes.io/instance: vaultwarden
+    app.kubernetes.io/name: vaultwarden
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app.kubernetes.io/component: vaultwarden
+    app.kubernetes.io/instance: vaultwarden
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: vaultwarden
+    app.kubernetes.io/version: 1.35.4
+    helm.sh/chart: vaultwarden-0.35.1
+  name: vaultwarden
+  namespace: vaultwarden
+spec:
+  persistentVolumeClaimRetentionPolicy:
+    whenDeleted: Retain
+    whenScaled: Retain
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: vaultwarden
+      app.kubernetes.io/instance: vaultwarden
+      app.kubernetes.io/name: vaultwarden
+  serviceName: vaultwarden
+  template:
+    metadata:
+      annotations:
+        checksum/config: a7bf8bac1987fe8a5494fc0ecca60c28a1007f9a
+        checksum/secret: 3a6ca17493d82c815f0e16b05b768b5c66f657cc
+      labels:
+        app.kubernetes.io/component: vaultwarden
+        app.kubernetes.io/instance: vaultwarden
+        app.kubernetes.io/name: vaultwarden
+    spec:
+      containers:
+      - env:
+        - name: ADMIN_TOKEN
+          valueFrom:
+            secretKeyRef:
+              key: admin-token
+              name: vaultwarden-admin-token
+        envFrom:
+        - configMapRef:
+            name: vaultwarden
+        image: docker.io/vaultwarden/server:1.35.4-alpine
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          failureThreshold: 10
+          httpGet:
+            path: /alive
+            port: http
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        name: vaultwarden
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /alive
+            port: http
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        resources:
+          limits:
+            cpu: 500m
+            memory: 512Mi
+          requests:
+            cpu: 100m
+            memory: 128Mi
+        volumeMounts:
+        - mountPath: /data
+          name: vaultwarden-data
+      serviceAccountName: vaultwarden-svc
+  volumeClaimTemplates:
+  - metadata:
+      annotations:
+        meta.helm.sh/release-name: vaultwarden
+        meta.helm.sh/release-namespace: vaultwarden
+      labels:
+        app.kubernetes.io/component: vaultwarden
+        app.kubernetes.io/instance: vaultwarden
+        app.kubernetes.io/name: vaultwarden
+      name: vaultwarden-data
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 5Gi
+      storageClassName: ceph-block
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  name: vaultwarden-admin-token
+  namespace: vaultwarden
+spec:
+  encryptedData:
+    admin-token: AgB2CDdPyfC56lE5tR64VPt0dP0GqvgEPGvD3cRlzF5+rCm57GXnAjhjz9fvY8ugYsXL97YgmXapwv43cFAXgOSVaHkQq/8YiJYBMzu12p4QS+ZFjxA17sjAe9HhHCx9rqMSyjsJwpL4GfryD0RhToWtFouSnrDG3f0F8Fr85owR99ipn5jP70O77CydcOt+Jlm1uON+K9brpzcyKPEFHcnrvvYyWQ1CpBZOPG2lzwxxT5/mw6nf64bKll5R4Zj+IGInptA6fvRHuhZB84/gp2zzO7eswiLL6oL24FkeJHc4xRzetErh76QQM6jGkI47KHPnid+xpZOF47jXsbqR821f4gVPGnVD/nb6tOSLQvEz51zpNSUdWE9WWG3XrzIZDDlilI77vMsP5nej4+UnWYxMc9NBF4nzW6USbuAwg+wWIJIxcAXERKckjwCD/ONOSTVR58puztjd/ylASgOL+2NjEKGRlLmiL/cQIP299lsAXzCLgg6nQQ10BEE8Y84NDsHNUWIvDn/Olb1NXkKiA6XaylWn2dhBqEoh4VUXTyW3FFYs4sXm1RIdG9cSiCqQq4MoI/EevDgNaJDIeG06gaK34frfoZrt2AePGf9tccV6K8T/HSn5+uhrUUdYWJyLBi6IcOK4FpEAJuz+5J0q6xl2GBUReOBmLk48zD4A6HDhuwaO0NuGNw6beNEECjium+TopsUNzqXejYcAlLLa+GdRoDznm40=
+  template:
+    metadata:
+      name: vaultwarden-admin-token
+      namespace: vaultwarden
+    type: Opaque
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: vaultwarden-route
+  namespace: vaultwarden
+spec:
+  hostnames:
+  - vaultwarden.scots-lab.local
+  parentRefs:
+  - name: kgateway-http
+    namespace: kgateway-system
+  rules:
+  - backendRefs:
+    - name: vaultwarden
+      port: 80
+    matches:
+    - path:
+        type: PathPrefix
+        value: /

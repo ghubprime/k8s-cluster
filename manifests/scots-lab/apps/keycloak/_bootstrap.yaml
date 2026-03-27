@@ -1,0 +1,224 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: keycloak
+---
+apiVersion: v1
+automountServiceAccountToken: true
+kind: ServiceAccount
+metadata:
+  labels:
+    app.kubernetes.io/instance: keycloak
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: keycloakx
+    app.kubernetes.io/version: 26.5.5
+    helm.sh/chart: keycloakx-7.1.8
+  name: keycloak-keycloakx
+  namespace: keycloak
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/component: headless
+    app.kubernetes.io/instance: keycloak
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: keycloakx
+    app.kubernetes.io/version: 26.5.5
+    helm.sh/chart: keycloakx-7.1.8
+  name: keycloak-keycloakx-headless
+  namespace: keycloak
+spec:
+  clusterIP: None
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: http
+  selector:
+    app.kubernetes.io/instance: keycloak
+    app.kubernetes.io/name: keycloakx
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/component: http
+    app.kubernetes.io/instance: keycloak
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: keycloakx
+    app.kubernetes.io/version: 26.5.5
+    helm.sh/chart: keycloakx-7.1.8
+  name: keycloak-keycloakx-http
+  namespace: keycloak
+spec:
+  ports:
+  - name: http-internal
+    port: 9000
+    protocol: TCP
+    targetPort: http-internal
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: http
+  - name: https
+    port: 8443
+    protocol: TCP
+    targetPort: https
+  selector:
+    app.kubernetes.io/instance: keycloak
+    app.kubernetes.io/name: keycloakx
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app.kubernetes.io/instance: keycloak
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: keycloakx
+    app.kubernetes.io/version: 26.5.5
+    helm.sh/chart: keycloakx-7.1.8
+  name: keycloak-keycloakx
+  namespace: keycloak
+spec:
+  podManagementPolicy: OrderedReady
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: keycloak
+      app.kubernetes.io/name: keycloakx
+  serviceName: keycloak-keycloakx-headless
+  template:
+    metadata:
+      annotations:
+        checksum/config-startup: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+        checksum/secrets: 44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a
+      labels:
+        app.kubernetes.io/instance: keycloak
+        app.kubernetes.io/name: keycloakx
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app.kubernetes.io/component
+                  operator: NotIn
+                  values:
+                  - test
+                matchLabels:
+                  app.kubernetes.io/instance: keycloak
+                  app.kubernetes.io/name: keycloakx
+              topologyKey: topology.kubernetes.io/zone
+            weight: 100
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app.kubernetes.io/component
+                operator: NotIn
+                values:
+                - test
+              matchLabels:
+                app.kubernetes.io/instance: keycloak
+                app.kubernetes.io/name: keycloakx
+            topologyKey: kubernetes.io/hostname
+      containers:
+      - args:
+        - start-dev
+        command:
+        - /opt/keycloak/bin/kc.sh
+        env:
+        - name: KC_HTTP_RELATIVE_PATH
+          value: /
+        - name: KC_CACHE
+          value: ispn
+        - name: KC_CACHE_STACK
+          value: jdbc-ping
+        - name: KC_PROXY_HEADERS
+          value: forwarded
+        - name: KC_HTTP_ENABLED
+          value: "true"
+        - name: KC_METRICS_ENABLED
+          value: "true"
+        - name: KC_HEALTH_ENABLED
+          value: "true"
+        - name: KC_BOOTSTRAP_ADMIN_USERNAME
+          value: admin
+        - name: KC_BOOTSTRAP_ADMIN_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: admin-password
+              name: keycloak-admin-credentials
+        envFrom: null
+        image: quay.io/keycloak/keycloak:26.5.5
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          httpGet:
+            path: /health/live
+            port: http-internal
+            scheme: HTTP
+          initialDelaySeconds: 0
+          timeoutSeconds: 5
+        name: keycloak
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        - containerPort: 9000
+          name: http-internal
+          protocol: TCP
+        - containerPort: 8443
+          name: https
+          protocol: TCP
+        readinessProbe:
+          httpGet:
+            path: /health/ready
+            port: http-internal
+            scheme: HTTP
+          initialDelaySeconds: 10
+          timeoutSeconds: 1
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 1Gi
+          requests:
+            cpu: 250m
+            memory: 512Mi
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1000
+        startupProbe:
+          failureThreshold: 60
+          httpGet:
+            path: /health
+            port: http-internal
+            scheme: HTTP
+          initialDelaySeconds: 15
+          periodSeconds: 5
+          timeoutSeconds: 1
+        volumeMounts: null
+      enableServiceLinks: true
+      restartPolicy: Always
+      securityContext:
+        fsGroup: 1000
+      serviceAccountName: keycloak-keycloakx
+      terminationGracePeriodSeconds: 60
+      volumes: null
+  updateStrategy:
+    type: RollingUpdate
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  name: keycloak-admin-credentials
+  namespace: keycloak
+spec:
+  encryptedData:
+    admin-password: AgA/ENR2PoTuYukKTYIEcuCY27EDWahKIlgG9bMKZxww4EnG+3r1DpF9CfHcPU7MHqawSMiUHn4lP5mnV3IKs1WPM1OAET3DQuFheitVLxmw9i8KnwdFnZMy+7pE0AinmfVreJ6hTPF/t48F03FhKg8lyXnRZDhCGpCWWqiQxVvWRlsqlL+5O+3RtkIJFJ1RmN1iXRIap+p2s/i6vAjR8aiLnb5nOAWexpf/RTPBtDdXZWsRysE7DOKk94HBc6/Q87slav3UR7KDcs0RW+EJNFy/QJeGYZifKEPEYgmdqEfkhw6igP+fNvDZrFPhFdQjAHTogzVR8uPiOvmCZornyLdUAB8I0zVeT5vBVvTOX7Ig83FA5BS9wrQCLPOnW8kZkpHt0hFl7luiGuiM1tE66i/iHVeBKeohb7mnByFWXE3wdLarRX3xLU0Fr2+H89QKeMHARZ/WoiflZyil5UYQlXO1lrLjFI0IeIWX+csXGBHsNuXPiP63xxY+G17VVZLT7sc60jZjvJkBNZYtOTzuYfzFTWb6KqNXdKL+EP1RG6Cp6gVzefO8sJHknVwT2pzMfmn7dq9OplYx3fbR/xNa/MpG2micXVipM2MYVqu3AAKhTbw9nRJIf7cE8eTNtZtNNBFde0xvL4H6JHCPbCD1HkT+LZqbIy/glRzs4ZDfRmv90hC85wJ7QqEAqCGubcHqnl1erefMku2JoYD2KYlbQkqq4s0eSbXKk1yjeLVZfrIlJw==
+  template:
+    metadata:
+      name: keycloak-admin-credentials
+      namespace: keycloak
