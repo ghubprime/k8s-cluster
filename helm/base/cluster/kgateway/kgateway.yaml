@@ -4,9 +4,9 @@ metadata:
   name: kgateway
 name: kgateway
 # OCI repo pulls fail in Kustomize Helm wrappers on GitHub Actions;
-# omit repo entirely to prevent Kustomize caching algorithms from hashing or fetching from network.
-# point chartHome exactly to the parent folder containing the 'kgateway' chart folder.
-chartHome: ../../../../charts/kgateway-v2.2.2
+# rely on local chart in chartHome by using a dummy https repo URL to trick Kustomize caching algorithm.
+repo: https://dummy.local/charts
+chartHome: ../../../../../charts
 releaseName: kgateway
 namespace: kgateway-system
 includeCRDs: true
