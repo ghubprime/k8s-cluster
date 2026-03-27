@@ -1,0 +1,5 @@
+# Rook Ceph Cluster values for monitoring
+monitoring:
+  enabled: true
+  createPrometheusRules: true
+  # metricsDisabled is false by default when enabled is true
