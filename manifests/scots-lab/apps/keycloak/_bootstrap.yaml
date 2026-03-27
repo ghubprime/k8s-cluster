@@ -222,28 +222,3 @@ spec:
     metadata:
       name: keycloak-admin-credentials
       namespace: keycloak
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  labels:
-    app.kubernetes.io/instance: keycloak
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: keycloakx
-    app.kubernetes.io/version: 26.5.5
-    helm.sh/chart: keycloakx-7.1.8
-  name: keycloak-keycloakx
-  namespace: keycloak
-spec:
-  ingressClassName: cilium
-  rules:
-  - host: keycloak.proxy-us.srbii.com
-    http:
-      paths:
-      - backend:
-          service:
-            name: keycloak-keycloakx-http
-            port:
-              name: http
-        path: /
-        pathType: Prefix
