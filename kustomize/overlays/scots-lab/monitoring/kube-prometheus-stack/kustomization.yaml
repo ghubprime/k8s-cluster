@@ -1,10 +1,15 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: kube-prometheus-system
-resources:
-  - ../../../../base/monitoring/kube-prometheus-stack/
-generators:
-  - ../../../../../helm/overlays/scots-lab/monitoring/kube-prometheus-stack/
+
+helmCharts:
+- name: kube-prometheus-stack
+  repo: https://prometheus-community.github.io/helm-charts
+  version: 72.6.3
+  releaseName: kube-prometheus-stack
+  namespace: kube-prometheus-system
+  includeCRDs: true
+  valuesFile: ../../../../../helm/overlays/scots-lab/monitoring/kube-prometheus-stack/values-scots-lab.yaml
 patches:
   - patch: |
       - op: add
