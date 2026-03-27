@@ -1,2 +1,2 @@
 Error: Error: unknown shorthand flag: 'c' in -c
-: unable to run: 'helm version -c --short' with env=[HELM_CONFIG_HOME=/tmp/kustomize-helm-803565921/helm HELM_CACHE_HOME=/tmp/kustomize-helm-803565921/helm/.cache HELM_DATA_HOME=/tmp/kustomize-helm-803565921/helm/.data] (is 'helm' installed?): exit status 1
+: unable to run: 'helm version -c --short' with env=[HELM_CONFIG_HOME=/tmp/kustomize-helm-1607843076/helm HELM_CACHE_HOME=/tmp/kustomize-helm-1607843076/helm/.cache HELM_DATA_HOME=/tmp/kustomize-helm-1607843076/helm/.data] (is 'helm' installed?): exit status 1
