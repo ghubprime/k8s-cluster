@@ -3,7 +3,8 @@ kind: HelmChartInflationGenerator
 name: kube-prometheus-stack
 metadata:
   name: kube-prometheus-stack
-chartHome: ../../../../../charts/kube-prometheus-stack-72.6.3
+repo: https://prometheus-community.github.io/helm-charts
+chartHome: ../../../../../charts
 releaseName: kube-prometheus-stack
 #namespace: prometheus
 includeCRDs: true
