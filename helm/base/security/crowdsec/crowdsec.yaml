@@ -1,0 +1,12 @@
+apiVersion: builtin
+kind: HelmChartInflationGenerator
+metadata:
+  name: crowdsec
+name: crowdsec
+repo: https://crowdsecurity.github.io/helm-charts
+chartHome: ../../../../../charts
+releaseName: crowdsec
+namespace: crowdsec
+includeCRDs: true
+skipHooks: false
+version: 0.16.2

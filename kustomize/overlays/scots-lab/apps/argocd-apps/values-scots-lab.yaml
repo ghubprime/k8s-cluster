@@ -156,3 +156,10 @@ argocdApplications:
     namespace: vaultwarden
     appCategory: apps
     syncWave: "2"
+  crowdsec:
+    disableAutomated: false
+    disable: false
+    name: crowdsec
+    namespace: crowdsec
+    appCategory: security
+    syncWave: "1"

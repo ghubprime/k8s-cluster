@@ -1,0 +1,22 @@
+container_runtime: containerd
+
+agent:
+  env:
+    - name: PARSERS
+      value: "crowdsecurity/envoy-logs"
+    - name: COLLECTIONS
+      value: "crowdsecurity/envoy"
+  acquisition:
+    - namespace: kgateway-system
+      podName: kgateway-*
+      program: kgateway
+      source: k8s-audit
+
+lapi:
+  env:
+    - name: BOUNCER_KEY_ENVOY
+      value: "envoy-bouncer-static-key"
+
+bouncers:
+  envoy:
+    enabled: true

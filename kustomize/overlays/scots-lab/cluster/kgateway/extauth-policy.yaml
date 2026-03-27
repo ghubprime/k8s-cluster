@@ -1,0 +1,16 @@
+apiVersion: gateway.kgateway.dev/v1alpha1
+kind: ExtAuthPolicy
+metadata:
+  name: crowdsec-bouncer
+  namespace: kgateway-system
+spec:
+  targetRef:
+    group: gateway.networking.k8s.io
+    kind: Gateway
+    name: kgateway-http
+  extAuth:
+    grpc:
+      backendRef:
+        name: crowdsec-bouncer-envoy
+        namespace: crowdsec
+        port: 8081
