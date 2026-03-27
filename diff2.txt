@@ -1,0 +1,2 @@
+﻿manifests/scots-lab/cluster/kgateway/kustomize_error.log
+manifests/scots-lab/security/crowdsec/kustomize_error.log
