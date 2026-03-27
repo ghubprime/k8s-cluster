@@ -56,7 +56,7 @@ resources:
 
 # Ingress via Cilium
 ingress:
-  enabled: true
+  enabled: false
   ingressClassName: "cilium"
   rules:
     - host: keycloak.proxy-us.srbii.com
