@@ -1,1 +1,2 @@
-Error: couldn't execute function: fork/exec ./plugins/generate-cluster-config.sh: permission denied
+Error: Error: unknown shorthand flag: 'c' in -c
+: unable to run: 'helm version -c --short' with env=[HELM_CONFIG_HOME=/tmp/kustomize-helm-1820181963/helm HELM_CACHE_HOME=/tmp/kustomize-helm-1820181963/helm/.cache HELM_DATA_HOME=/tmp/kustomize-helm-1820181963/helm/.data] (is 'helm' installed?): exit status 1

@@ -1,1 +1,2 @@
-Error: open /home/runner/work/k8s-cluster/k8s-cluster/kustomize/overlays/scots-lab/security/crowdsec/values.yaml: no such file or directory
+Error: Error: unknown shorthand flag: 'c' in -c
+: unable to run: 'helm version -c --short' with env=[HELM_CONFIG_HOME=/tmp/kustomize-helm-992691135/helm HELM_CACHE_HOME=/tmp/kustomize-helm-992691135/helm/.cache HELM_DATA_HOME=/tmp/kustomize-helm-992691135/helm/.data] (is 'helm' installed?): exit status 1
