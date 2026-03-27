@@ -1,4 +1,0 @@
-﻿GROUP:      gateway.kgateway.dev
-KIND:       TrafficPolicy
-VERSION:    v1alpha1
-
