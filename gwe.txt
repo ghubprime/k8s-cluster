@@ -1,0 +1,62 @@
+﻿GROUP:      gateway.kgateway.dev
+KIND:       GatewayExtension
+VERSION:    v1alpha1
+
+FIELD: extAuth <Object>
+
+
+DESCRIPTION:
+    ExtAuth configuration for ExtAuth extension type.
+    
+FIELDS:
+  clearRouteCache	<boolean>
+    ClearRouteCache determines if the route cache should be cleared to allow the
+    external authentication service to correctly affect routing decisions.
+
+  failOpen	<boolean>
+    FailOpen determines if requests are allowed when the ext auth service is
+    unavailable.
+    Defaults to false, meaning requests will be denied if the ext auth service
+    is unavailable.
+
+  grpcService	<Object>
+    GrpcService is the GRPC service that will handle the auth.
+    Mutually exclusive with HttpService.
+
+  headersToForward	<[]string>
+    HeadersToForward specifies which headers from the client request should be
+    forwarded to the external authorization service.
+    
+    HTTP services by default have the following headers forwarded: Host, Method,
+    Path, Content-Length, Authorization.
+    
+    If this field is omitted, gRPC services will have all client request headers
+    forwarded,
+    while HTTP services will only receive the default headers described above.
+    
+    Common examples: ["cookie", "authorization", "x-forwarded-for"]
+    More info is available on the [Envoy
+    docs](https://www.envoyproxy.io/docs/envoy/latest/api-v3/extensions/filters/http/ext_authz/v3/ext_authz.proto#envoy-v3-api-field-extensions-filters-http-ext-authz-v3-extauthz-allowed-headers)
+
+  httpService	<Object>
+    HttpService is the HTTP service that will handle the auth.
+    Mutually exclusive with GrpcService.
+
+  statPrefix	<string>
+    StatPrefix is an optional prefix to include when emitting stats from the
+    extauthz filter,
+    enabling different instances of the filter to have unique stats.
+
+  statusOnError	<integer>
+    StatusOnError sets the HTTP status response code that is returned to the
+    client when the
+    auth server returns an error or cannot be reached. Must be in the range of
+    100-511 inclusive.
+    The default matches the deny response code of 403 Forbidden.
+
+  withRequestBody	<Object>
+    WithRequestBody allows the request body to be buffered and sent to the auth
+    service.
+    Warning: buffering has implications for streaming and therefore performance.
+
+

@@ -1,0 +1,27 @@
+﻿GROUP:      gateway.kgateway.dev
+KIND:       GatewayExtension
+VERSION:    v1alpha1
+
+FIELD: grpcService <Object>
+
+
+DESCRIPTION:
+    GrpcService is the GRPC service that will handle the auth.
+    Mutually exclusive with HttpService.
+    
+FIELDS:
+  authority	<string>
+    Authority is the authority header to use for the GRPC service.
+
+  backendRef	<Object> -required-
+    BackendRef references the backend GRPC service.
+
+  requestTimeout	<string>
+    RequestTimeout is the timeout for the gRPC request. This is the timeout for
+    a specific request.
+
+  retry	<Object>
+    Retry specifies the retry policy for gRPC streams associated with the
+    service.
+
+
