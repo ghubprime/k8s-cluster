@@ -14,9 +14,6 @@ agent:
 
 lapi:
   env:
-    - name: BOUNCER_KEY_ENVOY
-      value: "envoy-bouncer-static-key"
+    - name: BOUNCER_KEY_KUBERNETES
+      value: "kubernetes-bouncer-static-key"
 
-bouncers:
-  envoy:
-    enabled: true
