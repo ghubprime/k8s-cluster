@@ -14,10 +14,10 @@ cephClusterSpec:
     provider: host
   dashboard:
     ssl: false
-    port: 7000
+    port: 7001
   annotations:
     dashboard:
-      omni-kube-service-exposer.sidero.dev/port: "7000"
+      omni-kube-service-exposer.sidero.dev/port: "7001"
       omni-kube-service-exposer.sidero.dev/label: "Ceph Dashboard"
       omni-kube-service-exposer.sidero.dev/prefix: "cephdash"
 
