@@ -1,2 +1,0 @@
-Error: Error: Chart.yaml file is missing
-: unable to run: 'helm template argo-cd /home/runner/work/k8s-cluster/k8s-cluster/charts/argo-cd-9.0.5/argo-cd --namespace argocd -f /tmp/kustomize-helm-1209717385/argo-cd-kustomize-values.yaml --include-crds' with env=[HELM_CONFIG_HOME=/tmp/kustomize-helm-1209717385/helm HELM_CACHE_HOME=/tmp/kustomize-helm-1209717385/helm/.cache HELM_DATA_HOME=/tmp/kustomize-helm-1209717385/helm/.data] (is 'helm' installed?): exit status 1
