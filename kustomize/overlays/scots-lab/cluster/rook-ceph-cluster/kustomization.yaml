@@ -6,8 +6,6 @@ resources:
   - exporter-service-monitor.yaml
   - prometheus.yaml
   - prometheus-service.yaml
-  - bridge-vlan-public-net.yaml
-  - bridge-vlan-cluster-net.yaml  
 helmCharts:
   - name: rook-ceph-cluster
     repo: https://charts.rook.io/release

@@ -5,6 +5,8 @@ monitoring:
   # metricsDisabled is false by default when enabled is true
 
 cephClusterSpec:
+  network:
+    provider: host
   dashboard:
     ssl: false
     port: 7000
