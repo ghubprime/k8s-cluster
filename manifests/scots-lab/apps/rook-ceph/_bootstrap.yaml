@@ -51074,7 +51074,7 @@ spec:
           limits:
             memory: 512Mi
           requests:
-            cpu: 200m
+            cpu: 10m
             memory: 128Mi
         securityContext:
           capabilities:
