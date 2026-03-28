@@ -9,6 +9,7 @@ monitoring:
   # metricsDisabled is false by default when enabled is true
 
 cephClusterSpec:
+  skipUpgradeChecks: true
   network:
     provider: host
   dashboard:
