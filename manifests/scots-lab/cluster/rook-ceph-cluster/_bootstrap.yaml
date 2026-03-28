@@ -293,7 +293,7 @@ spec:
       requests:
         cpu: 500m
         memory: 50Mi
-  skipUpgradeChecks: false
+  skipUpgradeChecks: true
   storage:
     useAllDevices: true
     useAllNodes: true
