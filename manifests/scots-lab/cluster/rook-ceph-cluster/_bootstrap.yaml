@@ -170,6 +170,11 @@ metadata:
   name: rook-ceph
   namespace: rook-ceph
 spec:
+  annotations:
+    dashboard:
+      omni-kube-service-exposer.sidero.dev/label: Ceph Dashboard
+      omni-kube-service-exposer.sidero.dev/port: "7000"
+      omni-kube-service-exposer.sidero.dev/prefix: cephdash
   cephVersion:
     allowUnsupported: false
     image: quay.io/ceph/ceph:v19.2.3
@@ -185,7 +190,8 @@ spec:
     disable: false
   dashboard:
     enabled: true
-    ssl: true
+    port: 7000
+    ssl: false
   dataDirHostPath: /var/lib/rook
   disruptionManagement:
     managePodBudgets: true
