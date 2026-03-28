@@ -90,7 +90,6 @@ argocdApplications:
     disableAutomated: false
     disable: false
     name: rook-ceph-cluster
-    path: kustomize/overlays/scots-lab/cluster/rook-ceph-cluster
     namespace: rook-ceph
     appCategory: cluster
     syncWave: "2"
