@@ -5,8 +5,11 @@ monitoring:
   # metricsDisabled is false by default when enabled is true
 
 cephClusterSpec:
+  dashboard:
+    ssl: false
+    port: 7000
   annotations:
     dashboard:
-      omni-kube-service-exposer.sidero.dev/port: "8443"
+      omni-kube-service-exposer.sidero.dev/port: "7000"
       omni-kube-service-exposer.sidero.dev/label: "Ceph Dashboard"
-      omni-kube-service-exposer.sidero.dev/prefix: "ceph"
+      omni-kube-service-exposer.sidero.dev/prefix: "cephdash"
