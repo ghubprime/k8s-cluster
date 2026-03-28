@@ -286,7 +286,7 @@ spec:
     kind: CephCluster
   project: default
   source:
-    path: kustomize/overlays/scots-lab/cluster/rook-ceph-cluster
+    path: manifests/scots-lab/cluster/rook-ceph-cluster
     repoURL: https://github.com/ghubprime/k8s-cluster.git
     targetRevision: HEAD
   syncPolicy:
