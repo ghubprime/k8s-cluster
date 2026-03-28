@@ -1,3 +1,8 @@
 # Rook Ceph Operator values for monitoring
 monitoring:
   enabled: true
+
+resources:
+  requests:
+    cpu: 10m
+    memory: 128Mi
