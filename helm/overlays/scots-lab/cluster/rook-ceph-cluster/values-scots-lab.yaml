@@ -3,3 +3,10 @@ monitoring:
   enabled: true
   createPrometheusRules: true
   # metricsDisabled is false by default when enabled is true
+
+cephClusterSpec:
+  annotations:
+    dashboard:
+      omni-kube-service-exposer.sidero.dev/port: "8443"
+      omni-kube-service-exposer.sidero.dev/label: "Ceph Dashboard"
+      omni-kube-service-exposer.sidero.dev/prefix: "ceph"
