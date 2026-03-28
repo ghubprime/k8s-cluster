@@ -327,7 +327,7 @@ spec:
   annotations:
     dashboard:
       omni-kube-service-exposer.sidero.dev/label: Ceph Dashboard
-      omni-kube-service-exposer.sidero.dev/port: "7000"
+      omni-kube-service-exposer.sidero.dev/port: "7001"
       omni-kube-service-exposer.sidero.dev/prefix: cephdash
   cephVersion:
     allowUnsupported: true
@@ -344,7 +344,7 @@ spec:
     disable: false
   dashboard:
     enabled: true
-    port: 7000
+    port: 7001
     ssl: false
   dataDirHostPath: /var/lib/rook
   disruptionManagement:
