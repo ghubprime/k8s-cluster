@@ -8,8 +8,14 @@ resources:
   - prometheus-service.yaml
   - bridge-vlan-public-net.yaml
   - bridge-vlan-cluster-net.yaml  
-generators:
-  - ../../../../../helm/overlays/scots-lab/cluster/rook-ceph-cluster/
+helmCharts:
+  - name: rook-ceph-cluster
+    repo: https://charts.rook.io/release
+    version: 1.19.2
+    releaseName: rook-ceph-cluster
+    namespace: rook-ceph
+    includeCRDs: true
+    valuesFile: ../../../../../helm/overlays/scots-lab/cluster/rook-ceph-cluster/values-scots-lab.yaml
 patches:
   - target:
       kind: VolumeSnapshotClass
