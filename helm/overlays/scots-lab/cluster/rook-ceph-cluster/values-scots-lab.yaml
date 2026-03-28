@@ -1,4 +1,8 @@
 # Rook Ceph Cluster values for monitoring
+cephImage:
+  tag: v20.2.0
+  allowUnsupported: true
+
 monitoring:
   enabled: true
   createPrometheusRules: true
