@@ -20,3 +20,6 @@ cephClusterSpec:
       omni-kube-service-exposer.sidero.dev/port: "7000"
       omni-kube-service-exposer.sidero.dev/label: "Ceph Dashboard"
       omni-kube-service-exposer.sidero.dev/prefix: "cephdash"
+
+toolbox:
+  enabled: true
