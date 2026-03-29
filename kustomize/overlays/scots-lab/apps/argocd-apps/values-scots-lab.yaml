@@ -163,3 +163,17 @@ argocdApplications:
     namespace: crowdsec
     appCategory: security
     syncWave: "1"
+  loki:
+    disableAutomated: false
+    disable: false
+    name: loki
+    namespace: loki
+    appCategory: monitoring
+    syncWave: "3"
+  uptime-kuma:
+    disableAutomated: false
+    disable: false
+    name: uptime-kuma
+    namespace: uptime-kuma
+    appCategory: apps
+    syncWave: "3"

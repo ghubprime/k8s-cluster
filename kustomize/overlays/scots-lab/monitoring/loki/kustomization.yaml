@@ -1,0 +1,24 @@
+# Loki overlay for scots-lab
+# Uses Kustomize v5 native helmCharts array (Rule #16) because Loki has
+# nested sub-chart dependencies (gateway, memcached) that crash the legacy
+# HelmChartInflationGenerator.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: loki
+resources:
+  - ../../../../base/monitoring/loki/
+helmCharts:
+- name: loki
+  repo: https://grafana.github.io/helm-charts
+  version: 6.55.0
+  releaseName: loki
+  namespace: loki
+  includeCRDs: true
+  valuesFile: values-scots-lab.yaml
+- name: alloy
+  repo: https://grafana.github.io/helm-charts
+  version: 1.6.2
+  releaseName: alloy
+  namespace: loki
+  includeCRDs: false
+  valuesFile: alloy-values-scots-lab.yaml

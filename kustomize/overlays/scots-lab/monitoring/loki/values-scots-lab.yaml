@@ -1,0 +1,86 @@
+# Loki Helm values for scots-lab (monolithic / single-binary mode)
+# Appropriate for a 3-node homelab cluster with filesystem storage on Ceph
+
+deploymentMode: SingleBinary
+
+loki:
+  # Authentication disabled for internal cluster use
+  auth_enabled: false
+
+  commonConfig:
+    replication_factor: 1
+    # Path prefix for data storage inside the container
+    path_prefix: /var/loki
+
+  storage:
+    type: filesystem
+
+  schemaConfig:
+    configs:
+      - from: "2024-04-01"
+        store: tsdb
+        object_store: filesystem
+        schema: v13
+        index:
+          prefix: loki_index_
+          period: 24h
+
+  limits_config:
+    retention_period: 360h  # 15 days, matching Prometheus retention
+    ingestion_rate_mb: 10
+    ingestion_burst_size_mb: 20
+    max_query_series: 5000
+
+  # Compactor handles retention enforcement
+  compactor:
+    working_directory: /var/loki/compactor
+    retention_enabled: true
+    delete_request_store: filesystem
+
+# Single binary deployment
+singleBinary:
+  replicas: 1
+  persistence:
+    enabled: true
+    size: 10Gi
+    storageClass: ceph-block
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 1Gi
+
+# Disable the NGINX gateway — unnecessary for single-binary homelab
+gateway:
+  enabled: false
+
+# Disable memcached sub-charts — not needed at homelab scale
+chunksCache:
+  enabled: false
+resultsCache:
+  enabled: false
+
+# Disable other deployment modes
+read:
+  replicas: 0
+write:
+  replicas: 0
+backend:
+  replicas: 0
+
+# Monitoring - enable ServiceMonitor for Prometheus scraping
+monitoring:
+  serviceMonitor:
+    enabled: true
+  selfMonitoring:
+    enabled: false
+    grafanaAgent:
+      installOperator: false
+  lokiCanary:
+    enabled: false
+
+# Test pods not needed
+test:
+  enabled: false

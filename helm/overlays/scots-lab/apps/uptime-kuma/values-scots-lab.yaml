@@ -1,0 +1,32 @@
+# Uptime Kuma values for scots-lab environment
+# Lightweight uptime monitoring dashboard with SQLite on Ceph block storage
+
+image:
+  repository: louislam/uptime-kuma
+  tag: "1"
+  pullPolicy: IfNotPresent
+
+# Persistent storage for SQLite database
+# Must use block storage (RWO) — NFS will corrupt SQLite file locks
+volume:
+  enabled: true
+  size: 2Gi
+  storageClassName: ceph-block
+
+# Ingress disabled — access via port-forward or Omni proxy
+ingress:
+  enabled: false
+
+# Service configuration
+service:
+  type: ClusterIP
+  port: 3001
+
+# Resource limits for homelab
+resources:
+  requests:
+    cpu: 50m
+    memory: 64Mi
+  limits:
+    cpu: 200m
+    memory: 256Mi

@@ -36,26 +36,30 @@ prometheus:
 alertmanager:
   alertmanagerSpec:
     replicas: 1
+  namespaceOverride: kube-prometheus-system
 
 grafana:
   enabled: true
   adminPassword: "admin" # To be replaced by sealed-secrets or real config if needed. We'll leave it as default or let the user change it.
+  namespaceOverride: kube-prometheus-system
+  additionalDataSources:
+    - name: Loki
+      type: loki
+      url: http://loki.loki.svc.cluster.local:3100
+      access: proxy
+      isDefault: false
 
 kube-state-metrics:
   enabled: true
+  namespaceOverride: kube-prometheus-system
   metricLabelsAllowlist:
     - pods=[*]
     - nodes=[*]
 
 prometheus-node-exporter:
+  namespaceOverride: kube-prometheus-system
   hostRootFsMount:
     enabled: true
+
 namespaceOverride: kube-prometheus-system
-alertmanager:
-  namespaceOverride: kube-prometheus-system
-grafana:
-  namespaceOverride: kube-prometheus-system
-kube-state-metrics:
-  namespaceOverride: kube-prometheus-system
-prometheus-node-exporter:
-  namespaceOverride: kube-prometheus-system
+
