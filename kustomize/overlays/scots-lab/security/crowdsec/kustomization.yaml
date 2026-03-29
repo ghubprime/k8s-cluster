@@ -2,5 +2,11 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - ../../../../base/security/crowdsec/
-generators:
-  - ../../../../../helm/overlays/scots-lab/security/crowdsec/
+helmCharts:
+  - name: crowdsec
+    repo: https://crowdsecurity.github.io/helm-charts
+    version: 0.22.1
+    releaseName: crowdsec
+    namespace: crowdsec
+    includeCRDs: true
+    valuesFile: ../../../../../helm/overlays/scots-lab/security/crowdsec/values.yaml

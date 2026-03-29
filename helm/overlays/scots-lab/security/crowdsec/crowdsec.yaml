@@ -1,5 +1,0 @@
-apiVersion: builtin
-kind: HelmChartInflationGenerator
-metadata:
-  name: crowdsec
-valuesFile: values.yaml
