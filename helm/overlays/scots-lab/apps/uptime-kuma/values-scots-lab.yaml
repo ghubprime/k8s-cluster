@@ -17,10 +17,14 @@ volume:
 ingress:
   enabled: false
 
-# Service configuration
+# Service configuration — exposed via Omni workload proxy (Rule #18: plain HTTP, no SSL)
 service:
   type: ClusterIP
   port: 3001
+  annotations:
+    omni-kube-service-exposer.sidero.dev/port: "50082"
+    omni-kube-service-exposer.sidero.dev/label: "Uptime Kuma"
+    omni-kube-service-exposer.sidero.dev/prefix: "uptimekuma"
 
 # Resource limits for homelab
 resources:
