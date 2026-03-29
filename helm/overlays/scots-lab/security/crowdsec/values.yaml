@@ -10,7 +10,6 @@ agent:
     - namespace: kgateway-system
       podName: kgateway-*
       program: kgateway
-      source: k8s-audit
 
 lapi:
   env:
