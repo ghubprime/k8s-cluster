@@ -1,63 +1,4 @@
 apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: crowdsec-kubernetes-bouncer
-  namespace: crowdsec
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  name: crowdsec-kubernetes-bouncer
-rules:
-- apiGroups:
-  - networking.k8s.io
-  resources:
-  - networkpolicies
-  verbs:
-  - get
-  - list
-  - watch
-  - create
-  - update
-  - patch
-  - delete
-- apiGroups:
-  - cilium.io
-  resources:
-  - ciliumnetworkpolicies
-  - ciliumclusterwidenetworkpolicies
-  verbs:
-  - get
-  - list
-  - watch
-  - create
-  - update
-  - patch
-  - delete
-- apiGroups:
-  - ""
-  resources:
-  - namespaces
-  - pods
-  verbs:
-  - get
-  - list
-  - watch
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: crowdsec-kubernetes-bouncer
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: crowdsec-kubernetes-bouncer
-subjects:
-- kind: ServiceAccount
-  name: crowdsec-kubernetes-bouncer
-  namespace: crowdsec
----
-apiVersion: v1
 data:
   acquis.yaml: |-
     ---
@@ -470,8 +411,8 @@ metadata:
 ---
 apiVersion: v1
 data:
-  csLapiSecret: ZiZAaC5tVDsoJTAmRDxVUEhjKUk9QyVYaitSeW8pOW16XF8wfFkrR2spYURTNERlTGRsOTByLTRpYS9pSWYsVA==
-  registrationToken: eEJGcUt3SFpOTmNxWHZTZzhNZzllUGs2T0tzSUJoMXNBbFJIcGRRcVU4c0lsbVVU
+  csLapiSecret: MzVOZVMgU0BzKSI3TU19WD4wXGNNezxGTkJXd3BVJTdbNEFcQH1ZUkNqaXwnJH44dFJmRWBDPTs/ZHEmdiR6RQ==
+  registrationToken: a3hRWDViWlNnU2o2VzZuUk1oUVA0OVpqaTloenJ6bGplSzBFSzBybEdCYVBjTUF3
 kind: Secret
 metadata:
   labels:
@@ -480,20 +421,6 @@ metadata:
     version: v1
   name: crowdsec-lapi-secrets
 type: Opaque
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: crowdsec-envoy-bouncer
-  namespace: crowdsec
-spec:
-  ports:
-  - name: grpc
-    port: 8080
-    protocol: TCP
-    targetPort: 8080
-  selector:
-    app: crowdsec-envoy-bouncer
 ---
 apiVersion: v1
 kind: Service
@@ -568,72 +495,6 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: crowdsec-envoy-bouncer
-  namespace: crowdsec
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: crowdsec-envoy-bouncer
-  template:
-    metadata:
-      labels:
-        app: crowdsec-envoy-bouncer
-    spec:
-      containers:
-      - env:
-        - name: CROWDSEC_BOUNCER_API_KEY
-          value: envoy-bouncer-static-key
-        - name: CROWDSEC_LAPI_URL
-          value: http://crowdsec-service.crowdsec.svc.cluster.local:8080
-        image: docker.io/crowdsecurity/envoy-bouncer:latest
-        name: bouncer
-        ports:
-        - containerPort: 8080
-          name: grpc
-        resources:
-          limits:
-            cpu: 100m
-            memory: 128Mi
-          requests:
-            cpu: 10m
-            memory: 32Mi
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: crowdsec-kubernetes-bouncer
-  namespace: crowdsec
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: crowdsec-kubernetes-bouncer
-  template:
-    metadata:
-      labels:
-        app: crowdsec-kubernetes-bouncer
-    spec:
-      containers:
-      - env:
-        - name: CROWDSEC_KUBERNETES_BOUNCER_API_KEY
-          value: kubernetes-bouncer-static-key
-        - name: CROWDSEC_LAPI_URL
-          value: http://crowdsec-service.crowdsec.svc.cluster.local:8080
-        image: docker.io/crowdsecurity/kubernetes-bouncer:latest
-        name: bouncer
-        resources:
-          limits:
-            cpu: 100m
-            memory: 128Mi
-          requests:
-            cpu: 10m
-            memory: 32Mi
-      serviceAccountName: crowdsec-kubernetes-bouncer
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
   labels:
     k8s-app: crowdsec
     type: lapi
@@ -651,7 +512,7 @@ spec:
     metadata:
       annotations:
         checksum/lapi-configmap: 5f81bdc08f32bc76fdb8210fa8afd96c741d1bb334f2cbf5d3a76cd7cd8e4ba7
-        checksum/lapi-secret: 983a73e3efa63e9ec0953ba0753dbd0aad35456b9f186ba79e5b192c10a9038f
+        checksum/lapi-secret: 855b10f44af46b2a6fa0fa4c5169093ff9fdbfd2951502fe5a52013258175d8f
       labels:
         k8s-app: crowdsec
         type: lapi
