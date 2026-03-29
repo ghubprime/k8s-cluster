@@ -1,5 +1,0 @@
-Error: Error: values don't meet the specifications of the schema(s) in the following chart(s):
-crowdsec:
-- agent.acquisition.0: Additional property source is not allowed
-
-: unable to run: 'helm template crowdsec /home/runner/work/k8s-cluster/k8s-cluster/kustomize/overlays/scots-lab/security/crowdsec/charts/crowdsec-0.22.1/crowdsec --namespace crowdsec -f /tmp/kustomize-helm-3123733925/crowdsec-kustomize-values.yaml --include-crds' with env=[HELM_CONFIG_HOME=/tmp/kustomize-helm-3123733925/helm HELM_CACHE_HOME=/tmp/kustomize-helm-3123733925/helm/.cache HELM_DATA_HOME=/tmp/kustomize-helm-3123733925/helm/.data] (is 'helm' installed?): exit status 1
