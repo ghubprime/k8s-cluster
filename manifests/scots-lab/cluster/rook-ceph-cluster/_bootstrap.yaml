@@ -403,15 +403,15 @@ spec:
         memory: 100Mi
     crashcollector:
       limits:
-        memory: 60Mi
+        memory: 256Mi
       requests:
-        cpu: 100m
+        cpu: 15m
         memory: 60Mi
     exporter:
       limits:
         memory: 128Mi
       requests:
-        cpu: 50m
+        cpu: 15m
         memory: 50Mi
     logcollector:
       limits:
@@ -419,30 +419,36 @@ spec:
       requests:
         cpu: 100m
         memory: 100Mi
+    mds:
+      limits:
+        memory: 4Gi
+      requests:
+        cpu: 100m
+        memory: 512Mi
     mgr:
       limits:
         memory: 1Gi
       requests:
-        cpu: 500m
-        memory: 512Mi
+        cpu: 100m
+        memory: 256Mi
     mgr-sidecar:
       limits:
         memory: 100Mi
       requests:
-        cpu: 100m
+        cpu: 25m
         memory: 40Mi
     mon:
       limits:
         memory: 2Gi
       requests:
-        cpu: 1000m
-        memory: 1Gi
+        cpu: 100m
+        memory: 512Mi
     osd:
       limits:
         memory: 4Gi
       requests:
-        cpu: 1000m
-        memory: 4Gi
+        cpu: 100m
+        memory: 1Gi
     prepareosd:
       requests:
         cpu: 500m
