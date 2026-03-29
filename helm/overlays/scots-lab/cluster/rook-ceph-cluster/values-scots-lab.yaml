@@ -20,6 +20,52 @@ cephClusterSpec:
       omni-kube-service-exposer.sidero.dev/port: "7001"
       omni-kube-service-exposer.sidero.dev/label: "Ceph Dashboard"
       omni-kube-service-exposer.sidero.dev/prefix: "cephdash"
+  # Homelab resource overrides — production defaults allocate 1000m per OSD/MON
+  # which saturates all 3 nodes at 99% CPU requests. Actual usage is <100m per daemon.
+  resources:
+    mon:
+      requests:
+        cpu: 100m
+        memory: 512Mi
+      limits:
+        memory: 2Gi
+    mgr:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        memory: 1Gi
+    osd:
+      requests:
+        cpu: 100m
+        memory: 1Gi
+      limits:
+        memory: 4Gi
+    mgr-sidecar:
+      requests:
+        cpu: 25m
+        memory: 40Mi
+      limits:
+        memory: 100Mi
+    mds:
+      requests:
+        cpu: 100m
+        memory: 512Mi
+      limits:
+        memory: 4Gi
+    crashcollector:
+      requests:
+        cpu: 15m
+        memory: 60Mi
+      limits:
+        memory: 256Mi
+    exporter:
+      requests:
+        cpu: 15m
+        memory: 50Mi
+      limits:
+        memory: 128Mi
 
 toolbox:
   enabled: true
+

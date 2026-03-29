@@ -35,6 +35,15 @@ kubectl:
 
 upgradeCRDs: false
 
+# Homelab resource override — default 500m CPU is excessive for scheduled backups
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 1
+    memory: 512Mi
+
 schedules:
   daily-cluster-backup:
     disabled: false
