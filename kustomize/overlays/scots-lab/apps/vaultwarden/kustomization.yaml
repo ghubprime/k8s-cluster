@@ -1,7 +1,0 @@
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
-resources:
-  - ../../../../base/apps/vaultwarden/
-  - httproute.yaml
-generators:
-  - ../../../../../helm/overlays/scots-lab/apps/vaultwarden/

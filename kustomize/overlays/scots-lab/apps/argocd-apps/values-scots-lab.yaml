@@ -142,20 +142,6 @@ argocdApplications:
     namespace: velero
     appCategory: apps
     syncWave: "1"
-  keycloak:
-    disableAutomated: false
-    disable: false
-    name: keycloak
-    namespace: keycloak
-    appCategory: apps
-    syncWave: "2"
-  vaultwarden:
-    disableAutomated: false
-    disable: false
-    name: vaultwarden
-    namespace: vaultwarden
-    appCategory: apps
-    syncWave: "2"
   crowdsec:
     disableAutomated: false
     disable: false

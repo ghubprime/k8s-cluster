@@ -15,7 +15,7 @@ The primary repository defining the `k8s-scots-lab` bare-metal Kubernetes cluste
 │       ├─ Multus CNI                             │
 │       ├─ Gateway API CRDs                       │
 │       ├─ ArgoCD                                 │
-│       └─ ArgoCD App-of-Apps (19 applications)   │
+│       └─ ArgoCD App-of-Apps (17 applications)   │
 └─────────────────────────────────────────────────┘
          │
          ▼  omnictl cluster template sync
@@ -28,13 +28,12 @@ The primary repository defining the `k8s-scots-lab` bare-metal Kubernetes cluste
          │
          ▼  ArgoCD syncs from manifests/
 ┌─────────────────────────────────────────────────┐
-│  Live Cluster (19 ArgoCD Applications)          │
+│  Live Cluster (17 ArgoCD Applications)          │
 │  Wave -1: CRDs (Gateway API, kGateway)          │
 │  Wave  0: Infra (Cilium, Multus, Whereabouts)   │
 │  Wave  1: Core (ArgoCD, cert-manager, Ceph,     │
 │           Velero, SealedSecrets, CrowdSec)       │
-│  Wave  2: Services (Ceph Cluster, kGateway,     │
-│           Keycloak, Vaultwarden)                 │
+│  Wave  2: Services (Ceph Cluster, kGateway)     │
 │  Wave  3: Monitoring (kube-prometheus-stack)     │
 └─────────────────────────────────────────────────┘
 ```
@@ -52,7 +51,7 @@ k8s-cluster/
 ├── kustomize/
 │   ├── base/                # Base Kustomize resources per app
 │   └── overlays/scots-lab/  # Environment-specific overlays and patches
-│       ├── apps/            # ArgoCD, cert-manager, velero, keycloak, vaultwarden
+│       ├── apps/            # ArgoCD, cert-manager, velero, sealed-secrets
 │       ├── cluster/         # rook-ceph-cluster, kgateway, gateway-api
 │       ├── infra/           # Cilium, Multus, Whereabouts
 │       ├── monitoring/      # kube-prometheus-stack
@@ -65,7 +64,7 @@ k8s-cluster/
 ├── charts/                  # Offline Helm chart cache (CRITICAL — do not modify)
 │   ├── argo-cd-*/           # ArgoCD chart
 │   ├── crowdsec-*/          # CrowdSec chart
-│   └── vaultwarden-*/       # Vaultwarden chart
+
 │
 └── .github/workflows/
     └── generate.yml         # CI pipeline: Kustomize + Helm → manifests/
