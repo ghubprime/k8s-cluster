@@ -163,3 +163,10 @@ argocdApplications:
     namespace: uptime-kuma
     appCategory: apps
     syncWave: "3"
+  nextcloud:
+    disableAutomated: false
+    disable: false
+    name: nextcloud
+    namespace: nextcloud
+    appCategory: apps
+    syncWave: "3"

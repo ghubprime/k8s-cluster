@@ -1,0 +1,46 @@
+# values-scots-lab.yaml for Nextcloud App
+# Nextcloud and Postgres on Ceph block storage
+
+image:
+  repository: nextcloud
+  tag: 30.0.4-apache
+  pullPolicy: IfNotPresent
+
+ingress:
+  enabled: false
+
+service:
+  type: ClusterIP
+  port: 8080
+
+nextcloud:
+  host: files.srbii.com
+  database: postgresql
+  
+  # Set Trusted Domains
+  configs:
+    proxy.config.php: |-
+      <?php
+      $CONFIG = array (
+        'trusted_proxies' => array('10.0.0.0/8', '192.168.0.0/16', '172.16.0.0/12'),
+        'overwriteprotocol' => 'https',
+      );
+
+persistence:
+  enabled: true
+  storageClass: ceph-block
+  size: 100Gi
+  accessMode: ReadWriteOnce
+
+postgresql:
+  enabled: true
+  global:
+    postgresql:
+      auth:
+        database: nextcloud
+        username: nextcloud
+  primary:
+    persistence:
+      enabled: true
+      storageClass: ceph-block
+      size: 20Gi
