@@ -117,7 +117,7 @@ metadata:
 apiVersion: v1
 data:
   nextcloud-password: Y2hhbmdlbWU=
-  nextcloud-token: TkZVZGg2R3daTg==
+  nextcloud-token: N25STEtuSUg0VA==
   nextcloud-username: YWRtaW4=
 kind: Secret
 metadata:
@@ -148,7 +148,7 @@ type: Opaque
 apiVersion: v1
 data:
   password: Y2hhbmdlbWU=
-  postgres-password: aVJzZ3dwemhEMg==
+  postgres-password: Q3JuckZXb0ZTRA==
 kind: Secret
 metadata:
   labels:
@@ -568,6 +568,20 @@ spec:
         requests:
           storage: 20Gi
       storageClassName: ceph-block
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  name: nextcloud-oidc-secret
+  namespace: nextcloud
+spec:
+  encryptedData:
+    OIDC_CLIENT_ID: AgBz11LfLaXwx+ANgv5/N03OkoBcq+32OlPd3lmKY/vzhMI06V+Y6R1xZ+qOpakdv7Nzn13AnScCHtQg/tE3Dcd3mLnm0Jkb/gzXYqZU9Fx5+icH/bRXAOhWZ2blQrg+s2M5tHa+Rr5jt/a/9NLOc6kIKqXlOizRoQpcGOknfC0NvFHgJQkFKM6jaWKUhp+hbng6aiwa+pchPWSMRExOZ5351W1gVaKE3Q9ZTxVg2r2pHKBxWr3Tg3CdMlWGH0a50HFFY/5qPxu1TzUAACvdiUtkgQzpDyHjxQUdG2AkjJWbDeqhePznGpHd9eQLG7UMgrGC8iqDdOcdQoMs4r1YcVlFy4FI/pGnPcVxffq020u1jxSOs1nk9cPYaZgQyGEJdOFuHCNdGELcuvnEyPJsA7Bgu1Ezjbl9AfyXHqrF4AIpI5l1PnnaUkimKA+J6S3ERkP1aTrkwsFGuX4JeP7yECnlV/rQNVExT9s2nnPCQbzyett4Iu/ButQXijZ4cK8IFsUMxgSO0QL7AxmMqOUYMgss9LfAcQo6Hcfbb0gZT5QuyyLx5M6FtvKn6h7d2hpqRqBvW6slcBd9iJXmHQSZOFCE+fnfm8r5t1UZZlTxtqnjJNf2+IBiLNolXGhVP7Ty7EP5qa3AJuToGX0ZbrsEAbDFLu5ZqkUbmPQpRHsCnfGlnLtBxefbSLoR2SCdCFQZzMN5b1hkBNNBH8WJJkNq7F/7
+    OIDC_CLIENT_SECRET: AgAwX8AqDbCtGsp9S+lrYLTIzGTUOVl7mMeDp/117F5j8kdmPsXCndGQGcCl5Oquxe4w+QXYwHW/B4/A072AeTSxvhqtBlbXg0zaXU8QGVaJZ8LScsRXHkuKssEzfOMqu0DlX1TREz/BucxwN8xAqzLbQNwoArtoZ6cPts6C7dtrqlI+JZLWViaKXmB1KKrBuK/MKcRYPrffkA5wU2jWQh4YUzJ3/IFl7kvTIXYfMKpK3sMOcHHgZeVT5MRnVzv8PiFA13/d8ODhQE0/ky2f5Ac5jSKCiM9V/1DnIKKXH3TxMhwRwKInJKqD+XiSp2FJR6KZDmECFj/l4NGNaIFVYGd2gzkIx5CJxOiWqdrUwCeKnnkGXVKff1ZKW5XIKJqZctcjjv1pL1CCNaQfRewc0f8pYWzA9EnNov40ooYykq4kxaRYVvBb9AL7bbdEcw3m/DqidHctoXbJ66do6VBXy0c9EjAggHXLGbZ5zZHmHh3YkGrsg30Q8MWV5Ij/79YGpdAxD5hF6zz8xIRSSYRs0++xVi4nUw4hlnEjWYP/PDgv9B4uBpQaIIjjl9PoBIWCM50nuhCMqShxA2Gvpcqr33puihMK5w7ppxUI6gkKwJnAJwVKeT3+1yA259jo1cgfJzf+QOxsdB3CPPsnKdiRcthj2O0MmU2TU2YwPcgCZn5/GvgOzaNl9G0C+zYZW3o81084qOJ158/vuio1RdoW0hP1WBD8xhRZnCv1xc/X2WYEzw==
+  template:
+    metadata:
+      name: nextcloud-oidc-secret
+      namespace: nextcloud
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
