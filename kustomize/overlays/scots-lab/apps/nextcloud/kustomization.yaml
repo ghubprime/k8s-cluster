@@ -4,6 +4,7 @@ namespace: nextcloud
 resources:
   - ../../../../base/apps/nextcloud/
   - httproute.yaml
+  - nextcloud-auth-secret-patch.yaml
 helmCharts:
 - name: nextcloud
   repo: https://nextcloud.github.io/helm/
