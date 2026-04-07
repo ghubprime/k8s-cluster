@@ -1,4 +1,5 @@
 # values-scots-lab.yaml for Nextcloud App
+# force rebuild
 # Nextcloud and Postgres on Ceph block storage
 
 image:
@@ -34,10 +35,10 @@ persistence:
 
 postgresql:
   enabled: true
+  image:
+    tag: "15"
   global:
     postgresql:
-      image:
-        tag: "15"
       auth:
         database: nextcloud
         username: nextcloud
