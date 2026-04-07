@@ -4,8 +4,6 @@ agent:
   env:
     - name: PARSERS
       value: "crowdsecurity/envoy-logs"
-    - name: COLLECTIONS
-      value: "crowdsecurity/envoy"
   acquisition:
     - namespace: kgateway-system
       podName: kgateway-*
