@@ -94,7 +94,7 @@ kind: Application
 metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "1"
-  name: cloudflare-tunnel-scots-lab
+  name: cloudflare-scots-lab
   namespace: argocd
 spec:
   destination:
@@ -102,7 +102,7 @@ spec:
     server: https://kubernetes.default.svc
   project: default
   source:
-    path: manifests/scots-lab/infra/cloudflare-tunnel
+    path: manifests/scots-lab/infra/cloudflare
     repoURL: https://github.com/ghubprime/k8s-cluster.git
     targetRevision: HEAD
   syncPolicy:
