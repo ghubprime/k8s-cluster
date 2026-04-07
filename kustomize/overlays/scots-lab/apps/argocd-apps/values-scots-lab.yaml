@@ -170,3 +170,10 @@ argocdApplications:
     namespace: nextcloud
     appCategory: apps
     syncWave: "3"
+  cloudflare-tunnel:
+    disableAutomated: false
+    disable: false
+    name: cloudflare-tunnel
+    namespace: cloudflare
+    appCategory: infra
+    syncWave: "1"
