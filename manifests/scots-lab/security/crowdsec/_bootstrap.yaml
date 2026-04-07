@@ -420,8 +420,8 @@ metadata:
 ---
 apiVersion: v1
 data:
-  csLapiSecret: RicqLDNrfjdYcmdGV2xiUm0gOUomMm1UdlBicSdqcy8jKj8/ZGE2PGAsXnJBZjY4KXhkaUdLSWc7d2snP30oNw==
-  registrationToken: eUY4eFlkZ2FtNkNzZHRwTm5XcnBLVFQ0NlNLQlR0TUJ4VmR6eWdWTUhJblpyVnU2
+  csLapiSecret: LSYrM3lQNTkoTGNmKHQye19zdW1hdGRle19QKk0hWFRrOTdRWDg/O0pQNTxsPSdhQWI1V1AhbD1lcl1ncTZ0TA==
+  registrationToken: ZldBOW0yaEZCZ2xBZVpPdFdNVm04QjRBdjBveE94S3lMQjJOaFl4OGNMWDB5ZDhH
 kind: Secret
 metadata:
   labels:
@@ -521,7 +521,7 @@ spec:
     metadata:
       annotations:
         checksum/lapi-configmap: 5f81bdc08f32bc76fdb8210fa8afd96c741d1bb334f2cbf5d3a76cd7cd8e4ba7
-        checksum/lapi-secret: fdb9a16d8f9f1f13269fb30e32df956ec3a0fc451d791197929b734ddca81270
+        checksum/lapi-secret: 5f2548937b47ee56a3152e2ef5625152a2694c5ddbd07e54a8f20130cc46e43f
       labels:
         k8s-app: crowdsec
         type: lapi
@@ -671,8 +671,6 @@ spec:
           value: http://crowdsec-service.crowdsec:8080
         - name: PARSERS
           value: crowdsecurity/envoy-logs
-        - name: COLLECTIONS
-          value: crowdsecurity/envoy
         image: crowdsecurity/crowdsec:v1.7.6
         imagePullPolicy: IfNotPresent
         livenessProbe:

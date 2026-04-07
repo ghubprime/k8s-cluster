@@ -117,7 +117,7 @@ metadata:
 apiVersion: v1
 data:
   nextcloud-password: Y2hhbmdlbWU=
-  nextcloud-token: cE93eXJoNFlWVA==
+  nextcloud-token: aEU5NUJUQmxNVg==
   nextcloud-username: YWRtaW4=
 kind: Secret
 metadata:
@@ -148,7 +148,7 @@ type: Opaque
 apiVersion: v1
 data:
   password: Y2hhbmdlbWU=
-  postgres-password: RWhHOW5ZRXh2Vw==
+  postgres-password: dHpsWHlITXJPdA==
 kind: Secret
 metadata:
   labels:
@@ -396,7 +396,7 @@ spec:
               name: nextcloud-db
         - name: POSTGRES_HOST
           value: nextcloud-postgresql
-        image: docker.io/bitnami/postgresql:15
+        image: docker.io/bitnami/postgresql:15.4.0-debian-11-r45
         name: postgresql-isready
       securityContext:
         fsGroup: 33
@@ -492,7 +492,7 @@ spec:
           value: error
         - name: POSTGRESQL_SHARED_PRELOAD_LIBRARIES
           value: pgaudit
-        image: docker.io/bitnami/postgresql:15
+        image: docker.io/bitnami/postgresql:15.4.0-debian-11-r45
         imagePullPolicy: IfNotPresent
         livenessProbe:
           exec:
