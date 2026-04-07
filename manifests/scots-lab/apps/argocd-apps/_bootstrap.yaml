@@ -94,6 +94,28 @@ kind: Application
 metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "1"
+  name: cloudflare-tunnel-scots-lab
+  namespace: argocd
+spec:
+  destination:
+    namespace: cloudflare
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: manifests/scots-lab/infra/cloudflare-tunnel
+    repoURL: https://github.com/ghubprime/k8s-cluster.git
+    targetRevision: HEAD
+  syncPolicy:
+    automated:
+      allowEmpty: false
+      prune: true
+      selfHeal: true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
   name: crowdsec-scots-lab
   namespace: argocd
 spec:
