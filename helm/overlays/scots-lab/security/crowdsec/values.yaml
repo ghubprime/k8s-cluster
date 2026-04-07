@@ -1,9 +1,6 @@
 container_runtime: containerd
 
 agent:
-  env:
-    - name: PARSERS
-      value: "crowdsecurity/envoy-logs"
   acquisition:
     - namespace: kgateway-system
       podName: kgateway-*
