@@ -12,7 +12,7 @@ ingress:
 
 service:
   type: ClusterIP
-  port: 8082
+  port: 8080
 
 nextcloud:
   host: files.srbii.com
