@@ -36,6 +36,8 @@ postgresql:
   enabled: true
   global:
     postgresql:
+      image:
+        tag: "15"
       auth:
         database: nextcloud
         username: nextcloud

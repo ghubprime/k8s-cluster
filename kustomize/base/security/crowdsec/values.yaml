@@ -19,5 +19,4 @@ lapi:
 
 bouncers:
   envoy:
-    enabled: true
-    # We will supply the Envoy bouncer as a separate Deployment hooked to ext_authz
+    enabled: false
