@@ -1,4 +1,13 @@
 apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    pod-security.kubernetes.io/audit: privileged
+    pod-security.kubernetes.io/enforce: privileged
+    pod-security.kubernetes.io/warn: privileged
+  name: crowdsec
+---
+apiVersion: v1
 data:
   acquis.yaml: |-
     ---
@@ -411,8 +420,8 @@ metadata:
 ---
 apiVersion: v1
 data:
-  csLapiSecret: bFU0RjRTaUV2YlhdNk8yanFbNU8seztzeFlXajx8aXErQkpTdCxge01pYDpyXCdwWS9+bDYyaTh2MjZ5MG4qcw==
-  registrationToken: ZkJHOHJOd1JBVzBSa3B5SHJtMW45aDEzdllyYThnVmlWZUJLa1lEbG55a2dMWVQ0
+  csLapiSecret: J1xNQkcsX2BuVV9WUD45Jyd0Lj8vd3BMOz8+UyBFMHsqSChvcjl3LCdeW3IgLjtCWCRrQVYjOnx7NnkmTUBrdg==
+  registrationToken: NEJxcFZzcVNJblpmdEhTWlRNd1h4UkNmNEhVQVR6dk1KbDBaZllOVGVheWc0dHE2
 kind: Secret
 metadata:
   labels:
@@ -512,7 +521,7 @@ spec:
     metadata:
       annotations:
         checksum/lapi-configmap: 5f81bdc08f32bc76fdb8210fa8afd96c741d1bb334f2cbf5d3a76cd7cd8e4ba7
-        checksum/lapi-secret: 8915311df2336473d692940ce07e180a13c6325bef8bb4d67e68f48ee0f857ab
+        checksum/lapi-secret: e5a059014b810fff96642dd1f9b321e5de8997bef44455707eb58263778c1f43
       labels:
         k8s-app: crowdsec
         type: lapi
@@ -766,37 +775,6 @@ spec:
       - hostPath:
           path: /var/log
         name: varlog
----
-apiVersion: gateway.kgateway.dev/v1alpha1
-kind: GatewayExtension
-metadata:
-  name: crowdsec-extauth-extension
-  namespace: crowdsec
-spec:
-  extAuth:
-    grpcService:
-      backendRef:
-        group: ""
-        kind: Service
-        name: crowdsec-envoy-bouncer
-        namespace: crowdsec
-        port: 8080
----
-apiVersion: gateway.kgateway.dev/v1alpha1
-kind: TrafficPolicy
-metadata:
-  name: crowdsec-extauth-policy
-  namespace: crowdsec
-spec:
-  policy:
-    extAuth:
-      extensionRef:
-        name: crowdsec-extauth-extension
-        namespace: kgateway-system
-  targetRef:
-    group: gateway.networking.k8s.io
-    kind: Gateway
-    name: kgateway
 ---
 apiVersion: v1
 kind: Pod
