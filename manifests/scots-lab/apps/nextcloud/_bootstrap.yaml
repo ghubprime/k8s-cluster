@@ -117,7 +117,7 @@ metadata:
 apiVersion: v1
 data:
   nextcloud-password: Y2hhbmdlbWU=
-  nextcloud-token: SlFWenhqVVBFcg==
+  nextcloud-token: dWtNa1l1cmRnZg==
   nextcloud-username: YWRtaW4=
 kind: Secret
 metadata:
@@ -148,7 +148,7 @@ type: Opaque
 apiVersion: v1
 data:
   password: Y2hhbmdlbWU=
-  postgres-password: SlkzeGZybnppbg==
+  postgres-password: YU42eDJVTkRvQg==
 kind: Secret
 metadata:
   labels:
@@ -304,6 +304,21 @@ spec:
           value: files.srbii.com
         - name: NEXTCLOUD_DATA_DIR
           value: /var/www/html/data
+        - name: OIDC_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              key: OIDC_CLIENT_ID
+              name: nextcloud-oidc-secret
+        - name: OIDC_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              key: OIDC_CLIENT_SECRET
+              name: nextcloud-oidc-secret
+        - name: OIDC_ISSUER_URL
+          valueFrom:
+            secretKeyRef:
+              key: OIDC_ISSUER_URL
+              name: nextcloud-oidc-secret
         image: nextcloud:30.0.4-apache
         imagePullPolicy: IfNotPresent
         livenessProbe:
@@ -575,8 +590,9 @@ metadata:
   namespace: nextcloud
 spec:
   encryptedData:
-    OIDC_CLIENT_ID: AgBz11LfLaXwx+ANgv5/N03OkoBcq+32OlPd3lmKY/vzhMI06V+Y6R1xZ+qOpakdv7Nzn13AnScCHtQg/tE3Dcd3mLnm0Jkb/gzXYqZU9Fx5+icH/bRXAOhWZ2blQrg+s2M5tHa+Rr5jt/a/9NLOc6kIKqXlOizRoQpcGOknfC0NvFHgJQkFKM6jaWKUhp+hbng6aiwa+pchPWSMRExOZ5351W1gVaKE3Q9ZTxVg2r2pHKBxWr3Tg3CdMlWGH0a50HFFY/5qPxu1TzUAACvdiUtkgQzpDyHjxQUdG2AkjJWbDeqhePznGpHd9eQLG7UMgrGC8iqDdOcdQoMs4r1YcVlFy4FI/pGnPcVxffq020u1jxSOs1nk9cPYaZgQyGEJdOFuHCNdGELcuvnEyPJsA7Bgu1Ezjbl9AfyXHqrF4AIpI5l1PnnaUkimKA+J6S3ERkP1aTrkwsFGuX4JeP7yECnlV/rQNVExT9s2nnPCQbzyett4Iu/ButQXijZ4cK8IFsUMxgSO0QL7AxmMqOUYMgss9LfAcQo6Hcfbb0gZT5QuyyLx5M6FtvKn6h7d2hpqRqBvW6slcBd9iJXmHQSZOFCE+fnfm8r5t1UZZlTxtqnjJNf2+IBiLNolXGhVP7Ty7EP5qa3AJuToGX0ZbrsEAbDFLu5ZqkUbmPQpRHsCnfGlnLtBxefbSLoR2SCdCFQZzMN5b1hkBNNBH8WJJkNq7F/7
-    OIDC_CLIENT_SECRET: AgAwX8AqDbCtGsp9S+lrYLTIzGTUOVl7mMeDp/117F5j8kdmPsXCndGQGcCl5Oquxe4w+QXYwHW/B4/A072AeTSxvhqtBlbXg0zaXU8QGVaJZ8LScsRXHkuKssEzfOMqu0DlX1TREz/BucxwN8xAqzLbQNwoArtoZ6cPts6C7dtrqlI+JZLWViaKXmB1KKrBuK/MKcRYPrffkA5wU2jWQh4YUzJ3/IFl7kvTIXYfMKpK3sMOcHHgZeVT5MRnVzv8PiFA13/d8ODhQE0/ky2f5Ac5jSKCiM9V/1DnIKKXH3TxMhwRwKInJKqD+XiSp2FJR6KZDmECFj/l4NGNaIFVYGd2gzkIx5CJxOiWqdrUwCeKnnkGXVKff1ZKW5XIKJqZctcjjv1pL1CCNaQfRewc0f8pYWzA9EnNov40ooYykq4kxaRYVvBb9AL7bbdEcw3m/DqidHctoXbJ66do6VBXy0c9EjAggHXLGbZ5zZHmHh3YkGrsg30Q8MWV5Ij/79YGpdAxD5hF6zz8xIRSSYRs0++xVi4nUw4hlnEjWYP/PDgv9B4uBpQaIIjjl9PoBIWCM50nuhCMqShxA2Gvpcqr33puihMK5w7ppxUI6gkKwJnAJwVKeT3+1yA259jo1cgfJzf+QOxsdB3CPPsnKdiRcthj2O0MmU2TU2YwPcgCZn5/GvgOzaNl9G0C+zYZW3o81084qOJ158/vuio1RdoW0hP1WBD8xhRZnCv1xc/X2WYEzw==
+    OIDC_CLIENT_ID: AgAOAUSEO6R3/h44oFVqrNmFktqKgS12A7nI41m/xPLhv7d3GAVbzbX54+3t1CNsFmU/c2zTZJvrI+yWGifdgd03w6EO5N9LA+VHVQVk3BRW2cNaLCfsqrFXe9PvNVA7ioAY6uj3+VROu9zT12Ijl0cyOorpb8S+MoJ+AF8KvDwOjHzlV3GTT60Wng6c2Z/d8wOIN2j0F44135xaWLllEHica+gE+v6ylqAUU/mcwILWL22hO2cFnPS3Xhl1/5+U1XYjb+0krxPXiO0J6ZPZVGEnU6PFjvkqEO97cnbiOHY+9sRX3CwsIPFzhBxh0w2YDhfA+ycy7aumLcrUlHDqWdYqnEToZfJTuqru2QmZGKpCtjL8M24UrJmBeM9Hzx/Nm5lxX+5gadklIVkne45EKXxdaUzYpzAlh2sSf+i4DMv+a5bQ8gwWzzU8QVrJLBZFEsVwHd/Lz1iKBaWYCkCPaVVJDfGjX+kecJnaaN+fapBrL7lx0nHEjcOffIPQrsegdl4EhygF+j+mf3YUADBjuHOPzA/gK0WQ49XSmj4WNXXzYN7Zv8KOTFrsy9DWj7oPHJhthPNB4llUOJn8ZJR375tY8XL7AZi9wGgsI3klTq5b4iq8+6UcDnhao71eqcz8yjy4SPdDkrouaj/wBy7mk+vybF5RkGvR43Oy24PLha3LnEABNp7XPC+FQKnoiMls18BtYN0k/9Yr4x/CPVTFsnVV
+    OIDC_CLIENT_SECRET: AgB1/idSJM7kKctFGchQ2HYtHwZQuBsB+D8llJrOwhqdkSNU7ljXhJMZ1YI0+PkA/Bcr55tevgMKBlzN1euaEhMhwpzV4B59ADJW5vKAFwV/3lrJ/fAZks3iWUeICGbare/oOVL2URcqJD504u1xyNF+NVXRDfLfjR71zuRKO5DJLJHqsSh46HoJ4E4YfViibCeR7YJIEhPRWCEsexz2a4q07knePnX04Z78BVpenMkq4/0F/0xP6C3/xqsjeOOGkdMyA3gOejP7HDZJvGTf43iMA4j+Rf2J9ZZP3N6bNNarHVStXpzoZQksMb3FAl+eO2oVpA8L9JYxCvLNlwrPXoOU6iTnk3Zdnprz9oG/+rhEoGOkjcYHAPUR+7/o0WCBTkBIsB8VtNps8YDdwJjFI1EKZY1xddnfq022bIbthoRW5rEeAbdKWXjsqlfw01wuqwrELBAAaseU4t8IDf/bOSwKu+tIyHznHEx02YacxQQpdiC1pzmC4D3tHJYWnLvPpppAQw2T54lWonXBQlD8NwwL//hcjxECsd82AN4yYqSYeQHuPlZL7yTAEYV9M9+xV9/aY9+Di17huJPB41ze2TQqKpR7e4GUWxiD8zy89doFSSaElo5NbyUtNtBcFM5e7zH5UZX5WTm9kh+vdqqczsbq9H/E3cfGenc3lGgtoZ3xdy5UwA3jOBJsrBkMzLEICSl3f0IO/mH+wqqo1pXvoUHzMc7hmpE9OcwNzNBu4Ks0QA==
+    OIDC_ISSUER_URL: AgAHDhn4rKclNrsqNy+/F//pEh3zG5xwJXuXwknXS8gCKF6991nZRdXUZGCloBEO7g9RE8112R1O9gf5lvpHquw04HHAqI4M/bUcnM3s5qwchUGQ+o6Wma+StUxFNXv4qmje6/qrWkuH9amsiPFMrDJQw6RyiZCDIrhuOaQJlCQhQV4CZ7z3vHsGhmMVnFwsquKPURGECO4ptU4SyKpg8mGevzsiHWgrySaVjV5+FpS58mH8ckk+CeN877kKl7jfO4tbqVyoCp/c6EV+NA98DQ3PdGq7TnwH2W77drnXyxmuNRoqWBjXGbSi0CyL1AN8xxYx71f4bcBvSXFns1UXsd9XmFv+veTesev5l3a00Js+Ga1KnH+22ckVdg96abIw1fEavwor1n2pH2FM83SywJXQir4+KdggHJmwG97YObL4U2vL08lAVp5vMkJmN2KjWnezLz7pKQptVuYGF59iTM8gscYLJb8rGgr1PeYTPK4Mm2LQDl0KaDq7Iim3DG/Cr/b8XeJYOnC9we7FAtGcy0yGZ+b+U63JjwCB21+PgTuvOMYgfRZYmzCQLFHhC6LLJ2YiM+5JKWHxSUubu7nBNN4wa2GVnKuyog1cp8EnOpSyEb4R+xFlYAO7EVjvQejipBgy/viNuecxAJo/R5qnZ6s3nnJSPb5cVZP49+9/DBZ/Y3Fmi0dZuS15LwaEJF+D/BqojqJBsR3njWjXASgWcC/nZ3gAfFIGQjsNbmwz2EM5NmP9SoFPNElP81mw
   template:
     metadata:
       name: nextcloud-oidc-secret
