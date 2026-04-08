@@ -18,6 +18,24 @@ nextcloud:
   host: files.srbii.com
   database: postgresql
   
+  extraEnv:
+    - name: OIDC_CLIENT_ID
+      valueFrom:
+        secretKeyRef:
+          name: nextcloud-oidc-secret
+          key: OIDC_CLIENT_ID
+    - name: OIDC_CLIENT_SECRET
+      valueFrom:
+        secretKeyRef:
+          name: nextcloud-oidc-secret
+          key: OIDC_CLIENT_SECRET
+    - name: OIDC_ISSUER_URL
+      valueFrom:
+        secretKeyRef:
+          name: nextcloud-oidc-secret
+          key: OIDC_ISSUER_URL
+
+  
   # Set Trusted Domains
   configs:
     proxy.config.php: |-
