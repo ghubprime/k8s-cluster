@@ -45,7 +45,9 @@ persistence:
 postgresql:
   enabled: true
   image:
-    tag: "16"
+    registry: docker.io
+    repository: bitnamilegacy/postgresql
+    tag: 16.2.0-debian-11-r1
   auth:
     database: paperless
     postgresPassword: changeme
@@ -58,7 +60,9 @@ postgresql:
 redis:
   enabled: true
   image:
-    tag: "7.4"
+    registry: docker.io
+    repository: bitnamilegacy/redis
+    tag: 7.4.2-debian-12-r0
   auth:
     enabled: true
     password: changeme
