@@ -4,7 +4,7 @@
 
 image:
   repository: nextcloud
-  tag: 30.0.17-apache
+  tag: 31.0.14-apache
   pullPolicy: IfNotPresent
 
 ingress:
