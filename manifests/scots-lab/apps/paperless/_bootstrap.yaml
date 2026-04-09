@@ -729,7 +729,7 @@ spec:
           value: error
         - name: POSTGRESQL_SHARED_PRELOAD_LIBRARIES
           value: pgaudit
-        image: docker.io/bitnami/postgresql:16.2.0-debian-11-r1
+        image: docker.io/bitnami/postgresql:16
         imagePullPolicy: IfNotPresent
         livenessProbe:
           exec:
@@ -882,7 +882,7 @@ spec:
           value: "no"
         - name: REDIS_PORT
           value: "6379"
-        image: docker.io/bitnami/redis:7.4.2-debian-12-r0
+        image: docker.io/bitnami/redis:7.4
         imagePullPolicy: IfNotPresent
         livenessProbe:
           exec:
@@ -1068,7 +1068,7 @@ spec:
           value: "no"
         - name: REDIS_PORT
           value: "6379"
-        image: docker.io/bitnami/redis:7.4.2-debian-12-r0
+        image: docker.io/bitnami/redis:7.4
         imagePullPolicy: IfNotPresent
         livenessProbe:
           exec:
