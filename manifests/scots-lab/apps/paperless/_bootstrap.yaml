@@ -589,6 +589,11 @@ spec:
           value: "8000"
         - name: PAPERLESS_REDIS
           value: redis://:$(A_REDIS_PASSWORD)@paperless-redis-master
+        - name: PAPERLESS_SOCIALACCOUNT_PROVIDERS
+          valueFrom:
+            secretKeyRef:
+              key: providers.json
+              name: paperless-oidc-secret
         - name: PAPERLESS_SOCIAL_AUTO_SIGNUP
           value: "true"
         - name: PAPERLESS_TIME_ZONE
