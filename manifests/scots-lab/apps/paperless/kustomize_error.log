@@ -1,0 +1,12 @@
+Error: Error: execution error at (paperless-ngx/charts/redis/templates/NOTES.txt:216:4): 
+
+⚠ ERROR: Original containers have been substituted for unrecognized ones. Deploying this chart with non-standard containers is likely to cause degraded security and performance, broken chart features, and missing environment variables.
+
+Unrecognized images:
+  - docker.io/bitnamilegacy/redis:7.4.2-debian-12-r0
+
+If you are sure you want to proceed with non-standard containers, you can skip container image verification by setting the global parameter 'global.security.allowInsecureImages' to true.
+Further information can be obtained at https://github.com/bitnami/charts/issues/30850
+
+Use --debug flag to render out invalid YAML
+: unable to run: 'helm template paperless /home/runner/work/k8s-cluster/k8s-cluster/kustomize/overlays/scots-lab/apps/paperless/charts/paperless-ngx-0.24.1/paperless-ngx --namespace paperless -f /tmp/kustomize-helm-2228182409/paperless-ngx-kustomize-values.yaml' with env=[HELM_CONFIG_HOME=/tmp/kustomize-helm-2228182409/helm HELM_CACHE_HOME=/tmp/kustomize-helm-2228182409/helm/.cache HELM_DATA_HOME=/tmp/kustomize-helm-2228182409/helm/.data] (is 'helm' installed?): exit status 1
