@@ -12,6 +12,10 @@ envValueFrom:
       name: paperless-oidc-secret
       key: providers.json
 
+global:
+  security:
+    allowInsecureImages: true
+
 ingress:
   main:
     enabled: false
