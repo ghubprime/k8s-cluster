@@ -177,3 +177,10 @@ argocdApplications:
     namespace: cloudflare
     appCategory: infra
     syncWave: "1"
+  paperless:
+    disableAutomated: false
+    disable: false
+    name: paperless
+    namespace: paperless
+    appCategory: apps
+    syncWave: "3"
