@@ -44,6 +44,8 @@ persistence:
 
 postgresql:
   enabled: true
+  image:
+    tag: "16"
   auth:
     database: paperless
     postgresPassword: changeme
@@ -55,6 +57,8 @@ postgresql:
 
 redis:
   enabled: true
+  image:
+    tag: "7.4"
   auth:
     enabled: true
     password: changeme
