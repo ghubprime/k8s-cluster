@@ -1245,7 +1245,7 @@ spec:
     namespace: kgateway-system
   rules:
   - backendRefs:
-    - name: paperless
+    - name: paperless-paperless-ngx
       port: 8000
     matches:
     - path:
