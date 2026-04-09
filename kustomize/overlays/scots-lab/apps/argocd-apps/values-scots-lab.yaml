@@ -183,4 +183,11 @@ argocdApplications:
     name: paperless
     namespace: paperless
     appCategory: apps
+    syncWave: "3"
+  photoprism:
+    disableAutomated: false
+    disable: false
+    name: photoprism
+    namespace: photoprism
+    appCategory: apps
     syncWave: "3"

@@ -1,0 +1,13 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: photoprism-photoprism-plus
+  namespace: photoprism
+spec:
+  template:
+    spec:
+      containers:
+        - name: photoprism-plus
+          envFrom:
+            - secretRef:
+                name: photoprism-oidc-secret
