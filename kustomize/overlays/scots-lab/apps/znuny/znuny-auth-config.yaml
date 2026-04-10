@@ -15,7 +15,7 @@ data:
         # Override default DB Auth to use Apache REMOTE_USER injected by oauth2-proxy
         $Self->{'AuthModule'} = 'Kernel::System::Auth::HTTPBasicAuth';
         
-        # Enable SSO for Customer Users as well (optional, but good practice for ticketing)
+        # Enable SSO for Customer Users as well
         $Self->{'Customer::AuthModule'} = 'Kernel::System::CustomerAuth::HTTPBasicAuth';
     }
     1;
