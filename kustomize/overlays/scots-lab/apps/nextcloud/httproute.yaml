@@ -17,4 +17,4 @@ spec:
         value: "/"
     backendRefs:
     - name: nextcloud
-      port: 8082
+      port: 8080

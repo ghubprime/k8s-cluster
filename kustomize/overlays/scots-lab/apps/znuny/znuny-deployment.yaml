@@ -71,10 +71,9 @@ spec:
             - |
               cp /tmp/znuny-auth-config/ZZZA_OIDC.pm /opt/znuny/Kernel/Config/Files/ZZZA_OIDC.pm
               chown znuny:znuny /opt/znuny/Kernel/Config/Files/ZZZA_OIDC.pm
+              sed -i 's/^Listen 80$/Listen 127.0.0.1:80/' /etc/apache2/ports.conf
               exec /usr/local/bin/docker-entrypoint.sh /usr/bin/supervisord -c /etc/supervisor/supervisord.conf
-          ports:
-            - containerPort: 80
-              name: http
+          # Intentionally omitted containerPort: 80 to prevent direct access bypass
           env:
             - name: TZ
               value: "UTC"
@@ -109,17 +108,15 @@ spec:
             - name: znuny-auth-config
               mountPath: /tmp/znuny-auth-config
           readinessProbe:
-            httpGet:
-              path: /
-              port: 80
+            exec:
+              command: ["curl", "-f", "-s", "http://127.0.0.1:80/"]
             initialDelaySeconds: 60
             periodSeconds: 15
             timeoutSeconds: 10
             failureThreshold: 8
           livenessProbe:
-            httpGet:
-              path: /
-              port: 80
+            exec:
+              command: ["curl", "-f", "-s", "http://127.0.0.1:80/"]
             initialDelaySeconds: 600
             periodSeconds: 30
             timeoutSeconds: 10
