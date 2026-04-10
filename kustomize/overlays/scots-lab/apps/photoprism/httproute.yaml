@@ -15,5 +15,5 @@ spec:
             type: PathPrefix
             value: /
       backendRefs:
-        - name: photoprism-photoprism-plus
+        - name: photoprism-photoprism
           port: 2342
