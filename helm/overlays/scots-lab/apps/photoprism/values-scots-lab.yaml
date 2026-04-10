@@ -35,6 +35,7 @@ config:
   PHOTOPRISM_AUTH_MODE: "password"
   PHOTOPRISM_LOG_LEVEL: "info"
   PHOTOPRISM_HTTP_COMPRESSION: "gzip"
+  PHOTOPRISM_SESSION_MAXAGE: "1209600"
 
 # SQLite database (chart default — no external DB needed for single-user homelab)
 database:
