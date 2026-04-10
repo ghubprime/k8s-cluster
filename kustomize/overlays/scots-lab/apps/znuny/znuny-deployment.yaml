@@ -71,9 +71,10 @@ spec:
               value: "true"
             - name: ZNUNY_ORGANIZATION
               value: "Scots Lab"
-          volumeMounts:
-            - name: znuny-data
-              mountPath: /opt/znuny
+          # No volume mounts for /opt/znuny — the image contains the full
+          # Znuny installation. All persistent state lives in MariaDB.
+          # Mounting a PVC at /opt/znuny would shadow the application files
+          # since the image does not copy files into the volume on first boot.
           # Readiness probe checks if Apache is serving content
           readinessProbe:
             httpGet:
@@ -103,8 +104,3 @@ spec:
             limits:
               cpu: 1000m
               memory: 2Gi
-      volumes:
-        - name: znuny-data
-          persistentVolumeClaim:
-            claimName: znuny-data
-

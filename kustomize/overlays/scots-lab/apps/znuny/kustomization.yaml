@@ -5,7 +5,6 @@ resources:
   - ../../../../base/apps/znuny/
   - mariadb-statefulset.yaml
   - mariadb-service.yaml
-  - znuny-pvcs.yaml
   - znuny-deployment.yaml
   - znuny-service.yaml
   - httproute.yaml
