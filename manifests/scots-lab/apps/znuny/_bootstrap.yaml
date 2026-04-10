@@ -105,19 +105,31 @@ spec:
       - env:
         - name: TZ
           value: UTC
-        - name: LANG
-          value: en_US.UTF-8
-        - name: LANGUAGE
-          value: en_US:en
-        - name: LC_ALL
-          value: en_US.UTF-8
-        image: ghcr.io/erik-donath/znuny-docker:latest
+        - name: ZNUNY_DB_TYPE
+          value: mysql
+        - name: ZNUNY_DB_HOST
+          value: znuny-mariadb
+        - name: ZNUNY_DB_NAME
+          value: znuny
+        - name: ZNUNY_DB_USER
+          value: znuny
+        - name: ZNUNY_DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: MYSQL_PASSWORD
+              name: znuny-db-secret
+        - name: ZNUNY_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: ZNUNY_ROOT_PASSWORD
+              name: znuny-db-secret
+        image: docker.io/andreynsafonov/znuny:7.2.3
         livenessProbe:
           failureThreshold: 5
           httpGet:
-            path: /znuny/index.pl
+            path: /
             port: 80
-          initialDelaySeconds: 120
+          initialDelaySeconds: 180
           periodSeconds: 30
           timeoutSeconds: 10
         name: znuny
@@ -125,11 +137,11 @@ spec:
         - containerPort: 80
           name: http
         readinessProbe:
-          failureThreshold: 6
+          failureThreshold: 8
           httpGet:
-            path: /znuny/index.pl
+            path: /
             port: 80
-          initialDelaySeconds: 30
+          initialDelaySeconds: 60
           periodSeconds: 15
           timeoutSeconds: 10
         resources:
@@ -274,8 +286,9 @@ metadata:
   namespace: znuny
 spec:
   encryptedData:
-    MYSQL_PASSWORD: AgBJUtO3SN+eW8uuoF7LbD5OgVM9tVq51AyTL+s3Ucao2y4padKFkkrfJL1OBOhyN87bIW+9suDyYWwpN1K0UVvjSdxstupoaMowHhCM8X/huT8NyBgsgj0VU1Gb6s6XSLLfUEWsoqVPTzmTPjsyLW+b6Tqhmjz51Bdlwrtlpwkp4tQJWw/AzWJnIMfPZDmEsHG5xg/uTgMBZE160MJe+ZUSAt7gLCsSt/JpQbooLpx8xwxH9q7M0a8IA9zsvxKYBzB4rdC8xTnroeksHJddtWOO51+hchNnWYIwxDudhj8w/VUjFrsoiaZccddOpgpTALoOLICZOImSnLlG8c+/8XUXlcYvabE0Kohw5WAsnTPqQdJYVIbB12lvB1GYIxjfSy5RHUJpY5QhXIgQpD6CGDEzcBD1w28KmgtcDYcbzBTPYJl71tFySGceWaUotLFUOfPtOoM64izEsZsIN0En1KLSjSC0EwjfEeEGckV8WtU0gSCK/pK+VvbGi3qvtEmS4Kcukkl1CtrWBF3PTX1eacYFYdk9CZr6odOs14gdqHcw+zGxpONM6556FWGPyZrWaKbg9e10ERJ9dEHEJg0cYHX5JtmK745SjkzjfWwkP3IMjKm593xhYr7K4i1cDLC0ZbDiQ2qMi7Qhe6Z8cOwDJT9zxIMa/IonqV1naXCSHv0i3gpAAn/f+KdmHaM8gDCLP2v5x5A4I1tz+UlxGAK53E0P81poDqu/X44=
-    MYSQL_ROOT_PASSWORD: AgAaLlF+UeAFpxKjoxEFuUiY2qClH3y7HfQ/SdCKuMCtOXi2UigkmvDUYbdHTFWyZc+djDWsrx8oGcKH98PdqkZ40vULsp+2eklAOvagnHJCDHD3cRJHG+2KldluFM4KYH30zJaUcIUaZdO0NC+EZhRsVvhEyITilZ6l3PcLsdLeX0L+0oZwfABReZIKp8lSwcdO5H+hmXnyDWM6zKGuWItYN65ZsTFw69WJJ+v4eqIzq/xlnyO17l+8UYzYXdssdctZZNfoX8PuHUzSOZZfnltjqOuMa7nZqS0S3LPN6qIHfAJJ26rtD0lgoKFbVcgulEWjZSt1Utenud3oYCb+0pSb7A3zO1eiMZiqwnYvM1kmc9bnmJIy1EMFo8Xt2cf+EpNO/4ZOiy2E6VWNeusCtWyjEbLlzvGbxgo5RJjw3V+Ism5/EKhCey1DpaOeHLPt7G+jCkq07CrMvO5Gbw9OX9AKOXa/kIyQErqxf0fLHJopAxE+ZYMAmdm6gWcDOdn1tXXWOGWS6u1Vr7cTJghWoxA3JbO88mqafO8g92nfyd70aXDJTf98jC51BBUdYGIbV/8cmilH7SyDkm0UHCs9Lhrrk+GXhp6swEqEeA215aQEsn2W6QKeKn0tu+uR84n+Sqjvp9gfgVfqRzF7dt0jo98UrX/m4w8pTkbrsT32flXt105BsTG3Bhw9vMu7lF6RvYRsQHsbzEs74VxZ9YDY/g1Flmv7LRI06F8=
+    MYSQL_PASSWORD: AgBTxP4+0bemv6TfPhZy6c1NqjyvQv7CutJ66sDIpov6e30iH82SjgF7ncN4fSXMotsgt+XBRg4ostLoM4kzMnSFsCZWDD4bweWMWJj3KlCIBdmqi37qBpKEKCQVouwdhjRTa6lrwKLrTK0sujkc8jkiG2fWelFsDDoRaC/ZE2jv8FR9RNZYjZjlrvGbWhJ9YKbtq/qYYt720HKzMc7xGKeILkkDD0mR2zJQVcLMGzUzKz3dCSUW6SEYbbB5ZmotseBvHDLnkg9lpNbLlD+md41aUZt9dFsh+hOfJ2VIEiIzNURdLihX46yob635fIemrOuZnLavKWrDQreUHgIDoGui11UBs4KIvOahlmyAVIvx6RU3BtM2kFL9Ube25PVuh3yqzRS9UtgyB1rOCB4XHacz7lMA+k4ebg62m9HprkbwARWcAXmvj/iydi7TCb62HNSGo/m8qjAu8ehfcySDH5hd+V5abXhATBJgEYBWNGBlbIgXlQaU+T7Z5Etf5UP7AmYjBe9tvQoZNC3s6gFFteffkyVOdqX3aV6CNmJ+R32+banLLttV1RP8qqrFp4e5R0DslyTVc2+hL6TzaH8lskVqkjKR7z1Ot4Fjor0Fv7Es4NuiiCFQjnwenna3lTN/yjtS35xOfzWNpmVvf5Cyb/9311i2RJbw0RsNC/2Y5SRZ0untFUP9fNx5w9bHYDArV8Z5DiksDeOe+TtPcR8QFQ0yM+0xo6PV5kg=
+    MYSQL_ROOT_PASSWORD: AgCgNAYMM4tRFSi9tqOI+4zurE6a8bQej9MlcqLWOVDqFLBeO11INxmnpirsJjCLg/LYkbUvxqc9WrBMuN6580ZDDEU4n9ro7XKoaJCujoxv3RQWtv3iN82sGKLpvwabZwdg3qnOc7WO1YdzCan46LWN1Av7sWY0Nbq6SYHjv4R/0G3MERK2zaOnrL2hmoSHiVwGCtNlTlsr4dvCM55LnM7dj31L5pAamZQb1/03HYscGAhGtUzCK9VoDVg+7I/2hqmvXE0aGWk42Dv+z333rmvVDsZQSfNXVXbTM2FQw7bix/sNzPz9O9CFFBxzy/XdGNhIjSeX/DdAQ4PO8McD+ucMZWNvR2iTG1VJX6Y548RG4SzLtXozg5TBFzRxsG9+JONExuC+CWYUXpqlKjaDEsvTZyLfx1beImouJsaTQwAUB0ZnAbeDWui71P2qwsXHPueXln2/9E19LLhPBxel2weOGdtI69v9I8MRId/VCoBcJ7vOkwrztmpMhSmiFpuhW/cmUtFRhA99E+rU78vbIU+lh8Kc7mBJpJVS7/lQQXrWJYmlEfk8D/PiNoQhxvcHoaI7Uk8PzCixHO/zOY9JPY9VgeZaalYfJfiWdWES+GIm5y9vdu+gvX4gVi20FlS38/wMImLNHuHErAOlkYnJ/KliDT4nbv2NKvOfD2LS/98VKiH9dtEksz8b6E6xC5Pvio4q8Z/jBEqzmY6uJ6ZF9CpMadmC3BTxnXY=
+    ZNUNY_ROOT_PASSWORD: AgC6YuVkyw0i80qHd4iX7nL/Nu4LjmcKH6Ye+q4r/BbC3UopT4mdWVIhJ+tA2webIG8WsDoxyQn+98sC3kn/O7JMrtz97m5fTQiypP4312B9SVx7kpmLeILfnpYeCbkQMQsl/F6mj5pPyMevr9mjICDTZ2WtyFWou4hFjtqOQdUmSilDqocNoXuKhDbydG+WLC9fan+5jGQTSGYDIBFf31sjIrud7DudIg0ThAwPIVmHO32nj0PkyCXEAdFetqD358N6csa04WSX4XcNsZx+UfxS+3sios4eCSAICJ1MjvrW1brXP0WLzNlXfX2fpLGC+hAx5ro7WVMrZjSaS6OkeMJKYN1Gt6dbm5KhfUXeAEwZKVzMP5TJAgYusWxN8gHcrGD2RFJWYInsgJT8KFPpRv7V8GPxusPr3m8b9HihTPnyKc9Lj1+V5RGCLeVvgs4m9e/ZLNy9+WVitevOYSirE2zWXq+W9KJ3x3GvwEve5mw6LQvuYderkhVdclI6XNCB7zc6+Tq1t2MWSDfkIyzB4Zb+MhbiKrCGaT+myYfz7BdSXPuKEXGX4TToSLY7pFFyoBZ/yXbV4Ff7Ops8CqoFaBzP9+qbrgeH9k+CO6aMW4kt57r4owj0FRgeew1vZY9v2tqOdyvoeln5NSa+0TyySW+m1E4yuGgmAgPcGAbArf50BLZi3wuiDEsrKqXAvCxtbZkdIpoDS4eWLsgPBCV/JHFt
   template:
     metadata:
       name: znuny-db-secret
