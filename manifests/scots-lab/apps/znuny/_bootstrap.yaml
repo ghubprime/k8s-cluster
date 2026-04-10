@@ -69,9 +69,6 @@ spec:
       containers:
       - args:
         - --provider=oidc
-        - --client-id=$(OAUTH2_PROXY_CLIENT_ID)
-        - --client-secret=$(OAUTH2_PROXY_CLIENT_SECRET)
-        - --cookie-secret=$(OAUTH2_PROXY_COOKIE_SECRET)
         - --oidc-issuer-url=https://auth.srbii.com/realms/homelab
         - --upstream=http://127.0.0.1:80
         - --http-address=0.0.0.0:4180
