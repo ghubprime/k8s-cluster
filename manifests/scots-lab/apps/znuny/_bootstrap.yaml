@@ -119,6 +119,14 @@ spec:
         - name: ZNUNY_ORGANIZATION
           value: Scots Lab
         image: docker.io/andreynsafonov/znuny:7.2.3
+        lifecycle:
+          postStart:
+            exec:
+              command:
+              - /bin/bash
+              - -c
+              - echo "\$Self->{'AuthModule'} = 'Kernel::System::Auth::HTTPBasicAuth';"
+                >> /opt/znuny/Kernel/Config.pm
         livenessProbe:
           failureThreshold: 5
           httpGet:
