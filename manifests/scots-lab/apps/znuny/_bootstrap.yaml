@@ -107,6 +107,7 @@ spec:
         - |
           cp /tmp/znuny-auth-config/ZZZA_OIDC.pm /opt/znuny/Kernel/Config/Files/ZZZA_OIDC.pm
           chown znuny:znuny /opt/znuny/Kernel/Config/Files/ZZZA_OIDC.pm
+          sed -i 's/^Listen 80$/Listen 127.0.0.1:80/' /etc/apache2/ports.conf
           exec /usr/local/bin/docker-entrypoint.sh /usr/bin/supervisord -c /etc/supervisor/supervisord.conf
         command:
         - /bin/bash
@@ -140,22 +141,25 @@ spec:
           value: Scots Lab
         image: docker.io/andreynsafonov/znuny:7.2.3
         livenessProbe:
+          exec:
+            command:
+            - curl
+            - -f
+            - -s
+            - http://127.0.0.1:80/
           failureThreshold: 5
-          httpGet:
-            path: /
-            port: 80
           initialDelaySeconds: 600
           periodSeconds: 30
           timeoutSeconds: 10
         name: znuny
-        ports:
-        - containerPort: 80
-          name: http
         readinessProbe:
+          exec:
+            command:
+            - curl
+            - -f
+            - -s
+            - http://127.0.0.1:80/
           failureThreshold: 8
-          httpGet:
-            path: /
-            port: 80
           initialDelaySeconds: 60
           periodSeconds: 15
           timeoutSeconds: 10

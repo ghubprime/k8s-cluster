@@ -117,7 +117,7 @@ metadata:
 apiVersion: v1
 data:
   nextcloud-password: Y2hhbmdlbWU=
-  nextcloud-token: ZFJSUDhldFZldg==
+  nextcloud-token: VWIwdlBWWWZMaA==
   nextcloud-username: YWRtaW4=
 kind: Secret
 metadata:
@@ -148,7 +148,7 @@ type: Opaque
 apiVersion: v1
 data:
   password: Y2hhbmdlbWU=
-  postgres-password: Wldoa0JrNUU3eA==
+  postgres-password: SnBoZmQ4VW5sYg==
 kind: Secret
 metadata:
   labels:
@@ -613,7 +613,7 @@ spec:
   rules:
   - backendRefs:
     - name: nextcloud
-      port: 8082
+      port: 8080
     matches:
     - path:
         type: PathPrefix
