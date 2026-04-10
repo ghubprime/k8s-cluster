@@ -42,44 +42,14 @@ kind: PersistentVolumeClaim
 metadata:
   labels:
     app: znuny-app
-  name: znuny-config
+  name: znuny-data
   namespace: znuny
 spec:
   accessModes:
   - ReadWriteOnce
   resources:
     requests:
-      storage: 1Gi
-  storageClassName: ceph-block
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  labels:
-    app: znuny-app
-  name: znuny-custom
-  namespace: znuny
-spec:
-  accessModes:
-  - ReadWriteOnce
-  resources:
-    requests:
-      storage: 1Gi
-  storageClassName: ceph-block
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  labels:
-    app: znuny-app
-  name: znuny-var
-  namespace: znuny
-spec:
-  accessModes:
-  - ReadWriteOnce
-  resources:
-    requests:
-      storage: 10Gi
+      storage: 15Gi
   storageClassName: ceph-block
 ---
 apiVersion: apps/v1
@@ -123,6 +93,12 @@ spec:
             secretKeyRef:
               key: ZNUNY_ROOT_PASSWORD
               name: znuny-db-secret
+        - name: ZNUNY_FQDN
+          value: tickets.srbii.com
+        - name: ZNUNY_AUTO_INSTALL
+          value: "true"
+        - name: ZNUNY_ORGANIZATION
+          value: Scots Lab
         image: docker.io/andreynsafonov/znuny:7.2.3
         livenessProbe:
           failureThreshold: 5
@@ -155,12 +131,8 @@ spec:
           runAsNonRoot: false
           runAsUser: 0
         volumeMounts:
-        - mountPath: /opt/znuny/var
-          name: znuny-var
-        - mountPath: /opt/znuny/Kernel/Config
-          name: znuny-config
-        - mountPath: /opt/znuny/Custom
-          name: znuny-custom
+        - mountPath: /opt/znuny
+          name: znuny-data
       initContainers:
       - command:
         - sh
@@ -182,15 +154,9 @@ spec:
             cpu: 10m
             memory: 16Mi
       volumes:
-      - name: znuny-var
+      - name: znuny-data
         persistentVolumeClaim:
-          claimName: znuny-var
-      - name: znuny-config
-        persistentVolumeClaim:
-          claimName: znuny-config
-      - name: znuny-custom
-        persistentVolumeClaim:
-          claimName: znuny-custom
+          claimName: znuny-data
 ---
 apiVersion: apps/v1
 kind: StatefulSet
