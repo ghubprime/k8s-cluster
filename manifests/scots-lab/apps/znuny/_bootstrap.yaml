@@ -4,6 +4,16 @@ metadata:
   name: znuny
 ---
 apiVersion: v1
+data:
+  oidc-header.conf: |
+    # Map X-Forwarded-Email from oauth2-proxy into REMOTE_USER for Znuny HTTPBasicAuth
+    SetEnvIf X-Forwarded-Email "(.*)" REMOTE_USER=$1
+kind: ConfigMap
+metadata:
+  name: apache-oidc-config
+  namespace: znuny
+---
+apiVersion: v1
 kind: Service
 metadata:
   labels:
@@ -15,7 +25,7 @@ spec:
   - name: http
     port: 80
     protocol: TCP
-    targetPort: 80
+    targetPort: 4180
   selector:
     app: znuny-app
   type: ClusterIP
@@ -57,6 +67,33 @@ spec:
         app: znuny-app
     spec:
       containers:
+      - args:
+        - --provider=oidc
+        - --client-id=$(OAUTH2_PROXY_CLIENT_ID)
+        - --client-secret=$(OAUTH2_PROXY_CLIENT_SECRET)
+        - --cookie-secret=$(OAUTH2_PROXY_COOKIE_SECRET)
+        - --oidc-issuer-url=https://auth.srbii.com/realms/homelab
+        - --upstream=http://127.0.0.1:80
+        - --http-address=0.0.0.0:4180
+        - --email-domain=*
+        - --pass-user-headers=true
+        - --pass-authorization-header=true
+        - --cookie-secure=true
+        envFrom:
+        - secretRef:
+            name: oauth2-proxy-secret
+        image: quay.io/oauth2-proxy/oauth2-proxy:v7.6.0
+        name: oauth2-proxy
+        ports:
+        - containerPort: 4180
+          name: proxy
+        resources:
+          limits:
+            cpu: 100m
+            memory: 128Mi
+          requests:
+            cpu: 10m
+            memory: 32Mi
       - env:
         - name: TZ
           value: UTC
@@ -115,6 +152,10 @@ spec:
         securityContext:
           runAsNonRoot: false
           runAsUser: 0
+        volumeMounts:
+        - mountPath: /etc/apache2/conf-enabled/oidc-header.conf
+          name: apache-oidc-config
+          subPath: oidc-header.conf
       initContainers:
       - command:
         - sh
@@ -135,6 +176,11 @@ spec:
           requests:
             cpu: 10m
             memory: 16Mi
+      volumes:
+      - configMap:
+          defaultMode: 420
+          name: apache-oidc-config
+        name: apache-oidc-config
 ---
 apiVersion: apps/v1
 kind: StatefulSet
@@ -222,6 +268,21 @@ spec:
         requests:
           storage: 10Gi
       storageClassName: ceph-block
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  name: oauth2-proxy-secret
+  namespace: znuny
+spec:
+  encryptedData:
+    OAUTH2_PROXY_CLIENT_ID: AgCfPYSNZVp7zby9K1k5AGbXwir1JoddpiM1zeIs95QoLeldrUKNrnPNYNM7SMGIR5odYPq4T7td1PrNM7p58hYhUELdGjaNUpbQ8kU0VV7wA5hsUxrqyXRg24elfB1EDW4kd9GyMb2Dy4/t7BPAvZFBXGiofnB96OxbILJXVOY8fb0kT9HmS9oxbdjZ0Rep0RYTmovSJ20Ac9qjwNnTlzgJ+KzYq6T6EmuWuvfCgfzqwW/SCyOBGhhEP5arz+m6TqEzAFN7bAM4kF17xtsJ16Zh6zv48RwHbShZKw3eXA5zR9w3Ni6DMm5pXn3oQz9Q3IgF9i2YwnIL/++HQNV2gf4BCM6ciKn45AjwJNjmH8cVZH84Zl8hK2fjSvdLeIe6SRGibj+pQKjmwH/DUiTu5xSUaOCNIjKLHjjgf0Iuhh+EhPAVawIZsIwLlILBGTwVruRunVu/bfHr1evBWIeB6NM7AtbpgdSivB1KnaMLRzyoM5TGPXPqCaIueZLL5g1ZF4zzZxj7F0igQMwMkzJ9NFP4hF9oEj4bwvr+gATnA6E9EwpCE4cfUJFPsBAwjuLVXBB9OrPWwvoMkZ9bWPjSYMRm+F+JJl+ayutouF8mM91mbcQ2Qc/4wfy3d85uJ6zJRiAYtFdSHYZpIyJxZDLDEuPFCbz2OkuPTRrfXytjbZsYDIOkxfAVqPVeC4bx6R4qGSTv/NvQI1Fb0+OxyBE=
+    OAUTH2_PROXY_CLIENT_SECRET: AgAJg5ik4OgxmAJ2ZqhWfK+JVQI2HoHmmd6da359dkfr/3uxoR2e6nhz6eEd19h1O1ohpZfJwQ4r1yjtVHZGey39IdNajcEAe1VdY3JC+PohPNjmPL32LpAV7bnBRqKos0IeN+3jP3kd8pQO0HO/8zrRByKswppU+mAexH7tkdJ35OBrJUR0T5hLHJ2oJ3fnILvGSdFCM1Z1CXJHdTDyYxtSX/hsAMKBpjyVif++4UJP5VBCVJrk+xZ3lEnKM2sPyRyiZXmTc8Le5lUnpPs6AwtbfSccbo6fpxMcCFgFMdDuqj3DvcJVp5v7rkW3p3xFk/1/Bnw0khkbtkJ20wIuhvm9rJQypk44hBdxilm9BS5EqijFnfIJaGorcAkL3zWDCQo8G7RhaYpn4AzbeaQf3N5F+YAZJmfbhA/iMKRIKXxM4TGI8YKDIbAzyDdXVWPoX1qIXxCwcVVI4jQPLuhCYf3pEEj6rT687g5UzNKjgcpibPaLmfg9apoVUqbiAAt8d+KeDOKPkQkeX2+gDoD/xhDS5Uof6eh+wNllfggq1UpJ4lDifVERgM2B6fHink9Yk4skDfWqC9ghSQVqXuIQZFJmUscr++iMWsvjkR3wIsFUlf3ECpKOlhLG2bre2jyyGoyJktWPQBklGweOOG/zEO2voAZsmFQBY0cix/v6uINATKU0oFYtvE32yfz/DC0YZ4CJNYUqqyGu7MvKxSeU0SSzH+Iw9XeeM4Ew57QKEDCWrg==
+    OAUTH2_PROXY_COOKIE_SECRET: AgCUbXJ/ucMFRh6RgsfOOQg+hQWvA26sEZr1XTuUxZP8Q6AxGvw2qo7qW/C8fJB9vuQJBMJ+ZH3W1iE4iyansBD8RXvmngMB+S+TQ9rUCtxBidvXkSoxOwkAME1CByFcJ5Jk5YFjXlMSnmkbaoPOvlNs5FMhhvMQZ+UnOH1dhxmGeM2fUo/nLmXtFFtSxGUs0RreNc8LLUHGrwOZf8mePRDFDBrJrQqHhFfj2RBY6jCNGTw9wPWtNxx/NwFa0eYcu+XeTq+jPo5VRhjXQ0H5xksfRVyaE/a4Nsfu95uBI0EqxKMrRYvWlL60NY+0FiJEhWiarQsyyLpH7kgS6VHZY5emPc45gaK1y4NgsgEQWTi4q+9hKlv4fCaibas5p0lk00VWXJEbrSwY26/U8BYhQAgi0Pm6AK+GJSMYyarEs1SrJLxz6SC1T+iQq4Ekh22haAjiREjQKtygkUDn+xUZu6hlOe7pTbmkTrB1ZE0eb/LTYirDemAqu5EAwl4By50CLjOV8wEZeytjB+JT70YwWA9BhvGA2xSp8/hH8yr7EVJbMYTRjZ7Nzffs/FOVCC/XgWQXb+XvBJMSjTE2d1fSL+XQqSbFxYXYQa52jtWuVbtPoRmqMcFZ6nYF5PIeY9xx8JT6DnCxPoQxUd27It+bVJQdgQT2nNtq+anf4hZHpGqxQY8q7JpgQeZfFCRAFXX9PLHVcwSPxbyyML+UBBOZoIx9M/YTkTtzGenAOYRcGMh2uw==
+  template:
+    metadata:
+      name: oauth2-proxy-secret
+      namespace: znuny
 ---
 apiVersion: bitnami.com/v1alpha1
 kind: SealedSecret
