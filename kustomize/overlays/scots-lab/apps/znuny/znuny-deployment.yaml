@@ -40,19 +40,31 @@ spec:
               memory: 32Mi
       containers:
         - name: znuny
-          image: ghcr.io/erik-donath/znuny-docker:latest
+          image: docker.io/andreynsafonov/znuny:7.2.3
           ports:
             - containerPort: 80
               name: http
           env:
             - name: TZ
               value: "UTC"
-            - name: LANG
-              value: "en_US.UTF-8"
-            - name: LANGUAGE
-              value: "en_US:en"
-            - name: LC_ALL
-              value: "en_US.UTF-8"
+            - name: ZNUNY_DB_TYPE
+              value: "mysql"
+            - name: ZNUNY_DB_HOST
+              value: "znuny-mariadb"
+            - name: ZNUNY_DB_NAME
+              value: "znuny"
+            - name: ZNUNY_DB_USER
+              value: "znuny"
+            - name: ZNUNY_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: znuny-db-secret
+                  key: MYSQL_PASSWORD
+            - name: ZNUNY_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: znuny-db-secret
+                  key: ZNUNY_ROOT_PASSWORD
           volumeMounts:
             - name: znuny-var
               mountPath: /opt/znuny/var
@@ -63,22 +75,22 @@ spec:
           # Readiness probe checks if Apache is serving content
           readinessProbe:
             httpGet:
-              path: /znuny/index.pl
+              path: /
               port: 80
-            initialDelaySeconds: 30
+            initialDelaySeconds: 60
             periodSeconds: 15
             timeoutSeconds: 10
-            failureThreshold: 6
+            failureThreshold: 8
           # Liveness probe with generous startup allowance
           livenessProbe:
             httpGet:
-              path: /znuny/index.pl
+              path: /
               port: 80
-            initialDelaySeconds: 120
+            initialDelaySeconds: 180
             periodSeconds: 30
             timeoutSeconds: 10
             failureThreshold: 5
-          # Entrypoint runs as root (PID 1) to start cron + znuny daemon + apache
+          # Container needs root for Apache, cron, and Znuny daemon
           securityContext:
             runAsUser: 0
             runAsNonRoot: false
@@ -99,3 +111,4 @@ spec:
         - name: znuny-custom
           persistentVolumeClaim:
             claimName: znuny-custom
+
