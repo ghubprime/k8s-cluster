@@ -174,7 +174,7 @@ spec:
         - name: PHOTOPRISM_SESSION_CACHE
           value: "900"
         - name: PHOTOPRISM_SESSION_MAXAGE
-          value: "1.2096e+06"
+          value: "1209600"
         - name: PHOTOPRISM_SESSION_TIMEOUT
           value: "604800"
         - name: PHOTOPRISM_SITE_CAPTION
