@@ -14,6 +14,19 @@ metadata:
   namespace: znuny
 ---
 apiVersion: v1
+data:
+  ZZZA_OIDC.pm: "package Kernel::Config::Files::ZZZA_OIDC;\nuse strict;\nuse warnings;\nuse
+    utf8;\nsub Load {\n    my ($File, $Self) = @_;\n    \n    # Override default DB
+    Auth to use Apache REMOTE_USER injected by oauth2-proxy\n    $Self->{'AuthModule'}
+    = 'Kernel::System::Auth::HTTPBasicAuth';\n    \n    # Enable SSO for Customer
+    Users as well (optional, but good practice for ticketing)\n    $Self->{'Customer::AuthModule'}
+    = 'Kernel::System::CustomerAuth::HTTPBasicAuth';\n}\n1;\n"
+kind: ConfigMap
+metadata:
+  name: znuny-auth-config
+  namespace: znuny
+---
+apiVersion: v1
 kind: Service
 metadata:
   labels:
@@ -153,6 +166,9 @@ spec:
         - mountPath: /etc/apache2/conf-enabled/oidc-header.conf
           name: apache-oidc-config
           subPath: oidc-header.conf
+        - mountPath: /opt/znuny/Kernel/Config/Files/ZZZA_OIDC.pm
+          name: znuny-auth-config
+          subPath: ZZZA_OIDC.pm
       initContainers:
       - command:
         - sh
@@ -178,6 +194,10 @@ spec:
           defaultMode: 420
           name: apache-oidc-config
         name: apache-oidc-config
+      - configMap:
+          defaultMode: 420
+          name: znuny-auth-config
+        name: znuny-auth-config
 ---
 apiVersion: apps/v1
 kind: StatefulSet
