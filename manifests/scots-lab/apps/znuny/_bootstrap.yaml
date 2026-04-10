@@ -104,7 +104,15 @@ spec:
           requests:
             cpu: 10m
             memory: 32Mi
-      - env:
+      - args:
+        - |
+          cp /tmp/znuny-auth-config/ZZZA_OIDC.pm /opt/znuny/Kernel/Config/Files/ZZZA_OIDC.pm
+          chown znuny:znuny /opt/znuny/Kernel/Config/Files/ZZZA_OIDC.pm
+          exec /docker-entrypoint.sh
+        command:
+        - /bin/bash
+        - -c
+        env:
         - name: TZ
           value: UTC
         - name: ZNUNY_DB_TYPE
@@ -166,9 +174,8 @@ spec:
         - mountPath: /etc/apache2/conf-enabled/oidc-header.conf
           name: apache-oidc-config
           subPath: oidc-header.conf
-        - mountPath: /opt/znuny/Kernel/Config/Files/ZZZA_OIDC.pm
+        - mountPath: /tmp/znuny-auth-config
           name: znuny-auth-config
-          subPath: ZZZA_OIDC.pm
       initContainers:
       - command:
         - sh
