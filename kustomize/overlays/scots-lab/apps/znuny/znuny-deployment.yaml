@@ -108,6 +108,10 @@ spec:
             periodSeconds: 15
             timeoutSeconds: 10
             failureThreshold: 8
+          lifecycle:
+            postStart:
+              exec:
+                command: ["/bin/bash", "-c", "echo \"\\$Self->{'AuthModule'} = 'Kernel::System::Auth::HTTPBasicAuth';\" >> /opt/znuny/Kernel/Config.pm"]
           livenessProbe:
             httpGet:
               path: /
