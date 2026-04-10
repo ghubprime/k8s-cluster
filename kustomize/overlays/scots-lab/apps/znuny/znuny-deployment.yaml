@@ -100,6 +100,9 @@ spec:
             - name: apache-oidc-config
               mountPath: /etc/apache2/conf-enabled/oidc-header.conf
               subPath: oidc-header.conf
+            - name: znuny-auth-config
+              mountPath: /opt/znuny/Kernel/Config/Files/ZZZA_OIDC.pm
+              subPath: ZZZA_OIDC.pm
           readinessProbe:
             httpGet:
               path: /
@@ -130,4 +133,8 @@ spec:
         - name: apache-oidc-config
           configMap:
             name: apache-oidc-config
+            defaultMode: 0644
+        - name: znuny-auth-config
+          configMap:
+            name: znuny-auth-config
             defaultMode: 0644

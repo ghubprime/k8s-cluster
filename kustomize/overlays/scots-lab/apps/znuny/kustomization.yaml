@@ -7,6 +7,7 @@ resources:
   - mariadb-service.yaml
   - apache-oidc-config.yaml
   - sealed-oauth2-proxy-secret.yaml
+  - znuny-auth-config.yaml
   - znuny-deployment.yaml
   - znuny-service.yaml
   - httproute.yaml
