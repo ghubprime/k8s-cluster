@@ -1,1 +1,1 @@
-Error: no resource matches strategic merge patch "Deployment.v1.apps/photoprism-photoprism-plus.photoprism": no matches for Id Deployment.v1.apps/photoprism-photoprism-plus.photoprism; failed to find unique target for patch Deployment.v1.apps/photoprism-photoprism-plus.photoprism
+Error: no resource matches strategic merge patch "StatefulSet.v1.apps/photoprism-photoprism-plus.photoprism": no matches for Id StatefulSet.v1.apps/photoprism-photoprism-plus.photoprism; failed to find unique target for patch StatefulSet.v1.apps/photoprism-photoprism-plus.photoprism
