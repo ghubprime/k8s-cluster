@@ -65,13 +65,15 @@ spec:
                 secretKeyRef:
                   name: znuny-db-secret
                   key: ZNUNY_ROOT_PASSWORD
+            - name: ZNUNY_FQDN
+              value: "tickets.srbii.com"
+            - name: ZNUNY_AUTO_INSTALL
+              value: "true"
+            - name: ZNUNY_ORGANIZATION
+              value: "Scots Lab"
           volumeMounts:
-            - name: znuny-var
-              mountPath: /opt/znuny/var
-            - name: znuny-config
-              mountPath: /opt/znuny/Kernel/Config
-            - name: znuny-custom
-              mountPath: /opt/znuny/Custom
+            - name: znuny-data
+              mountPath: /opt/znuny
           # Readiness probe checks if Apache is serving content
           readinessProbe:
             httpGet:
@@ -102,13 +104,7 @@ spec:
               cpu: 1000m
               memory: 2Gi
       volumes:
-        - name: znuny-var
+        - name: znuny-data
           persistentVolumeClaim:
-            claimName: znuny-var
-        - name: znuny-config
-          persistentVolumeClaim:
-            claimName: znuny-config
-        - name: znuny-custom
-          persistentVolumeClaim:
-            claimName: znuny-custom
+            claimName: znuny-data
 
