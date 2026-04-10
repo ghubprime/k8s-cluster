@@ -66,12 +66,6 @@ spec:
 
         - name: znuny
           image: docker.io/andreynsafonov/znuny:7.2.3
-          command: ["/bin/bash", "-c"]
-          args:
-            - |
-              cp /tmp/znuny-auth-config/ZZZA_OIDC.pm /opt/znuny/Kernel/Config/Files/ZZZA_OIDC.pm
-              chown znuny:znuny /opt/znuny/Kernel/Config/Files/ZZZA_OIDC.pm
-              exec /docker-entrypoint.sh
           ports:
             - containerPort: 80
               name: http
@@ -106,8 +100,6 @@ spec:
             - name: apache-oidc-config
               mountPath: /etc/apache2/conf-enabled/oidc-header.conf
               subPath: oidc-header.conf
-            - name: znuny-auth-config
-              mountPath: /tmp/znuny-auth-config
           readinessProbe:
             httpGet:
               path: /
@@ -138,8 +130,4 @@ spec:
         - name: apache-oidc-config
           configMap:
             name: apache-oidc-config
-            defaultMode: 0644
-        - name: znuny-auth-config
-          configMap:
-            name: znuny-auth-config
             defaultMode: 0644
