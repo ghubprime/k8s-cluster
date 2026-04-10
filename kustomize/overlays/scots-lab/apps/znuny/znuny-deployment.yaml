@@ -1,0 +1,101 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: znuny-app
+  namespace: znuny
+  labels:
+    app: znuny-app
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: znuny-app
+  template:
+    metadata:
+      labels:
+        app: znuny-app
+    spec:
+      # Init container waits for MariaDB readiness before starting Znuny
+      initContainers:
+        - name: wait-for-db
+          image: busybox:1.36
+          command:
+            - sh
+            - -c
+            - |
+              echo "Waiting for MariaDB to be ready..."
+              until nc -z znuny-mariadb 3306; do
+                echo "MariaDB not ready yet, retrying in 3s..."
+                sleep 3
+              done
+              echo "MariaDB is ready!"
+          resources:
+            requests:
+              cpu: 10m
+              memory: 16Mi
+            limits:
+              cpu: 50m
+              memory: 32Mi
+      containers:
+        - name: znuny
+          image: ghcr.io/erik-donath/znuny-docker:latest
+          ports:
+            - containerPort: 80
+              name: http
+          env:
+            - name: TZ
+              value: "UTC"
+            - name: LANG
+              value: "en_US.UTF-8"
+            - name: LANGUAGE
+              value: "en_US:en"
+            - name: LC_ALL
+              value: "en_US.UTF-8"
+          volumeMounts:
+            - name: znuny-var
+              mountPath: /opt/znuny/var
+            - name: znuny-config
+              mountPath: /opt/znuny/Kernel/Config
+            - name: znuny-custom
+              mountPath: /opt/znuny/Custom
+          # Readiness probe checks if Apache is serving content
+          readinessProbe:
+            httpGet:
+              path: /znuny/index.pl
+              port: 80
+            initialDelaySeconds: 30
+            periodSeconds: 15
+            timeoutSeconds: 10
+            failureThreshold: 6
+          # Liveness probe with generous startup allowance
+          livenessProbe:
+            httpGet:
+              path: /znuny/index.pl
+              port: 80
+            initialDelaySeconds: 120
+            periodSeconds: 30
+            timeoutSeconds: 10
+            failureThreshold: 5
+          # Entrypoint runs as root (PID 1) to start cron + znuny daemon + apache
+          securityContext:
+            runAsUser: 0
+            runAsNonRoot: false
+          resources:
+            requests:
+              cpu: 250m
+              memory: 512Mi
+            limits:
+              cpu: 1000m
+              memory: 2Gi
+      volumes:
+        - name: znuny-var
+          persistentVolumeClaim:
+            claimName: znuny-var
+        - name: znuny-config
+          persistentVolumeClaim:
+            claimName: znuny-config
+        - name: znuny-custom
+          persistentVolumeClaim:
+            claimName: znuny-custom
