@@ -14,6 +14,18 @@ metadata:
   namespace: znuny
 ---
 apiVersion: v1
+data:
+  ZZZA_OIDC.pm: "package Kernel::Config::Files::ZZZA_OIDC;\nuse strict;\nuse warnings;\nuse
+    utf8;\nsub Load {\n    my ($File, $Self) = @_;\n    \n    # Override default DB
+    Auth to use Apache REMOTE_USER injected by oauth2-proxy\n    $Self->{'AuthModule'}
+    = 'Kernel::System::Auth::HTTPBasicAuth';\n    \n    # Enable SSO for Customer
+    Users as well\n    $Self->{'Customer::AuthModule'} = 'Kernel::System::CustomerAuth::HTTPBasicAuth';\n}\n1;\n"
+kind: ConfigMap
+metadata:
+  name: znuny-auth-config
+  namespace: znuny
+---
+apiVersion: v1
 kind: Service
 metadata:
   labels:
@@ -91,7 +103,15 @@ spec:
           requests:
             cpu: 10m
             memory: 32Mi
-      - env:
+      - args:
+        - |
+          cp /tmp/znuny-auth-config/ZZZA_OIDC.pm /opt/znuny/Kernel/Config/Files/ZZZA_OIDC.pm
+          chown znuny:znuny /opt/znuny/Kernel/Config/Files/ZZZA_OIDC.pm
+          exec /usr/local/bin/docker-entrypoint.sh /usr/bin/supervisord -c /etc/supervisor/supervisord.conf
+        command:
+        - /bin/bash
+        - -c
+        env:
         - name: TZ
           value: UTC
         - name: ZNUNY_DB_TYPE
@@ -119,14 +139,6 @@ spec:
         - name: ZNUNY_ORGANIZATION
           value: Scots Lab
         image: docker.io/andreynsafonov/znuny:7.2.3
-        lifecycle:
-          postStart:
-            exec:
-              command:
-              - /bin/bash
-              - -c
-              - echo "\$Self->{'AuthModule'} = 'Kernel::System::Auth::HTTPBasicAuth';"
-                >> /opt/znuny/Kernel/Config.pm
         livenessProbe:
           failureThreshold: 5
           httpGet:
@@ -161,6 +173,8 @@ spec:
         - mountPath: /etc/apache2/conf-enabled/oidc-header.conf
           name: apache-oidc-config
           subPath: oidc-header.conf
+        - mountPath: /tmp/znuny-auth-config
+          name: znuny-auth-config
       initContainers:
       - command:
         - sh
@@ -186,6 +200,10 @@ spec:
           defaultMode: 420
           name: apache-oidc-config
         name: apache-oidc-config
+      - configMap:
+          defaultMode: 420
+          name: znuny-auth-config
+        name: znuny-auth-config
 ---
 apiVersion: apps/v1
 kind: StatefulSet

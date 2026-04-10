@@ -117,7 +117,7 @@ metadata:
 apiVersion: v1
 data:
   nextcloud-password: Y2hhbmdlbWU=
-  nextcloud-token: WFlVRzhQYTcxaw==
+  nextcloud-token: ZFJSUDhldFZldg==
   nextcloud-username: YWRtaW4=
 kind: Secret
 metadata:
@@ -148,7 +148,7 @@ type: Opaque
 apiVersion: v1
 data:
   password: Y2hhbmdlbWU=
-  postgres-password: Z25Pb1VvN3ZaSA==
+  postgres-password: Wldoa0JrNUU3eA==
 kind: Secret
 metadata:
   labels:
