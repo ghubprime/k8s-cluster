@@ -37,21 +37,6 @@ spec:
     app: znuny-mariadb
   type: ClusterIP
 ---
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  labels:
-    app: znuny-app
-  name: znuny-data
-  namespace: znuny
-spec:
-  accessModes:
-  - ReadWriteOnce
-  resources:
-    requests:
-      storage: 15Gi
-  storageClassName: ceph-block
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -130,9 +115,6 @@ spec:
         securityContext:
           runAsNonRoot: false
           runAsUser: 0
-        volumeMounts:
-        - mountPath: /opt/znuny
-          name: znuny-data
       initContainers:
       - command:
         - sh
@@ -153,10 +135,6 @@ spec:
           requests:
             cpu: 10m
             memory: 16Mi
-      volumes:
-      - name: znuny-data
-        persistentVolumeClaim:
-          claimName: znuny-data
 ---
 apiVersion: apps/v1
 kind: StatefulSet
