@@ -199,13 +199,13 @@ spec:
         - containerPort: 2342
           name: http
         securityContext:
-          allowPrivilegeEscalation: false
+          allowPrivilegeEscalation: true
           capabilities:
             drop:
             - ALL
-          runAsGroup: 1000
-          runAsNonRoot: true
-          runAsUser: 1000
+          runAsGroup: 0
+          runAsNonRoot: false
+          runAsUser: 0
           seccompProfile:
             type: RuntimeDefault
         volumeMounts:
@@ -214,7 +214,7 @@ spec:
         - mountPath: /photoprism/storage
           name: storage
       securityContext:
-        fsGroup: 1000
+        fsGroup: 0
         fsGroupChangePolicy: OnRootMismatch
       volumes:
       - name: originals
