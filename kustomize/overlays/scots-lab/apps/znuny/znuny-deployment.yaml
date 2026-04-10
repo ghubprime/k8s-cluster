@@ -39,6 +39,34 @@ spec:
               cpu: 50m
               memory: 32Mi
       containers:
+        - name: oauth2-proxy
+          image: quay.io/oauth2-proxy/oauth2-proxy:v7.6.0
+          args:
+            - --provider=oidc
+            - --client-id=$(OAUTH2_PROXY_CLIENT_ID)
+            - --client-secret=$(OAUTH2_PROXY_CLIENT_SECRET)
+            - --cookie-secret=$(OAUTH2_PROXY_COOKIE_SECRET)
+            - --oidc-issuer-url=https://auth.srbii.com/realms/homelab
+            - --upstream=http://127.0.0.1:80
+            - --http-address=0.0.0.0:4180
+            - --email-domain=*
+            - --pass-user-headers=true
+            - --pass-authorization-header=true
+            - --cookie-secure=true
+          envFrom:
+            - secretRef:
+                name: oauth2-proxy-secret
+          ports:
+            - containerPort: 4180
+              name: proxy
+          resources:
+            requests:
+              cpu: 10m
+              memory: 32Mi
+            limits:
+              cpu: 100m
+              memory: 128Mi
+
         - name: znuny
           image: docker.io/andreynsafonov/znuny:7.2.3
           ports:
@@ -71,11 +99,10 @@ spec:
               value: "true"
             - name: ZNUNY_ORGANIZATION
               value: "Scots Lab"
-          # No volume mounts for /opt/znuny — the image contains the full
-          # Znuny installation. All persistent state lives in MariaDB.
-          # Mounting a PVC at /opt/znuny would shadow the application files
-          # since the image does not copy files into the volume on first boot.
-          # Readiness probe checks if Apache is serving content
+          volumeMounts:
+            - name: apache-oidc-config
+              mountPath: /etc/apache2/conf-enabled/oidc-header.conf
+              subPath: oidc-header.conf
           readinessProbe:
             httpGet:
               path: /
@@ -84,7 +111,6 @@ spec:
             periodSeconds: 15
             timeoutSeconds: 10
             failureThreshold: 8
-          # Liveness probe with generous startup allowance
           livenessProbe:
             httpGet:
               path: /
@@ -93,7 +119,6 @@ spec:
             periodSeconds: 30
             timeoutSeconds: 10
             failureThreshold: 5
-          # Container needs root for Apache, cron, and Znuny daemon
           securityContext:
             runAsUser: 0
             runAsNonRoot: false
@@ -104,3 +129,8 @@ spec:
             limits:
               cpu: 1000m
               memory: 2Gi
+      volumes:
+        - name: apache-oidc-config
+          configMap:
+            name: apache-oidc-config
+            defaultMode: 0644

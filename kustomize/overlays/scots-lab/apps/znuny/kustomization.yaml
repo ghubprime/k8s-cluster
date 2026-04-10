@@ -5,6 +5,8 @@ resources:
   - ../../../../base/apps/znuny/
   - mariadb-statefulset.yaml
   - mariadb-service.yaml
+  - apache-oidc-config.yaml
+  - sealed-oauth2-proxy-secret.yaml
   - znuny-deployment.yaml
   - znuny-service.yaml
   - httproute.yaml
