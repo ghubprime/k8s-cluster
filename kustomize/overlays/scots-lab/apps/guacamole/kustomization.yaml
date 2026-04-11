@@ -5,6 +5,8 @@ namespace: guacamole
 resources:
   - guacd.yaml
   - guacamole.yaml
+  - sealed-guacd-secret.yaml
+  - sealed-oidc-secret.yaml
 
 # Rule 16: Complex Helm Chart Inflation via native Kustomize integration
 helmCharts:
