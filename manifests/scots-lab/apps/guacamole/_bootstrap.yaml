@@ -11,8 +11,8 @@ metadata:
     app.kubernetes.io/instance: guacamole-postgresql
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: postgresql
-    app.kubernetes.io/version: 17.0.0
-    helm.sh/chart: postgresql-16.2.0
+    app.kubernetes.io/version: 16.3.0
+    helm.sh/chart: postgresql-15.5.0
   name: guacamole-postgresql
   namespace: guacamole
 ---
@@ -28,8 +28,8 @@ metadata:
     app.kubernetes.io/instance: guacamole-postgresql
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: postgresql
-    app.kubernetes.io/version: 17.0.0
-    helm.sh/chart: postgresql-16.2.0
+    app.kubernetes.io/version: 16.3.0
+    helm.sh/chart: postgresql-15.5.0
   name: guacamole-postgresql-configuration
   namespace: guacamole
 ---
@@ -58,8 +58,8 @@ metadata:
     app.kubernetes.io/instance: guacamole-postgresql
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: postgresql
-    app.kubernetes.io/version: 17.0.0
-    helm.sh/chart: postgresql-16.2.0
+    app.kubernetes.io/version: 16.3.0
+    helm.sh/chart: postgresql-15.5.0
   name: guacamole-postgresql
   namespace: guacamole
 spec:
@@ -78,13 +78,15 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
+  annotations:
+    service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
   labels:
     app.kubernetes.io/component: primary
     app.kubernetes.io/instance: guacamole-postgresql
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: postgresql
-    app.kubernetes.io/version: 17.0.0
-    helm.sh/chart: postgresql-16.2.0
+    app.kubernetes.io/version: 16.3.0
+    helm.sh/chart: postgresql-15.5.0
   name: guacamole-postgresql-hl
   namespace: guacamole
 spec:
@@ -272,8 +274,8 @@ metadata:
     app.kubernetes.io/instance: guacamole-postgresql
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: postgresql
-    app.kubernetes.io/version: 17.0.0
-    helm.sh/chart: postgresql-16.2.0
+    app.kubernetes.io/version: 16.3.0
+    helm.sh/chart: postgresql-15.5.0
   name: guacamole-postgresql
   namespace: guacamole
 spec:
@@ -293,8 +295,8 @@ spec:
         app.kubernetes.io/instance: guacamole-postgresql
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/name: postgresql
-        app.kubernetes.io/version: 17.0.0
-        helm.sh/chart: postgresql-16.2.0
+        app.kubernetes.io/version: 16.3.0
+        helm.sh/chart: postgresql-15.5.0
       name: guacamole-postgresql
     spec:
       affinity:
@@ -351,7 +353,7 @@ spec:
           value: error
         - name: POSTGRESQL_SHARED_PRELOAD_LIBRARIES
           value: pgaudit
-        image: docker.io/bitnami/postgresql:17.0.0-debian-12-r11
+        image: docker.io/bitnami/postgresql:16.3.0-debian-12-r10
         imagePullPolicy: IfNotPresent
         livenessProbe:
           exec:
@@ -386,7 +388,7 @@ spec:
         resources:
           limits:
             cpu: 150m
-            ephemeral-storage: 2Gi
+            ephemeral-storage: 1024Mi
             memory: 192Mi
           requests:
             cpu: 100m
@@ -461,8 +463,8 @@ metadata:
     app.kubernetes.io/instance: guacamole-postgresql
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: postgresql
-    app.kubernetes.io/version: 17.0.0
-    helm.sh/chart: postgresql-16.2.0
+    app.kubernetes.io/version: 16.3.0
+    helm.sh/chart: postgresql-15.5.0
   name: guacamole-postgresql
   namespace: guacamole
 spec:
@@ -509,8 +511,8 @@ metadata:
     app.kubernetes.io/instance: guacamole-postgresql
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: postgresql
-    app.kubernetes.io/version: 17.0.0
-    helm.sh/chart: postgresql-16.2.0
+    app.kubernetes.io/version: 16.3.0
+    helm.sh/chart: postgresql-15.5.0
   name: guacamole-postgresql
   namespace: guacamole
 spec:
