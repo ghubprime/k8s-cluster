@@ -72,6 +72,10 @@ spec:
             - name: GUACD_PORT
               value: "4822"
             
+            # Application Context
+            - name: WEBAPP_CONTEXT
+              value: "ROOT"
+            
             # Database Connection
             - name: POSTGRES_HOSTNAME
               value: guacamole-postgresql
@@ -107,13 +111,13 @@ spec:
                   optional: false
           livenessProbe:
             httpGet:
-              path: /guacamole/
+              path: /
               port: http
             initialDelaySeconds: 30
             periodSeconds: 10
           readinessProbe:
             httpGet:
-              path: /guacamole/
+              path: /
               port: http
             initialDelaySeconds: 15
             periodSeconds: 10
