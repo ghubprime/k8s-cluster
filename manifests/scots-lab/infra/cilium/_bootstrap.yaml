@@ -2068,3 +2068,19 @@ spec:
         seccompProfile:
           type: RuntimeDefault
       serviceAccountName: hubble-generate-certs
+---
+apiVersion: cilium.io/v2alpha1
+kind: CiliumL2AnnouncementPolicy
+metadata:
+  name: default-l2-policy
+spec:
+  loadBalancerIPs: true
+---
+apiVersion: cilium.io/v2alpha1
+kind: CiliumLoadBalancerIPPool
+metadata:
+  name: homelab-pool
+spec:
+  blocks:
+  - end: 192.168.1.60
+    start: 192.168.1.50
