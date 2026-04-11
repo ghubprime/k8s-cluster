@@ -68,7 +68,7 @@ spec:
   resources:
     requests:
       storage: 1Gi
-  storageClassName: rook-ceph-block
+  storageClassName: ceph-block
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -81,7 +81,7 @@ spec:
   resources:
     requests:
       storage: 5Gi
-  storageClassName: rook-ceph-block
+  storageClassName: ceph-block
 ---
 apiVersion: apps/v1
 kind: Deployment
