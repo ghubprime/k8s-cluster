@@ -1,6 +1,28 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+  name: adguard-home-scots-lab
+  namespace: argocd
+spec:
+  destination:
+    namespace: adguard-home
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: manifests/scots-lab/apps/adguard-home
+    repoURL: https://github.com/ghubprime/k8s-cluster.git
+    targetRevision: HEAD
+  syncPolicy:
+    automated:
+      allowEmpty: false
+      prune: true
+      selfHeal: true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
   name: argocd-apps-scots-lab
   namespace: argocd
 spec:
