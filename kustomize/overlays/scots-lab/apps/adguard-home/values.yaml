@@ -12,12 +12,6 @@ controllers:
           pullPolicy: IfNotPresent
         env:
           TZ: "America/Los_Angeles"
-        probes:
-          liveness:
-            enabled: true
-            type: HTTP
-            path: /login
-            port: 80
         resources:
           requests:
             cpu: 50m
@@ -32,6 +26,8 @@ service:
     ports:
       http:
         port: 80
+      setup:
+        port: 3000
   dns:
     enabled: true
     controller: main
