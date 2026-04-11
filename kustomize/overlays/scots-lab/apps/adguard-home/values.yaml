@@ -27,12 +27,14 @@ controllers:
 
 service:
   main:
+    controller: main
     type: ClusterIP
     ports:
       http:
         port: 80
   dns:
     enabled: true
+    controller: main
     type: LoadBalancer
     annotations:
       # Instructs Cilium to allocate this specifically from the IPAM pool
