@@ -7,6 +7,9 @@ auth:
     adminPasswordKey: "POSTGRES_PASSWORD"
     userPasswordKey: "POSTGRES_PASSWORD"
 
+image:
+  tag: "16"
+
 primary:
   persistence:
     enabled: true
