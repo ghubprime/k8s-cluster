@@ -204,4 +204,11 @@ argocdApplications:
     name: adguard-home
     namespace: adguard-home
     appCategory: apps
-    syncWave: "2"
+    syncWave: "2"
+  netbootxyz:
+    disableAutomated: false
+    disable: false
+    name: netbootxyz
+    namespace: netbootxyz
+    appCategory: apps
+    syncWave: "3"
