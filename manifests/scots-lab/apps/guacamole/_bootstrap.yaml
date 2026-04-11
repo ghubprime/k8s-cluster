@@ -19,8 +19,8 @@ metadata:
 apiVersion: v1
 data:
   postgresql.conf: |
-    max_connections = "200"
-    shared_buffers = "128MB"
+    max_connections = 200
+    shared_buffers = 128MB
 kind: ConfigMap
 metadata:
   labels:
@@ -289,7 +289,8 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/configuration: 011905541fc00de1cb94ef42a4075bc9b9c8f1c916bae6e89dd2b8aa3725e92f
+        backup.velero.io/backup-volumes: data
+        checksum/configuration: 3e5d346d855b2914150c41f4f840b3f96e85d09dcc7c56e0e2c99bc9a58ccd16
       labels:
         app.kubernetes.io/component: primary
         app.kubernetes.io/instance: guacamole-postgresql
@@ -387,13 +388,11 @@ spec:
           timeoutSeconds: 5
         resources:
           limits:
-            cpu: 150m
-            ephemeral-storage: 1024Mi
-            memory: 192Mi
+            cpu: 500m
+            memory: 1Gi
           requests:
             cpu: 100m
-            ephemeral-storage: 50Mi
-            memory: 128Mi
+            memory: 256Mi
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
@@ -453,7 +452,7 @@ spec:
       - ReadWriteOnce
       resources:
         requests:
-          storage: 8Gi
+          storage: 5Gi
 ---
 apiVersion: policy/v1
 kind: PodDisruptionBudget
