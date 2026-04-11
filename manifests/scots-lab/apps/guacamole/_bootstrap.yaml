@@ -1,0 +1,496 @@
+apiVersion: v1
+automountServiceAccountToken: false
+kind: ServiceAccount
+metadata:
+  labels:
+    app.kubernetes.io/instance: guacamole-postgresql
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: postgresql
+    app.kubernetes.io/version: 17.0.0
+    helm.sh/chart: postgresql-16.2.0
+  name: guacamole-postgresql
+  namespace: guacamole
+---
+apiVersion: v1
+data:
+  postgresql.conf: |
+    max_connections = "200"
+    shared_buffers = "128MB"
+kind: ConfigMap
+metadata:
+  labels:
+    app.kubernetes.io/component: primary
+    app.kubernetes.io/instance: guacamole-postgresql
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: postgresql
+    app.kubernetes.io/version: 17.0.0
+    helm.sh/chart: postgresql-16.2.0
+  name: guacamole-postgresql-configuration
+  namespace: guacamole
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/name: guacamole
+  name: guacamole
+  namespace: guacamole
+spec:
+  ports:
+  - name: http
+    port: 8080
+    protocol: TCP
+    targetPort: http
+  selector:
+    app.kubernetes.io/name: guacamole
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/component: primary
+    app.kubernetes.io/instance: guacamole-postgresql
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: postgresql
+    app.kubernetes.io/version: 17.0.0
+    helm.sh/chart: postgresql-16.2.0
+  name: guacamole-postgresql
+  namespace: guacamole
+spec:
+  ports:
+  - name: tcp-postgresql
+    nodePort: null
+    port: 5432
+    targetPort: tcp-postgresql
+  selector:
+    app.kubernetes.io/component: primary
+    app.kubernetes.io/instance: guacamole-postgresql
+    app.kubernetes.io/name: postgresql
+  sessionAffinity: None
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/component: primary
+    app.kubernetes.io/instance: guacamole-postgresql
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: postgresql
+    app.kubernetes.io/version: 17.0.0
+    helm.sh/chart: postgresql-16.2.0
+  name: guacamole-postgresql-hl
+  namespace: guacamole
+spec:
+  clusterIP: None
+  ports:
+  - name: tcp-postgresql
+    port: 5432
+    targetPort: tcp-postgresql
+  publishNotReadyAddresses: true
+  selector:
+    app.kubernetes.io/component: primary
+    app.kubernetes.io/instance: guacamole-postgresql
+    app.kubernetes.io/name: postgresql
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/name: guacd
+  name: guacd
+  namespace: guacamole
+spec:
+  ports:
+  - name: guacd
+    port: 4822
+    protocol: TCP
+    targetPort: guacd
+  selector:
+    app.kubernetes.io/name: guacd
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/name: guacamole
+  name: guacamole
+  namespace: guacamole
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: guacamole
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: guacamole
+    spec:
+      containers:
+      - env:
+        - name: GUACD_HOSTNAME
+          value: guacd
+        - name: GUACD_PORT
+          value: "4822"
+        - name: POSTGRES_HOSTNAME
+          value: guacamole-postgresql
+        - name: POSTGRES_DATABASE
+          value: guacamole
+        - name: POSTGRES_USER
+          value: guacamole
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: POSTGRES_PASSWORD
+              name: guacamole-db-secret
+        - name: OPENID_AUTHORIZATION_ENDPOINT
+          value: https://auth.srbii.com/realms/homelab/protocol/openid-connect/auth
+        - name: OPENID_JWKS_ENDPOINT
+          value: https://auth.srbii.com/realms/homelab/protocol/openid-connect/certs
+        - name: OPENID_ISSUER
+          value: https://auth.srbii.com/realms/homelab
+        - name: OPENID_CLIENT_ID
+          value: guacamole-client
+        - name: OPENID_REDIRECT_URI
+          value: https://guacamole.srbii.com
+        - name: OPENID_MAX_TOKEN_VALIDITY
+          value: "1209600"
+        - name: OPENID_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              key: OIDC_CLIENT_SECRET
+              name: guacamole-oidc-secret
+              optional: false
+        image: guacamole/guacamole:1.5.5
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          httpGet:
+            path: /guacamole/
+            port: http
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        name: guacamole
+        ports:
+        - containerPort: 8080
+          name: http
+        readinessProbe:
+          httpGet:
+            path: /guacamole/
+            port: http
+          initialDelaySeconds: 15
+          periodSeconds: 10
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 1Gi
+          requests:
+            cpu: 100m
+            memory: 512Mi
+      initContainers:
+      - command:
+        - sh
+        - -c
+        - until pg_isready -h guacamole-postgresql -p 5432 -U guacamole; do echo waiting
+          for db; sleep 2; done;
+        image: postgres:16-alpine
+        name: wait-for-db
+      - args:
+        - |
+          export PGPASSWORD=$POSTGRES_PASSWORD
+          if ! psql -h $POSTGRES_HOSTNAME -U $POSTGRES_USER -d $POSTGRES_DATABASE -c '\dt' | grep -q 'guacamole_user'; then
+            echo "Database empty. Initializing..."
+            /opt/guacamole/bin/initdb.sh --postgresql | psql -h $POSTGRES_HOSTNAME -U $POSTGRES_USER -d $POSTGRES_DATABASE
+          else
+            echo "Database already initialized."
+          fi
+        command:
+        - sh
+        - -c
+        env:
+        - name: POSTGRES_HOSTNAME
+          value: guacamole-postgresql
+        - name: POSTGRES_DATABASE
+          value: guacamole
+        - name: POSTGRES_USER
+          value: guacamole
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: POSTGRES_PASSWORD
+              name: guacamole-db-secret
+        image: guacamole/guacamole:1.5.5
+        name: init-db
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/name: guacd
+  name: guacd
+  namespace: guacamole
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: guacd
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: guacd
+    spec:
+      containers:
+      - image: guacamole/guacd:1.5.5
+        imagePullPolicy: IfNotPresent
+        name: guacd
+        ports:
+        - containerPort: 4822
+          name: guacd
+        resources:
+          limits:
+            cpu: 500m
+            memory: 512Mi
+          requests:
+            cpu: 50m
+            memory: 128Mi
+        securityContext:
+          runAsNonRoot: false
+          runAsUser: 1000
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app.kubernetes.io/component: primary
+    app.kubernetes.io/instance: guacamole-postgresql
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: postgresql
+    app.kubernetes.io/version: 17.0.0
+    helm.sh/chart: postgresql-16.2.0
+  name: guacamole-postgresql
+  namespace: guacamole
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: primary
+      app.kubernetes.io/instance: guacamole-postgresql
+      app.kubernetes.io/name: postgresql
+  serviceName: guacamole-postgresql-hl
+  template:
+    metadata:
+      annotations:
+        checksum/configuration: 011905541fc00de1cb94ef42a4075bc9b9c8f1c916bae6e89dd2b8aa3725e92f
+      labels:
+        app.kubernetes.io/component: primary
+        app.kubernetes.io/instance: guacamole-postgresql
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/name: postgresql
+        app.kubernetes.io/version: 17.0.0
+        helm.sh/chart: postgresql-16.2.0
+      name: guacamole-postgresql
+    spec:
+      affinity:
+        nodeAffinity: null
+        podAffinity: null
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - podAffinityTerm:
+              labelSelector:
+                matchLabels:
+                  app.kubernetes.io/component: primary
+                  app.kubernetes.io/instance: guacamole-postgresql
+                  app.kubernetes.io/name: postgresql
+              topologyKey: kubernetes.io/hostname
+            weight: 1
+      automountServiceAccountToken: false
+      containers:
+      - env:
+        - name: BITNAMI_DEBUG
+          value: "false"
+        - name: POSTGRESQL_PORT_NUMBER
+          value: "5432"
+        - name: POSTGRESQL_VOLUME_DIR
+          value: /bitnami/postgresql
+        - name: PGDATA
+          value: /bitnami/postgresql/data
+        - name: POSTGRES_USER
+          value: guacamole
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: POSTGRES_PASSWORD
+              name: guacamole-db-secret
+        - name: POSTGRES_POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: POSTGRES_PASSWORD
+              name: guacamole-db-secret
+        - name: POSTGRES_DATABASE
+          value: guacamole
+        - name: POSTGRESQL_ENABLE_LDAP
+          value: "no"
+        - name: POSTGRESQL_ENABLE_TLS
+          value: "no"
+        - name: POSTGRESQL_LOG_HOSTNAME
+          value: "false"
+        - name: POSTGRESQL_LOG_CONNECTIONS
+          value: "false"
+        - name: POSTGRESQL_LOG_DISCONNECTIONS
+          value: "false"
+        - name: POSTGRESQL_PGAUDIT_LOG_CATALOG
+          value: "off"
+        - name: POSTGRESQL_CLIENT_MIN_MESSAGES
+          value: error
+        - name: POSTGRESQL_SHARED_PRELOAD_LIBRARIES
+          value: pgaudit
+        image: docker.io/bitnami/postgresql:17.0.0-debian-12-r11
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          exec:
+            command:
+            - /bin/sh
+            - -c
+            - exec pg_isready -U "guacamole" -d "dbname=guacamole" -h 127.0.0.1 -p
+              5432
+          failureThreshold: 6
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 5
+        name: postgresql
+        ports:
+        - containerPort: 5432
+          name: tcp-postgresql
+        readinessProbe:
+          exec:
+            command:
+            - /bin/sh
+            - -c
+            - -e
+            - |
+              exec pg_isready -U "guacamole" -d "dbname=guacamole" -h 127.0.0.1 -p 5432
+              [ -f /opt/bitnami/postgresql/tmp/.initialized ] || [ -f /bitnami/postgresql/.initialized ]
+          failureThreshold: 6
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 5
+        resources:
+          limits:
+            cpu: 150m
+            ephemeral-storage: 2Gi
+            memory: 192Mi
+          requests:
+            cpu: 100m
+            ephemeral-storage: 50Mi
+            memory: 128Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          privileged: false
+          readOnlyRootFilesystem: true
+          runAsGroup: 1001
+          runAsNonRoot: true
+          runAsUser: 1001
+          seLinuxOptions: {}
+          seccompProfile:
+            type: RuntimeDefault
+        volumeMounts:
+        - mountPath: /tmp
+          name: empty-dir
+          subPath: tmp-dir
+        - mountPath: /opt/bitnami/postgresql/conf
+          name: empty-dir
+          subPath: app-conf-dir
+        - mountPath: /opt/bitnami/postgresql/tmp
+          name: empty-dir
+          subPath: app-tmp-dir
+        - mountPath: /dev/shm
+          name: dshm
+        - mountPath: /bitnami/postgresql
+          name: data
+        - mountPath: /bitnami/postgresql/conf
+          name: postgresql-config
+      hostIPC: false
+      hostNetwork: false
+      securityContext:
+        fsGroup: 1001
+        fsGroupChangePolicy: Always
+        supplementalGroups: []
+        sysctls: []
+      serviceAccountName: guacamole-postgresql
+      volumes:
+      - emptyDir: {}
+        name: empty-dir
+      - configMap:
+          name: guacamole-postgresql-configuration
+        name: postgresql-config
+      - emptyDir:
+          medium: Memory
+        name: dshm
+  updateStrategy:
+    rollingUpdate: {}
+    type: RollingUpdate
+  volumeClaimTemplates:
+  - apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
+      name: data
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 8Gi
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  labels:
+    app.kubernetes.io/component: primary
+    app.kubernetes.io/instance: guacamole-postgresql
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: postgresql
+    app.kubernetes.io/version: 17.0.0
+    helm.sh/chart: postgresql-16.2.0
+  name: guacamole-postgresql
+  namespace: guacamole
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: primary
+      app.kubernetes.io/instance: guacamole-postgresql
+      app.kubernetes.io/name: postgresql
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  labels:
+    app.kubernetes.io/component: primary
+    app.kubernetes.io/instance: guacamole-postgresql
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: postgresql
+    app.kubernetes.io/version: 17.0.0
+    helm.sh/chart: postgresql-16.2.0
+  name: guacamole-postgresql
+  namespace: guacamole
+spec:
+  egress:
+  - {}
+  ingress:
+  - ports:
+    - port: 5432
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/component: primary
+      app.kubernetes.io/instance: guacamole-postgresql
+      app.kubernetes.io/name: postgresql
+  policyTypes:
+  - Ingress
+  - Egress
