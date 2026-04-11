@@ -194,6 +194,8 @@ spec:
           value: guacamole
         - name: POSTGRES_DB
           value: guacamole
+        - name: PGDATA
+          value: /var/lib/postgresql/data/pgdata
         - name: POSTGRES_PASSWORD
           valueFrom:
             secretKeyRef:
