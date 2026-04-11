@@ -120,15 +120,6 @@ spec:
           value: America/Los_Angeles
         image: adguard/adguardhome:v0.107.46
         imagePullPolicy: IfNotPresent
-        livenessProbe:
-          failureThreshold: 3
-          httpGet:
-            path: /login
-            port: 80
-            scheme: HTTP
-          initialDelaySeconds: 0
-          periodSeconds: 10
-          timeoutSeconds: 1
         name: main
         resources:
           limits:
