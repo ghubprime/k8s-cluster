@@ -468,6 +468,34 @@ spec:
       app.kubernetes.io/instance: guacamole-postgresql
       app.kubernetes.io/name: postgresql
 ---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  name: guacamole-db-secret
+  namespace: guacamole
+spec:
+  encryptedData:
+    POSTGRES_PASSWORD: AgBJS2oCOfMDYBmAOBolTaunk+GFy9onT8mJrXmhMhuOaSQYWjHCD/5JaufZWfoJY+C1rbB+gY6xQnI38ZBvwrNHd9UHXwvUeekQAzhqHiZ5ieaRZloAW2y7CC893OcsKfYeCJuNdyD1BccPHjzSQ83Gu9uo0WACZ/qKaL1byFeUe9sUjuHfy3BAS8Gie76TNhiWfHogDd8uLwt/Bac+GzMS3XCw8B1EYHzuZQRQYbjshxwKShfIjj8XAwpGe58+xIa0THzBSSeDdBQjHT9lXM2lL6XZPqLc6p4Bm0CPZxKtBAJ8b4CFDaj4OcMBsIVavoe7N0O1IsPmyt+wjZK66rCDlnddfYjTMukWe76soGB50sTY5KGSP/UojT6l2CcokY5DTphzH4AZD5/9QW9e7sj21toIIyePV24mM6N5ZeSJxV5dhVG6PYTWQ7eALspLIfAkfVyCBxXhoqyjQrN67PdxO0M72Qy81nk8UJ8D7v9+lpLRQ3CpKusO412QrN0f9wVNBZVwvPyiPUjNZw+qjd6kw6YlSy52uSWNtv0/ZY9VOdram7IY3U+n9BrC7GV9rCDLzz5INMJi/Ivv2g9eLgawNIZ25sB0TLQSEskNvGWRslD8NiXPbgFejG6Al6n+XKxo+Ypzw1v+B+j+IBwhjYeZz+1bwsTFZwfQO0SIm0Um21DtFTV5eZMlAXz9rpiHyzu9ERdRVatbuiijYJAyTtn5ePfM/DDtNoowqA==
+  template:
+    metadata:
+      name: guacamole-db-secret
+      namespace: guacamole
+    type: Opaque
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  name: guacamole-oidc-secret
+  namespace: guacamole
+spec:
+  encryptedData:
+    OIDC_CLIENT_SECRET: AgAAOf3WmPbixipBiPnBjYIsQVQyrbkSSM4NXuHipgquZj1gR1Oh91eRQR5kdSbr8yECEWUPGIhv+vLp+XKl+ZGN6PIeqkpIr5cSlHlcZGqwUsMq+qAPhSOHmx+ZRmEpH2IMzwoHgYsG+mya1YIIwHU7WDyTs43HP49gMEjjqRahu6yYwbL7IBqTdIwHVFt9s/uB0qAtMtJx3HdeW1asZk1DmiiKOXJdSjTvs+m8fF16tKNd7e9dh/lo5KfSSWtCB3Rt3PsVAkVgUunbo1qHWGyuu6G0TyXz+cSi6fJDrUHcDuRQ7Dvnoe3/M3wWcf6YUDbrO/cG2mKu13aUJ17ciHVmYfnIN5ZEzOrwgVquJUXbKF4HzhFoRSsqKTFaEY3HJu4SB2ErMzRMQg5HnAOpsSXYarrQ6MsYb0C+1liUavJTVSGSnmO3C0IAemGwM/PX6H6RTyxk0d591kxkgyjWie+GRshjY21rT3yLycSUPshjD9a/oT30n79VWVqgzj5c0IOhzjVPIa3ahqv/OTCP52rdRL/d/BVzzGjsutmIhOmObqkZ7yWp4CoKTBr+9DP8Dt6stxFN9Yj+phK5cdMDZIYErha6/GLD3+UPBDnsw7aJS0IpnpxOuS33pkfxE5rw2gFvtr3B2xFo+j8VwtQ5CWls1Xb3racpe8uX7fz8c/DRd7nkmqx9awocwCiF6OtY/+gIGCCF8FQV3Cunnj65VtwRykxcySrusVcesqoYJnlUyw==
+  template:
+    metadata:
+      name: guacamole-oidc-secret
+      namespace: guacamole
+    type: Opaque
+---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
