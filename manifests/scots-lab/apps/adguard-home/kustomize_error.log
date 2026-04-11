@@ -1,2 +1,6 @@
-Error: Error: looks like "https://bjw-s.github.io/helm-charts" is not a valid chart repository or cannot be reached: failed to fetch https://bjw-s.github.io/helm-charts/index.yaml : 404 Not Found
-: unable to run: 'helm pull --untar --untardir /home/runner/work/k8s-cluster/k8s-cluster/kustomize/overlays/scots-lab/apps/adguard-home/charts/app-template-3.2.1 --repo https://bjw-s.github.io/helm-charts app-template --version 3.2.1' with env=[HELM_CONFIG_HOME=/tmp/kustomize-helm-2748702879/helm HELM_CACHE_HOME=/tmp/kustomize-helm-2748702879/helm/.cache HELM_DATA_HOME=/tmp/kustomize-helm-2748702879/helm/.data] (is 'helm' installed?): exit status 1
+Error: Error: values don't meet the specifications of the schema(s) in the following chart(s):
+app-template:
+- service.main: controller is required
+- service.dns: controller is required
+
+: unable to run: 'helm template adguard-home /home/runner/work/k8s-cluster/k8s-cluster/kustomize/overlays/scots-lab/apps/adguard-home/charts/app-template-3.2.1/app-template --namespace adguard-home -f /tmp/kustomize-helm-4160319527/app-template-kustomize-values.yaml' with env=[HELM_CONFIG_HOME=/tmp/kustomize-helm-4160319527/helm HELM_CACHE_HOME=/tmp/kustomize-helm-4160319527/helm/.cache HELM_DATA_HOME=/tmp/kustomize-helm-4160319527/helm/.data] (is 'helm' installed?): exit status 1
