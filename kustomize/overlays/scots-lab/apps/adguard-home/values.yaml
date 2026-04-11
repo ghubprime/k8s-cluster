@@ -33,8 +33,7 @@ service:
     controller: main
     type: LoadBalancer
     annotations:
-      # Instructs Cilium to allocate this specifically from the IPAM pool
-      io.cilium/bgp-virtual-ip: "true" 
+      io.cilium/ippool: "homelab-pool"
     loadBalancerIP: "192.168.1.53"
     externalTrafficPolicy: Local
     ports:
