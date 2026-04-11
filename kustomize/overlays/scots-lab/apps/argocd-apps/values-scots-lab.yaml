@@ -211,4 +211,11 @@ argocdApplications:
     name: netbootxyz
     namespace: netbootxyz
     appCategory: apps
+    syncWave: "3"
+  guacamole:
+    disableAutomated: false
+    disable: false
+    name: guacamole
+    namespace: guacamole
+    appCategory: apps
     syncWave: "3"

@@ -1,0 +1,29 @@
+auth:
+  enablePostgresUser: true
+  database: "guacamole"
+  username: "guacamole"
+  existingSecret: "guacamole-db-secret"
+  secretKeys:
+    adminPasswordKey: "POSTGRES_PASSWORD"
+    userPasswordKey: "POSTGRES_PASSWORD"
+
+primary:
+  persistence:
+    enabled: true
+    size: "5Gi"
+  podAnnotations:
+    backup.velero.io/backup-volumes: "data"
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "256Mi"
+    limits:
+      cpu: "500m"
+      memory: "1Gi"
+
+# Rule 23: Ensure numeric values (if any) are double quoted. 
+# Here the PostgreSQL max_connections is explicitly double quoted.
+primary:
+  configuration: |
+    max_connections = "200"
+    shared_buffers = "128MB"

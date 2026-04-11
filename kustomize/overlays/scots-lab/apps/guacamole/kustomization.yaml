@@ -1,0 +1,16 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: guacamole
+
+resources:
+  - guacd.yaml
+  - guacamole.yaml
+
+# Rule 16: Complex Helm Chart Inflation via native Kustomize integration
+helmCharts:
+  - name: postgresql
+    repo: https://charts.bitnami.com/bitnami
+    version: 16.2.0
+    releaseName: guacamole-postgresql
+    namespace: guacamole
+    valuesFile: values-postgresql.yaml
