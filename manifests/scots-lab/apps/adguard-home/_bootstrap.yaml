@@ -17,7 +17,7 @@ metadata:
   name: adguard-home-dns
   namespace: adguard-home
 spec:
-  externalTrafficPolicy: Local
+  externalTrafficPolicy: Cluster
   loadBalancerIP: 192.168.8.53
   ports:
   - name: dns-tcp
