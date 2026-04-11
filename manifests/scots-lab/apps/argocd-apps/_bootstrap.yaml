@@ -292,6 +292,28 @@ kind: Application
 metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "3"
+  name: netbootxyz-scots-lab
+  namespace: argocd
+spec:
+  destination:
+    namespace: netbootxyz
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: manifests/scots-lab/apps/netbootxyz
+    repoURL: https://github.com/ghubprime/k8s-cluster.git
+    targetRevision: HEAD
+  syncPolicy:
+    automated:
+      allowEmpty: false
+      prune: true
+      selfHeal: true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
   name: nextcloud-scots-lab
   namespace: argocd
 spec:
