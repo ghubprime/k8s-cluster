@@ -84,6 +84,8 @@ spec:
           value: guacd
         - name: GUACD_PORT
           value: "4822"
+        - name: WEBAPP_CONTEXT
+          value: ROOT
         - name: POSTGRES_HOSTNAME
           value: guacamole-postgresql
         - name: POSTGRES_DATABASE
@@ -117,7 +119,7 @@ spec:
         imagePullPolicy: IfNotPresent
         livenessProbe:
           httpGet:
-            path: /guacamole/
+            path: /
             port: http
           initialDelaySeconds: 30
           periodSeconds: 10
@@ -127,7 +129,7 @@ spec:
           name: http
         readinessProbe:
           httpGet:
-            path: /guacamole/
+            path: /
             port: http
           initialDelaySeconds: 15
           periodSeconds: 10
