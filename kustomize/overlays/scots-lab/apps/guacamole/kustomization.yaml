@@ -13,7 +13,7 @@ resources:
 helmCharts:
   - name: postgresql
     repo: https://charts.bitnami.com/bitnami
-    version: 16.2.0
+    version: 15.5.0
     releaseName: guacamole-postgresql
     namespace: guacamole
     valuesFile: values-postgresql.yaml
