@@ -51,10 +51,6 @@ spec:
     port: 80
     protocol: TCP
     targetPort: 80
-  - name: setup
-    port: 3000
-    protocol: TCP
-    targetPort: 3000
   selector:
     app.kubernetes.io/component: main
     app.kubernetes.io/instance: adguard-home
@@ -124,6 +120,15 @@ spec:
           value: America/Los_Angeles
         image: adguard/adguardhome:v0.107.46
         imagePullPolicy: IfNotPresent
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /login
+            port: 80
+            scheme: HTTP
+          initialDelaySeconds: 0
+          periodSeconds: 10
+          timeoutSeconds: 1
         name: main
         resources:
           limits:
@@ -164,4 +169,4 @@ spec:
   rules:
   - backendRefs:
     - name: adguard-home
-      port: 3000
+      port: 80
