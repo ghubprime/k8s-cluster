@@ -3,6 +3,7 @@ kind: Kustomization
 namespace: guacamole
 
 resources:
+  - namespace.yaml
   - guacd.yaml
   - guacamole.yaml
   - sealed-guacd-secret.yaml
