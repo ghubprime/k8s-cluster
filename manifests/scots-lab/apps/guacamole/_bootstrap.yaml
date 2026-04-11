@@ -148,10 +148,24 @@ spec:
         name: wait-for-db
       - args:
         - |
+          if [ ! -f /initdb-dir/initdb.sql ]; then
+            echo "Generating schema..."
+            /opt/guacamole/bin/initdb.sh --postgresql > /initdb-dir/initdb.sql || exit 1;
+          fi
+        command:
+        - sh
+        - -c
+        image: guacamole/guacamole:1.5.5
+        name: generate-schema
+        volumeMounts:
+        - mountPath: /initdb-dir
+          name: initdb-vol
+      - args:
+        - |
           export PGPASSWORD=$POSTGRES_PASSWORD
           if ! psql -h $POSTGRES_HOSTNAME -U $POSTGRES_USER -d $POSTGRES_DATABASE -c '\dt' | grep -q 'guacamole_user'; then
             echo "Database empty. Initializing..."
-            /opt/guacamole/bin/initdb.sh --postgresql | psql -h $POSTGRES_HOSTNAME -U $POSTGRES_USER -d $POSTGRES_DATABASE
+            cat /initdb-dir/initdb.sql | psql -h $POSTGRES_HOSTNAME -U $POSTGRES_USER -d $POSTGRES_DATABASE
           else
             echo "Database already initialized."
           fi
@@ -170,8 +184,14 @@ spec:
             secretKeyRef:
               key: POSTGRES_PASSWORD
               name: guacamole-db-secret
-        image: guacamole/guacamole:1.5.5
-        name: init-db
+        image: postgres:16-alpine
+        name: apply-schema
+        volumeMounts:
+        - mountPath: /initdb-dir
+          name: initdb-vol
+      volumes:
+      - emptyDir: {}
+        name: initdb-vol
 ---
 apiVersion: apps/v1
 kind: Deployment
