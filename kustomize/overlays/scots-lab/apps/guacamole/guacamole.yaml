@@ -19,8 +19,20 @@ spec:
         - name: wait-for-db
           image: postgres:16-alpine
           command: ['sh', '-c', 'until pg_isready -h guacamole-postgresql -p 5432 -U guacamole; do echo waiting for db; sleep 2; done;']
-        - name: init-db
+        - name: generate-schema
           image: guacamole/guacamole:1.5.5
+          command: ['sh', '-c']
+          args:
+            - |
+              if [ ! -f /initdb-dir/initdb.sql ]; then
+                echo "Generating schema..."
+                /opt/guacamole/bin/initdb.sh --postgresql > /initdb-dir/initdb.sql || exit 1;
+              fi
+          volumeMounts:
+            - name: initdb-vol
+              mountPath: /initdb-dir
+        - name: apply-schema
+          image: postgres:16-alpine
           env:
             - name: POSTGRES_HOSTNAME
               value: guacamole-postgresql
@@ -39,10 +51,13 @@ spec:
               export PGPASSWORD=$POSTGRES_PASSWORD
               if ! psql -h $POSTGRES_HOSTNAME -U $POSTGRES_USER -d $POSTGRES_DATABASE -c '\dt' | grep -q 'guacamole_user'; then
                 echo "Database empty. Initializing..."
-                /opt/guacamole/bin/initdb.sh --postgresql | psql -h $POSTGRES_HOSTNAME -U $POSTGRES_USER -d $POSTGRES_DATABASE
+                cat /initdb-dir/initdb.sql | psql -h $POSTGRES_HOSTNAME -U $POSTGRES_USER -d $POSTGRES_DATABASE
               else
                 echo "Database already initialized."
               fi
+          volumeMounts:
+            - name: initdb-vol
+              mountPath: /initdb-dir
       containers:
         - name: guacamole
           image: guacamole/guacamole:1.5.5
@@ -109,6 +124,9 @@ spec:
             limits:
               cpu: "1000m"
               memory: "1Gi"
+      volumes:
+        - name: initdb-vol
+          emptyDir: {}
 ---
 apiVersion: v1
 kind: Service
