@@ -1,0 +1,62 @@
+# Note on Rule 22: We will use the official adguard/adguardhome image, which does 
+# not use s6-overlay, thus bypassing the UID 0 limitation. Standard best-practices apply.
+controllers:
+  main:
+    annotations:
+      reloader.stakater.com/auto: "true"
+    containers:
+      main:
+        image:
+          repository: adguard/adguardhome
+          tag: v0.107.46
+          pullPolicy: IfNotPresent
+        env:
+          TZ: "America/Los_Angeles"
+        probes:
+          liveness:
+            enabled: true
+            type: HTTP
+            path: /login
+            port: 80
+        resources:
+          requests:
+            cpu: 50m
+            memory: 128Mi
+          limits:
+            memory: 512Mi
+
+service:
+  main:
+    type: ClusterIP
+    ports:
+      http:
+        port: 80
+  dns:
+    enabled: true
+    type: LoadBalancer
+    annotations:
+      # Instructs Cilium to allocate this specifically from the IPAM pool
+      io.cilium/bgp-virtual-ip: "true" 
+    loadBalancerIP: "192.168.1.53"
+    externalTrafficPolicy: Local
+    ports:
+      dns-tcp:
+        port: 53
+        protocol: TCP
+        targetPort: 53
+      dns-udp:
+        port: 53
+        protocol: UDP
+        targetPort: 53
+
+persistence:
+  config:
+    enabled: true
+    existingClaim: adguard-config-pvc
+    globalMounts:
+      - path: /opt/adguardhome/conf
+  data:
+    enabled: true
+    existingClaim: adguard-data-pvc
+    globalMounts:
+      - path: /opt/adguardhome/work

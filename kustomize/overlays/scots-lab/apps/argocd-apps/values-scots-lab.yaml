@@ -197,4 +197,11 @@ argocdApplications:
     name: znuny
     namespace: znuny
     appCategory: apps
-    syncWave: "3"
+    syncWave: "3"
+  adguard-home:
+    disableAutomated: false
+    disable: false
+    name: adguard-home
+    namespace: adguard-home
+    appCategory: apps
+    syncWave: "2"
