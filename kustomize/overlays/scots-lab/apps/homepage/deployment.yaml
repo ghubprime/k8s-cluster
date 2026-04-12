@@ -18,12 +18,17 @@ spec:
       containers:
         - name: homepage
           image: ghcr.io/gethomepage/homepage:latest
+          env:
+            - name: HOMEPAGE_ALLOWED_HOSTS
+              value: "home.srbii.com"
           ports:
             - containerPort: 3000
               name: http
           volumeMounts:
             - name: config
               mountPath: /app/config
+            - name: logs
+              mountPath: /app/config/logs
           resources:
             requests:
               cpu: 10m
@@ -64,3 +69,5 @@ spec:
         - name: config
           configMap:
             name: homepage-config
+        - name: logs
+          emptyDir: {}
