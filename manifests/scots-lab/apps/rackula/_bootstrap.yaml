@@ -1,0 +1,133 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: rackula
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rackula
+  namespace: rackula
+spec:
+  ports:
+  - name: proxy
+    port: 4180
+    targetPort: 4180
+  selector:
+    app: rackula
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: rackula-data
+  namespace: rackula
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+  storageClassName: ceph-block
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: rackula
+  name: rackula
+  namespace: rackula
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rackula
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: rackula
+    spec:
+      containers:
+      - image: ghcr.io/rackulalives/rackula:latest
+        name: rackula
+        ports:
+        - containerPort: 8080
+          name: http
+        resources:
+          limits:
+            cpu: 250m
+            memory: 256Mi
+          requests:
+            cpu: 10m
+            memory: 64Mi
+        volumeMounts:
+        - mountPath: /app/data
+          name: data
+      - args:
+        - --provider=oidc
+        - --oidc-issuer-url=https://auth.srbii.com/realms/homelab
+        - --upstream=http://127.0.0.1:8080
+        - --http-address=0.0.0.0:4180
+        - --email-domain=*
+        - --pass-user-headers=true
+        - --pass-authorization-header=true
+        - --cookie-secure=true
+        - --redirect-url=https://rack.srbii.com/oauth2/callback
+        - --cookie-domain=.srbii.com
+        - --whitelist-domain=.srbii.com
+        - --skip-provider-button=true
+        envFrom:
+        - secretRef:
+            name: oauth2-proxy-secret
+        image: quay.io/oauth2-proxy/oauth2-proxy:v7.6.0
+        name: oauth2-proxy
+        ports:
+        - containerPort: 4180
+          name: proxy
+        resources:
+          limits:
+            cpu: 100m
+            memory: 128Mi
+          requests:
+            cpu: 10m
+            memory: 32Mi
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: rackula-data
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  name: oauth2-proxy-secret
+  namespace: rackula
+spec:
+  encryptedData:
+    OAUTH2_PROXY_CLIENT_ID: AgAbPEPcfnvBb79TicNMUYEJhz0BSIWptGP94TgP1cdW/wjPW2LLLJV3J05ccjBf+MTtpmwAs79wBl72/bA6eSrbFAQflr/TAb6J0gNrOqncSQGOdEPsgburQsrIbpXuMkVzVxCr5OV9Fc1U4a8kqIMpshCMAMEPaGPCLzl4fpQ8mk8dwuxbWr9L4uf0ZFbByqksiVPCzTXTF9GvmBQJxhVm1F5esqXE0G1FT49fUgYRu9ogPJJUWn5eH/RQmUbdit6MZXTF74jP8GvK+ImGcyfrBCGEWF4ryrItInUVy/V/tRVzpW6Da2a8MI20DM99uyU2340FriKeQ1S6g4VnYqWjBewyg00Mk6NlHghOwNwoUM8Kf8q8fCIMq7yjOSPdu9/sE+a64v6OPwPbK4o2fIzDi1Jd9PmxqxJP+9dw3LRkF87RrnU2iaZSIZnWoJFZ82j52HO8Htdrdt6tYM31X93/UWnCLZmBYM4G9gQTff0/Lat4LA6v7PzkHViSVSOz3mgNi73dyW0yiMrf0NKy/fzxe1XB8KNLi4YDSfben1fAfcN9/hfYQUISb0Id6BC0DVZKLpoIjJCyuIYFUsImaNfAcgX6AM9grwyqNILdl8VgRZ+yP7HdueUigOk2GcvgzxLk0T4R9alRP7MCSLzw+jBpzHOElYLqEP2Q+576ocO5tAUlsJtt9hO2j0ptK9R23tf345Px7OxxoZ90YEd3CA==
+    OAUTH2_PROXY_CLIENT_SECRET: AgBe2uvvwU/ybBwa3rXlXMSItxsLHm+Tl16u7gI1lauG5lacQqDrCaVgWN6uu+fUBJPSIjyXPJwBiU10AEVx7+V5G7+BKdBcLA/ZnFfyXZCDsVHqQZwORdb0Wu93wnn+B4WwMgk+L/WY+Tfpy5eIj7Dl7x+SH8FrHDMt2pjRfPAaXGtiMYTAbXPLMyFHO/BE2WRI769evs7PPxWnDAxhmLH7bCYow/31WhCwgkFyFtYexNjg+4hjYvezFbsv1TW34+xb5JtAQjd6VP9LEkBKUFsLV/nzyTKlemqx2DKF683iXyIvqB6m9QoiWbHJmQ79Q7Uaoa3YQ6BEVKmusaVm8CNkQAdQq6tARLjOBSxSdnN9y1EEtSRS/3qTIrc1xRD2oBddYpplrl7kP5sTZoX+u9l/31eo6f7l9KIttFoM259M2cEh6gQT7aXs2GY4YO+oBD3ZFlZ0pElXv9LAgyUv6Iz/Sx7oPPHKuktXrFX3YRhO/GeNSwinp0F+5stxpcXkRTT/oC5EeQzttMgReajwUVun3qIdv3oYAX1yBaqAlaXKT9OhE5WbSScwSgWsdS4JmTd1DdL0zN1np8NOE8mKT7Ao2zyA9khrhvOdoWigvEAyZXOAMdCVdLHxHhC8p33TEtfMpyXi2U3RX8js5LZtVpbBf408h/1tNgd0UeLHdbZlsxkr6e8QRIlPC1VnJPlPc7uSYOKOFZbwj+6PvzbdtdFRTmZDyHsq392ZmTOBK7wk3Q==
+    OAUTH2_PROXY_COOKIE_SECRET: AgAK1YCrREfoGpFnQYxn4QZyHoKGAJDSeZKGJYCW52CqM1aDyM429d707Rgw4IVhuCa1Qn/toDM3QekCngLKbOYIF1i3Qg+BbIXbqVbdbXttbX9hHVA6oFBuslWQCAaqtwe6oaz/9qgB2p1yaznOEy2Upf9ELvg31YvKetrsa108alWE1jUoHOIsFgGzU5f+oSpgWMuW4CRmgql3rVFeuKqxwiEEPg+khxhIruJ2cY7GTwz02bVROiadYC20gwgitjjWtI9wjWwnsg8yVZVsYigX8IoHoxMaSjc5dzTZsYWUhAUQIu+8CWBWChMH1hQ9yQBE/IkevWqTRdKDYp6W4oPwj0g5hVIPIip/9EaTmusk9qNwrn0Y0kAhk60XuLz7r26jwMSlnThGzd5sQra/yxb2TAIniq/JlKifgOwPxKe0Ff+KDyrk3DP2KuIdESP0jUKCrvHfBzmvhoO8aTMdLbTKC8/icTK3Nud9cqARrfu7+SJYPF7FU1lWJD3cWhJXodABx54YWRMmSHnmAIhukYuNvFXjBZhp7fCFgAu1F0KWUKjsaq5+w+FvkEjKFeeyDt4+gdZfbZL9cAPJRJlH95XuDwnyn2qCWLXIZYAU502xFxFDQtdOKenFml9g5EC/56YvHTf8/l+mk9sgt1bSqMOlOPRQbk/0E9GsPwJhr0R1EoF6gSrNyN55kDrSjEzQWs2DLpDADet4ePe8ylfti0p3VPGrkvBvbKNBA4pu5oaPIfZN2hvtfuVzd6rCSg==
+  template:
+    metadata:
+      name: oauth2-proxy-secret
+      namespace: rackula
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: rackula
+  namespace: rackula
+spec:
+  hostnames:
+  - rack.srbii.com
+  parentRefs:
+  - name: kgateway-http
+    namespace: kgateway-system
+  rules:
+  - backendRefs:
+    - name: rackula
+      port: 4180
+    matches:
+    - path:
+        type: PathPrefix
+        value: /

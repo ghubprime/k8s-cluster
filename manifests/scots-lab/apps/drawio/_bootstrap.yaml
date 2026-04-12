@@ -1,0 +1,111 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: drawio
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: drawio
+  namespace: drawio
+spec:
+  ports:
+  - name: proxy
+    port: 4180
+    targetPort: 4180
+  selector:
+    app: drawio
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: drawio
+  name: drawio
+  namespace: drawio
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: drawio
+  template:
+    metadata:
+      labels:
+        app: drawio
+    spec:
+      containers:
+      - image: jgraph/drawio:latest
+        name: drawio
+        ports:
+        - containerPort: 8080
+          name: http
+        resources:
+          limits:
+            cpu: 500m
+            memory: 512Mi
+          requests:
+            cpu: 10m
+            memory: 128Mi
+      - args:
+        - --provider=oidc
+        - --oidc-issuer-url=https://auth.srbii.com/realms/homelab
+        - --upstream=http://127.0.0.1:8080
+        - --http-address=0.0.0.0:4180
+        - --email-domain=*
+        - --pass-user-headers=true
+        - --pass-authorization-header=true
+        - --cookie-secure=true
+        - --redirect-url=https://draw.srbii.com/oauth2/callback
+        - --cookie-domain=.srbii.com
+        - --whitelist-domain=.srbii.com
+        - --skip-provider-button=true
+        envFrom:
+        - secretRef:
+            name: oauth2-proxy-secret
+        image: quay.io/oauth2-proxy/oauth2-proxy:v7.6.0
+        name: oauth2-proxy
+        ports:
+        - containerPort: 4180
+          name: proxy
+        resources:
+          limits:
+            cpu: 100m
+            memory: 128Mi
+          requests:
+            cpu: 10m
+            memory: 32Mi
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  name: oauth2-proxy-secret
+  namespace: drawio
+spec:
+  encryptedData:
+    OAUTH2_PROXY_CLIENT_ID: AgAYLG9LEcQNVVo+Ol4sG4FOFH+B+WlX1ckCD3Kh4RWApKPsVcFFRl6l4UsB4FYgBtzG5DYCrOmeVZKFMGF56epuYFZ217fsF+1aOa7El+7pMncz6uPRjw/wHIdVbXXydrvGtquWJwc4sEe9036uHDrSy8UU4S1uGhWDXsMti67alD2atpdP4BXcG1zpqaSrr9GEUI20KmBuv+pLqes9TOLX79RGRr/akLZKQF4VuBFES9KeClOuqXMhJyN7sKYZtzykBu8hZyw2WIcDsu9xL2h0Ju5/5WXkS/DQqo5hNkX0gZP6vg6JPpshJZ+rPaftfbiXCjk06+qReusdAfqYtzFyy+UtJyHnqKb6xzCIESRZwvmmOhRkjv7JcC6BFzm7Z77ZGmldRz88YBE1/YNsZ+FZBOnMKhNme1URXc2C3IU/5IeQFcWF31izo/68ZDO+K/ozuiXVoxXBqEzPrxrR+vR+A0IhsPCZ1apCydJPQqbB2ZhAW34Lwo5hvXratGYXT39HfL2eihmd9m7AZ+8J7y8zdXzJVP1fnACHiD325uFJ7hXBaOMGZCIR9T1ZF7nRSXzmgch1047Pm5uv6FWBZUFzICc9/aZT/rtvPn3gaTJwGwPU63q2ZQH8bskqCavBubd9xPtr4y02OAIdLIV6h/NL6tFJiLWEdIZw+31JW2AUb3eLU5B6mgJBJLw5bG2kEoKSTsQMQbdfjRtEZ+nt
+    OAUTH2_PROXY_CLIENT_SECRET: AgADhJc3Oi4blZ5AfNRgezd4r1lOotu3O4sljAzotF6JGp63urNd9U9jBoQmWQCSCdxrl00B32LSB0SnRLjZFbF/JYzsICnehogxjWqM9c2FDrhMUqX9yRUEuPjQ1anlOSyZFcaxAy9D+ybog1H/zdj2xw3EA1/gnG/2RcE3CFhaq8k40OpQeoKB/sNWQuU4kuBqM3QiONGulmkO+W4Boz+JAJ9g/le2bUKe98g1ezOybyvEZicwUDONqjNYoYiV/GXqei3hEHii0lrq/F5bai49+90FI/8WfTkOfW6sknGCGTptUYfANVIJrJUbdgs3366bGU62XpzG36Z+n5KaM3WRwGeGEa6O4qnKEZzM2N2Tlt9Vxlr0Mk5xdz2FPhkSyQq7szG9Dn02LPVN5d8AZhIlSgh070DhC3FkdBPrL9ohg0HnvORw0es12OFOKuQU0Nnlr1w6miW023HTlMdGErg3Qu0h497LvzBiWLvu7fAl2PvNCq6JBgB6NiyRWq+zbTAH3/eVywmjRa9fLrU+Ic7jY+y2Cm/QcpSERpKlIyx8k+tOyP7avHl7Ya4pksHPFnz/PJcmYFnbFbs+o8n0EoZk+wQKKij32R02jXIoyBRM+VmGUIhCAvQqgMqzWCUgbZhUlgR5snsXd0vP37jJGzL6U02fSuF+A+0zaBVFQaDl5+llpI5GCEqE4epX1WrIsP+zsAbC7akMhPS0wCsulBJBsGrcA7tlgdy8B27APdPMtQ==
+    OAUTH2_PROXY_COOKIE_SECRET: AgCnJuWZdAN7vCS2g0d+f6S/nzjQlO4+9Sn0dsinZSy8SApqTKAHLNyC4w8Dj33y/Hu1NKIrLjFKtwgsy5Ijl1n05t6r17gt9EReJ05hDxsq23Wc7j+/jXMYlLALr+YqF59LuVzKCnCFaEsRV6zl959pwdW3uhiW/m9992CWYJuhGN+EiQlbzglvrve7AbxQhit4kvprvrgUKDrJK9GYXy5mvz2tiJXU/h6oy1HgmM68wTeTnicbPg0ptPzktR12y9CkuWM3GyYQTY0G1x6dtzX1noZSV3g9U+LyQrbzxHc2GI2PrzyTbqSxwPhTSmq4OgaqKS3zYxnt6vMocYNYf7LPvynAvaT381PCziJP0axku3u/uGVbPj+8IrLtBEsEynL+elO7kC/JWlTAilt2DVYinV9XJfU9P2rpU0a4jaRFBOuH2vU77fhLzvj7AImYjYfuAnM9Dhy6WBB2phKhof+3fU2UkJXg9Bh35PBmDmoVWlAxvOVG7/vTGYDE+HFxXao6X3S2Cx9E18DU0y5V4zvabnL5uDx7ykkGf14MRjENxqTmPZ7zHQME5wjfzA7y3g6VQAhv+EtSpc9mP2rXKESE7DHZuGFMps4A4DCENiArLuBdS60CHUkWnGk1ry+XTKVRy6EXeb0G19feaR+LVvHbrAREUcvssOJ0HoSxB4fOn94xi+qnCnv83uQzX2+6VcQyt5WmAHkFxdh6vWbiMZnzZlqZ4K70DoZavb+qqerj0/KJQh5X8x+XOQiD8w==
+  template:
+    metadata:
+      name: oauth2-proxy-secret
+      namespace: drawio
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: drawio
+  namespace: drawio
+spec:
+  hostnames:
+  - draw.srbii.com
+  parentRefs:
+  - name: kgateway-http
+    namespace: kgateway-system
+  rules:
+  - backendRefs:
+    - name: drawio
+      port: 4180
+    matches:
+    - path:
+        type: PathPrefix
+        value: /

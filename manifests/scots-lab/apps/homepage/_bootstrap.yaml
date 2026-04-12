@@ -1,0 +1,251 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: homepage
+---
+apiVersion: v1
+data:
+  bookmarks.yaml: |
+    - Documentation:
+        - Talos Docs:
+            - href: https://www.talos.dev/latest/
+              icon: si-linux
+        - ArgoCD Docs:
+            - href: https://argo-cd.readthedocs.io/
+              icon: si-argo
+        - Rook-Ceph Docs:
+            - href: https://rook.io/docs/rook/latest/
+              icon: mdi-database
+        - Cilium Docs:
+            - href: https://docs.cilium.io/
+              icon: si-cilium
+  services.yaml: |
+    - Infrastructure:
+        - ArgoCD:
+            href: https://argocd-omni.proxy-us.srbii.com/
+            description: GitOps Engine
+            icon: argocd.png
+        - Ceph Dashboard:
+            href: https://cephdash-omni.proxy-us.srbii.com/
+            description: Storage Cluster
+            icon: ceph.png
+        - Grafana:
+            href: https://grafana-omni.proxy-us.srbii.com/
+            description: Observability
+            icon: grafana.png
+        - Hubble UI:
+            href: https://hubbleui-omni.proxy-us.srbii.com/
+            description: Network Observability
+            icon: cilium.png
+        - Uptime Kuma:
+            href: https://uptimekuma-omni.proxy-us.srbii.com/
+            description: Status Monitoring
+            icon: uptime-kuma.png
+        - Omni:
+            href: https://omni.srbii.com/
+            description: Cluster Management
+            icon: mdi-server
+
+    - Applications:
+        - Nextcloud:
+            href: https://files.srbii.com
+            description: File Storage
+            icon: nextcloud.png
+        - Vaultwarden:
+            href: https://vault.srbii.com
+            description: Password Manager
+            icon: vaultwarden.png
+        - PhotoPrism:
+            href: https://photos.srbii.com
+            description: Photo Gallery
+            icon: photoprism.png
+        - Paperless-ngx:
+            href: https://docs.srbii.com
+            description: Document Management
+            icon: paperless-ngx.png
+        - Keycloak:
+            href: https://auth.srbii.com
+            description: Identity Provider
+            icon: keycloak.png
+        - Guacamole:
+            href: https://guacamole-omni.proxy-us.srbii.com/
+            description: Remote Desktop
+            icon: guacamole.png
+
+    - Tools:
+        - Draw.io:
+            href: https://draw.srbii.com
+            description: Diagram Editor
+            icon: diagrams-net.png
+        - IT-Tools:
+            href: https://tools.srbii.com
+            description: Developer Utilities
+            icon: it-tools.png
+        - VERT:
+            href: https://vert.srbii.com
+            description: File Converter
+            icon: mdi-file-swap
+        - Rackula:
+            href: https://rack.srbii.com
+            description: Rack Planner
+            icon: mdi-server
+        - OpenSpeedTest:
+            href: https://speed.srbii.com
+            description: Network Speed Test
+            icon: mdi-speedometer
+        - Netboot.xyz:
+            href: https://boot.srbii.com
+            description: Network Boot Manager
+            icon: mdi-lan-connect
+
+    - Monitoring:
+        - Changedetection:
+            href: https://changes.srbii.com
+            description: Web Change Monitor
+            icon: changedetection-io.png
+        - Znuny:
+            href: https://tickets.srbii.com
+            description: Ticket System
+            icon: mdi-ticket-confirmation
+  settings.yaml: |
+    title: Scots Lab
+    favicon: https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/png/kubernetes.png
+    theme: dark
+    color: slate
+    headerStyle: clean
+    layout:
+      Infrastructure:
+        style: row
+        columns: 3
+        icon: mdi-server-network
+      Applications:
+        style: row
+        columns: 3
+        icon: mdi-application
+      Tools:
+        style: row
+        columns: 3
+        icon: mdi-toolbox
+      Monitoring:
+        style: row
+        columns: 3
+        icon: mdi-chart-line
+  widgets.yaml: "- greeting:\n    text_size: xl\n    text: Scots Lab \U0001F3F4\U000E0067\U000E0062\U000E0073\U000E0063\U000E0074\U000E007F\n"
+kind: ConfigMap
+metadata:
+  name: homepage-config
+  namespace: homepage
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: homepage
+  namespace: homepage
+spec:
+  ports:
+  - name: proxy
+    port: 4180
+    targetPort: 4180
+  selector:
+    app: homepage
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: homepage
+  name: homepage
+  namespace: homepage
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: homepage
+  template:
+    metadata:
+      labels:
+        app: homepage
+    spec:
+      containers:
+      - image: ghcr.io/gethomepage/homepage:latest
+        name: homepage
+        ports:
+        - containerPort: 3000
+          name: http
+        resources:
+          limits:
+            cpu: 500m
+            memory: 256Mi
+          requests:
+            cpu: 10m
+            memory: 64Mi
+        volumeMounts:
+        - mountPath: /app/config
+          name: config
+      - args:
+        - --provider=oidc
+        - --oidc-issuer-url=https://auth.srbii.com/realms/homelab
+        - --upstream=http://127.0.0.1:3000
+        - --http-address=0.0.0.0:4180
+        - --email-domain=*
+        - --pass-user-headers=true
+        - --pass-authorization-header=true
+        - --cookie-secure=true
+        - --redirect-url=https://home.srbii.com/oauth2/callback
+        - --cookie-domain=.srbii.com
+        - --whitelist-domain=.srbii.com
+        - --skip-provider-button=true
+        envFrom:
+        - secretRef:
+            name: oauth2-proxy-secret
+        image: quay.io/oauth2-proxy/oauth2-proxy:v7.6.0
+        name: oauth2-proxy
+        ports:
+        - containerPort: 4180
+          name: proxy
+        resources:
+          limits:
+            cpu: 100m
+            memory: 128Mi
+          requests:
+            cpu: 10m
+            memory: 32Mi
+      volumes:
+      - configMap:
+          name: homepage-config
+        name: config
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  name: oauth2-proxy-secret
+  namespace: homepage
+spec:
+  encryptedData:
+    OAUTH2_PROXY_CLIENT_ID: AgBM6fqAwNH7/XOrvH/QPsyKQ5tmXW8MJM6rgPZCOeeM7JvMqaZr2bBg4dkH84V1UWU8aBavvWGV8MpyDsBD9PlDNxvTsxUBP+Yntk/98i+RWp70x076gdNXAO0dosmMnP+mfQ43k2mBahIxVxXsAtDZkCx/ZxJIz3/j7sOXkDbK0Vb4RFCKG0PvXNeUDGjtugs+IGvoOKVAzAXnHBNsS4ZsV/PxfL76QdMfSBDQVsktKvTUV/KqYGKybdcfpLyLQD10HvHRpjBt+9LeR8IpTKQf/olTBK6f0PR2m0cLj/Lohlf6zrgCc+mZpYhHPVxChHnFavf4R26l4HjTCQcKP7l1Bw4asKGLw/C2IYD8Lh0Ohva9DmsYYHuTfE5nb0H+P6g3v278SETJAWdOsh+bec+zl3ezE+fLbezwJpIXA5XnLb4eKCltUCbDNK+NU11cNIHdXs53o+crWf+DPZP5/Eyirg+18vcYtDKHba3k/rBTyTF0Vx2udwIsx2i4n2fhgtzC7IMFImc+M0BSzUK7xde83+2TP3u+V0y6K7pMfOrYcWI6LyJAXeqWau2HQzwW0UFl6BHxE6cdbIyvXPTdL14xYolWCPgKjZvzDQT+zB3z4SHdaVffgorLBanMNcm64TXpQUud2jpmkRYih+0LPjudw2s1ckSdb8T+5ft76DrwZgAdBL2+LxdbWZTHBkZ2xa3S+llP9am2Zh7qaLjCQOE=
+    OAUTH2_PROXY_CLIENT_SECRET: AgA526uhZlU3aUkSBjiaYvMXiiFIPvzFRWby3Y+hwMkcIOOd0XZLyDMeLRTwSvc5ATecxGmUvx088YefTpCL0K8HxxYt29JuIN8mLRUo4T/afLxY6+cu9xqqcs34ETRWZ924SKIwwzJJ5bs4opm8mVrgTn+wc7lnferPr4S4Mm8xf4dtRFX+56lZtY+n/DdcWVvW879TDbftI8jJYRnGkGd4PALwLjA0MX/c4qx1izk4FModOlEUvRIATAR5uTgYa+8k/19AyhIcnZi4uAsDw4+m2Mq7X27lnKv3xws4s3dV9nyNqXz34/7iOOGRkJRkHMM35Te/JruQ8GwIZDjcuIllukBnUgaBXc6+IVpY7u4mpR+VuVKMtPeUtwXnMm+3MIyg0OhKoTZFMOmrD8jTZ7O2B3vxZzxzjHNJRphj2wc+UL66d/oehMajf0FTW+qyDoqkiuaqhtNpg//l+3aAnKs8xCX68eUTsiRvqCj0BgAPsOMb/DpE/oAkLCqqQBK5xHvMzVLKKoIqrdcaJm7jCZ/veKFUgWZOvZdrZeDeAXMth57ONor7Gw42sB5g/G3G1K7iZvW5aD/w/mKVnBlC0K98my9Wo+xzS32oMniVPF5MGmahNCGqY4LdZvXoytcPLODw1EfEuyTQfTzaLloQcS8yO5bxDeNfJzQRbKZRLx0EvYmj7OyUqwU2GJ6vMZiey1SoGbGmp7TmF4m9fqtJBVcxPYGv/cVu/VagsyNy2lv5UA==
+    OAUTH2_PROXY_COOKIE_SECRET: AgBRjliQEw1FUrXcKirpJibylHQ4RuBsYR0hP5tF9Uu4UvugWOHNeBuZiGJSKgCCTOlWHqG5fbLvalIA6gG+jG6NU9X7+5+gDPFqxlRKtwoR0/DBtF8ImZ4YijnHVfUeKPFON5NIoRpvVTVkc/Sb1XivxOcnLYdQzNy0KZtDR2d2AVK5qzfVyhJCbxcxNG724QAfiVGMhkdBIj4UMECNlHLI9zwLpTwpHBY5J5zYBk8/3Q72Q0mWx3CldkoC2Wid1dbp4+HD4awoZwKHrTgxVwnrhHBXc6m5g2DlbP4ChoY2PC8wAaVGZmqBEQMqMJa1R3fCwlpFB/aOzmkJrXhecOhczN9vAG4EHvfASCFWnEtlPIoZUbewxd23vlNgVjWic9VBoM2ioY42S8bLuxvVAL7xFrIxGwKC67dWuzqcD6kZfxeohZsWN8ZduBPU6+9mjOGxYd2NxbwOpEPst2VHgpjKsVVPSVOhuGsiQ+z01EZmLs6TRuY30mAxF7SrfOfOekYt2AaJVYvKJB3HRvXyGphK8NVR+GyK3aXkyGKMZblfZnTrNY/j8+OKMKciotT0VFdGbVAz0uL8eoMhkR83M9rsEKO/8xNj4WGxUj4i2NPvuT+ADWBIMqMmwp89vL/BNW6vniemzBILYK63CvvHWlGY0DW9lLq+Ttz8l2MZLDokR/NXHGcoemXsFiFQdmnqCUDfLBOCyHUT3kPGSGVFbj3W/e84LBP+y8L1hv3aYk3CWC7X+4heguTLu3u+eg==
+  template:
+    metadata:
+      name: oauth2-proxy-secret
+      namespace: homepage
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: homepage
+  namespace: homepage
+spec:
+  hostnames:
+  - home.srbii.com
+  parentRefs:
+  - name: kgateway-http
+    namespace: kgateway-system
+  rules:
+  - backendRefs:
+    - name: homepage
+      port: 4180
+    matches:
+    - path:
+        type: PathPrefix
+        value: /

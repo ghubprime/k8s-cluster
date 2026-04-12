@@ -28,6 +28,19 @@ spec:
   type: ClusterIP
 ---
 apiVersion: v1
+kind: Service
+metadata:
+  name: netbootxyz-web
+  namespace: netbootxyz
+spec:
+  ports:
+  - name: proxy
+    port: 4180
+    targetPort: 4180
+  selector:
+    app.kubernetes.io/name: netbootxyz
+---
+apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: netbootxyz-assets
@@ -112,6 +125,34 @@ spec:
           name: config
         - mountPath: /assets
           name: assets
+      - args:
+        - --provider=oidc
+        - --oidc-issuer-url=https://auth.srbii.com/realms/homelab
+        - --upstream=http://127.0.0.1:3000
+        - --http-address=0.0.0.0:4180
+        - --email-domain=*
+        - --pass-user-headers=true
+        - --pass-authorization-header=true
+        - --cookie-secure=true
+        - --redirect-url=https://boot.srbii.com/oauth2/callback
+        - --cookie-domain=.srbii.com
+        - --whitelist-domain=.srbii.com
+        - --skip-provider-button=true
+        envFrom:
+        - secretRef:
+            name: oauth2-proxy-secret
+        image: quay.io/oauth2-proxy/oauth2-proxy:v7.6.0
+        name: oauth2-proxy
+        ports:
+        - containerPort: 4180
+          name: proxy
+        resources:
+          limits:
+            cpu: 100m
+            memory: 128Mi
+          requests:
+            cpu: 10m
+            memory: 32Mi
       volumes:
       - name: config
         persistentVolumeClaim:
@@ -119,6 +160,41 @@ spec:
       - name: assets
         persistentVolumeClaim:
           claimName: netbootxyz-assets
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  name: oauth2-proxy-secret
+  namespace: netbootxyz
+spec:
+  encryptedData:
+    OAUTH2_PROXY_CLIENT_ID: AgC/FjC8aIp4u16iEFP77UOPQRuAibEyp77lK9tRuLxeS8GhFyZLOisrFj1W+k1yfZfokqEB10vaOCkycyNUOHPLIIQb2GExPLl3GWjybK+im7MzDqIEFvHMmo2rJ+hDeaRet3MbPwsDJOBDn7bFlDsr+EfCKFBen2TOtDXRseHoAmixRRPAjNuHIb4kebTGWc19uvhkvQL2DnWu8qgDDNWdgE0Zm90zeBrT/WUSuwIvp2KqYijwNUOeLG942016TgTOszrvlFS9PNnB0czSEwBZWIg7+bp5S4aIeYQ6n7al1Hl6Nk8Z2aGHYAllREvBFQToPFSikBRV8MKTe1rsbL8lNbumc5oLINY/0rTJW4boqfyp1w6sLwy1wamxhR+yGNrPRhdYPOPoWO4RoUB2ggIsC+ak1zh0iB4T908PwIOSzICsPw+aoqhiMImlWz12bfmgr9gI34uVaXts8g8FFjG1QFwDpsVt7z3MvAnAu/0C3Apd+PrmCYacBBZ3mzTLDZoyIIn5ZkG8K7K8YV422YqToTVmcFJ1zLq51QS1Lcw+7MCPph3NB4p6Md/ijaYSRZ1SjIh49flyLQOulnLLWW2r4HcmdVvLBQauGlaZwpU71vVDyIRuTRm2J99Ox2cr87+ukMROF82hzF1rM8ixHAHr4uKV9NzCE22Axdg0tACmWd7rvQ1c3vaTn1asLVpWXS5uJtTIU7tu3iINzzQMn7e9LQ==
+    OAUTH2_PROXY_CLIENT_SECRET: AgBofNaJjDoXejXMFKrFxcHY1GexdO4nSyvSwnrfRCRlvUSJKsJMwgLQ7CGVmwvSudOjhDrqjH3CDcivMeaypcLNMXbLErLKzo028p7EGv+XmguP5LVd7E0JxoPn/DRnkuqq2gxpKe/SMImu7WzIir38xsTtouJBjmCQlqD+EOPcbW6NCuZDBA1FcmTlybzE2ieGyaNi9t++QeAv0rg1biUY2poSLQ2TdoYFVgKt0ZZD6w4vM8kYeKfYhorUiJ7UPnUpFbx8H+EZg8f0+zdcYNMUvmRYmMmisKmE8dpVJAXcfBJq2ZBj4WqYrEUcIrZcP+unfP3Gn7xdSE1mOiL8eShXO9NEEJONx8SmDc4kQqbgflQbQG5u3VYvWWqvmcobdUDnlMcUzTbY3vurMuHSWxkUs5iVQGZqUEMZQhu0r/SKfDsM8S6RmFpi6dhc0OUJlwTQSDXsFhtOYgB9XlFR2q7qE7CgCZbC7tWhiPJDldRFB5m0roWflIub+RqRLy42MgrsV77eC3C3M+WjktwnFybRjlYZ01LVHC6toSZv1k2Iml4quTO+piMWg+jaTkbPPQwoAhq9mUNKMynUtUNH4aypUDBy7u2Dv/ZvDEoyC1MtcBmsEh42Tn3Nrg0xU3VBW2ElB4DpTL7Q75BdEhZY1X4k3kTL/z8Jw5tDlhehFu8YbuMS8oPQEnxf1sepGwRdkpUpQ3LT58x+ZmCpGoZJlNdYzAha79NWWDvGk/7vL2Q/0A==
+    OAUTH2_PROXY_COOKIE_SECRET: AgAdalOhxsNpYrqA0FCSj/VcYbsa4w8bGm0WvATe5XpM7XrSzCsivWmyip8wntLVyccxxrk7sgCNPT2nLt50H6DQFwmvxvuCOYicgTm8I4pdbcnZpmxgfZ07Zaoh6qmkSMzyWpdV9GS1lNtF43dl4A2U8fKb++m0jF/il4WCMY5wF8VL/jgqRkHxuDOPhvNk5HUEoyDPJaTQsbD/jx6FmW0z+X1ZVeIZTVo1Bxa7Yj3HsaqbClvPNgbzU10xuQNYGe+OdyyLahflR3yPPcY28EK/MAS34VJjDRMUTd7r5LFMewJPlCSyn/RFGhm4vThDk88y4VEsn48VQUcQzSjJjoRrbZTj585wT5vrHwcqPjqfMLYRoGijPryFfvW7E2a1yJsSz0y2NmmAby5fd6WwDmd/saj4GJc+tl1JkCh++sncBjSvl5FbbHgPr7JXYEoyqNso5I1x8S43rCD8zwrSm1XWtPVlZl8fFQ7K9zVd6fIiGs1QW897YFe5aYX5GAMAu83JMTAgb9NDNpMNxZw3GptywjQ7pDzZrAaNb15ZzqIeoQV83ziI4134sJ1daMkkfisnY+nuTwiWfvZSj+Iykyd1hU1mjdNfj/BeUHVhguvs7Yt3tauSgxKWOKaUppUCeZLsoAQfT+Ws5bpFUcYO/t3fZM4DdW5l8hwjHEaqGLPG4rAj+ejQpr9zxHlDcIJwK49AhAL/8kmRV0fWgJWgGLwerCmfE3m4FuyJhZclerb3pc6M+HxyC28/Oa5NJA==
+  template:
+    metadata:
+      name: oauth2-proxy-secret
+      namespace: netbootxyz
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: netbootxyz
+  namespace: netbootxyz
+spec:
+  hostnames:
+  - boot.srbii.com
+  parentRefs:
+  - name: kgateway-http
+    namespace: kgateway-system
+  rules:
+  - backendRefs:
+    - name: netbootxyz-web
+      port: 4180
+    matches:
+    - path:
+        type: PathPrefix
+        value: /
 ---
 apiVersion: k8s.cni.cncf.io/v1
 kind: NetworkAttachmentDefinition

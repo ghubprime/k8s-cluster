@@ -1,0 +1,111 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: openspeedtest
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: openspeedtest
+  namespace: openspeedtest
+spec:
+  ports:
+  - name: proxy
+    port: 4180
+    targetPort: 4180
+  selector:
+    app: openspeedtest
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: openspeedtest
+  name: openspeedtest
+  namespace: openspeedtest
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: openspeedtest
+  template:
+    metadata:
+      labels:
+        app: openspeedtest
+    spec:
+      containers:
+      - image: openspeedtest/latest
+        name: openspeedtest
+        ports:
+        - containerPort: 3000
+          name: http
+        resources:
+          limits:
+            cpu: 500m
+            memory: 256Mi
+          requests:
+            cpu: 10m
+            memory: 32Mi
+      - args:
+        - --provider=oidc
+        - --oidc-issuer-url=https://auth.srbii.com/realms/homelab
+        - --upstream=http://127.0.0.1:3000
+        - --http-address=0.0.0.0:4180
+        - --email-domain=*
+        - --pass-user-headers=true
+        - --pass-authorization-header=true
+        - --cookie-secure=true
+        - --redirect-url=https://speed.srbii.com/oauth2/callback
+        - --cookie-domain=.srbii.com
+        - --whitelist-domain=.srbii.com
+        - --skip-provider-button=true
+        envFrom:
+        - secretRef:
+            name: oauth2-proxy-secret
+        image: quay.io/oauth2-proxy/oauth2-proxy:v7.6.0
+        name: oauth2-proxy
+        ports:
+        - containerPort: 4180
+          name: proxy
+        resources:
+          limits:
+            cpu: 100m
+            memory: 128Mi
+          requests:
+            cpu: 10m
+            memory: 32Mi
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  name: oauth2-proxy-secret
+  namespace: openspeedtest
+spec:
+  encryptedData:
+    OAUTH2_PROXY_CLIENT_ID: AgBgmkiRFmEUjkOrO8KXZC2OrOPwrymzvsZeCOaDUKZhR7GxQMll+79xRdWCLQtw0lAL1MkCU1F563A+OgFywWIDbQWOh60gVvVB8FedjtzPJkaa7hmc7iGGfgzT2baqfpFFAS9oRw2kYlH1b5W2bMkt+cfpLOv3p3TBmTA5e0OsL5zHkthMajVWQb6SPqz1emznJC4fojfzkcpSMZD+CxP6MjNH5gVtVfto7O44uLdpkJMWz70X/34G5XNg0LX3JcLokdEOf34TCUXcWZERblWJLgLQC/17YSmEVb/3nwXSIgOSDUAqvKw4mkLRBb6Z2BBcbsjErDZYWZMbmjGkqr73ks/n8GpnrWtFrlQ6CrogAg88KK8ZNTbZdfkq0SaCB1ObcpcFj6Cf558+ohbIoOCK0S0aTvm+qmlgdD2R9sLWqvbijnloEgH5SNA1D9c6rYcobj4hZAoA2CS2wHiCHR5uKIziNT0YQAPQaDTSKZuumaH1xrlZey4JakUkV7p4WiKDADSSvU+wJ5kEvUrGRMWe6xSfA6g0fl9pHSAfPAfrjhlE82Hxh/Ruwa7O53zSlmOiMIJgPQJvQeka0BEkw49+OdjTnCf/awOOrUr3iS8WURI4FWr0Xo2s5b0HBNgKDuOcS9o55alReD2qXAPHthulqm2wxFUtvpuiq1L4TRgrPSHxwZf0vCAvlAkD+36TWtBkfBsGyfCvtewSuXA8yTVjsj7Csg==
+    OAUTH2_PROXY_CLIENT_SECRET: AgAQNS/xNBZqTnzXBnyQHL4iFjAsmiOOeJ+X0LCmwzb6fQYk2SOPwWMJLESKVL4qfMH7Tufvmv1zRNivBAgEWPQczFexIB6AAV1EvRytV8ZjbpUOj/20rlI4vvn3ONy3JYKbzDZIq7Y9h6sEB5O+Krf3nHkZIzXSQt0hWzFV0v6ULrnzZH2jsU1kbHdfKkQqJ+8xOBZazXBI4MkhHBKPqAS3jmxyWT9me2c7mFhf7DOJdfHzJ9eSYfb1SJzvDT1v/QBtRJA75LyYWvO87lma8iVG/klaIr7L8QF5I3Rk4uEPJO7Ok/SC6b21Tq8D1smOj5a4atQ0gMSUD0p5K/ofxLJApEt9WZgoW0RBldtJHw9DyWm0qG9gWxOt+zg2Hz7Cx36oGTma+mmbMHXzB6Dita0XChXFBqVJKyVnfBTxhhi5zFRxCJCNbiAn7h1UbVp8k3s+hDB9MnIkb8vhodB7HiIxF4JY+pv/d51ei0VRMeLTgvpue2LuXMRTi3PokzjtIXEQyzK44UOcZ6OrnsScqpldEmVs2joBC/UwrnBbrtWd1sFotYfy1BKdYYBEGjQwMLAOcaSUHIbdfXSCSBLaX6tm0zpM2Mhpc0afg5nu/NGgAfU+z+88UCstvP1e0RYoBnxYQkyZtVbSW3kr6uQ6tNPbyK4WCZeO2Ooh9bHlJMhqP56F3iEKAEK4uT+IuCa5WkNQsFMs9ubAgVypCC6jsgmNffjCtrGvUzpCPQjvcvXksQ==
+    OAUTH2_PROXY_COOKIE_SECRET: AgCZGKX5Yp1ZWLC8EkytYlhTIfsqq2ci+HKFTfMeNOwHJKuo7hlqPA4hgMhMpT9etWzeP7a3j7KzLrmNcfZLbjrHcCc7k/No6DXoiH2F68//LRe3nSrCEDAF167K+2TgX6bqUNkslixbpUBIzvGXUKCgb4CUW5XtbkFYqyqtuXMB1P89WqCnjcpuutHbRw5H5CJEe1cG7Ukdl3qs/3MfL+FOF8eTVJFc7ldO68G9q04KkGqrJZVJtTzKd7BsBejvXb27NRmc5f0ZvAY9ftS4tea8GeYoeS5odfF5c5V5B7xP0XQ9lf0RwvZgpm8gIKKuEYJJ6lFibuuDXv89NKPsefJIAwtDdLdjw7XtR+MXdELjRynEBi4b3MPTOfkQePbSjBrnp/JBaLyJGb+IagfSW+rVYJbDxOwx1bYNf9VZpsFxt3RsBQJzE18ZbkddItL0XEdB2k/fA1a/+DeS3iF6IlEZxJSlVrCMuMSngRf1rxdodUnL/VYZvcOfPjxOu9j8JgRkkxix/cjJa1I4jRxOSAUMM3tM7TTNSXNovqK4mOq+STec6WFtjjFaGTI9hXaMWIwjZKAoqqNEQfFu9yooBq+7OfL/FVKoAiEAMRZ0IC7njhX+Xb1PJny9cKii0K1uo10SF8tiLDBvrTTR58Ljj+0AfJRz4v/+71ejG0qvuV0peQNnz/44jXCM6eKaMK1omA4Gpv5dAMvLHITHlWskJbohNELhXO0Cv/fUF0KztSp59q9+MN7B3tYWBleevg==
+  template:
+    metadata:
+      name: oauth2-proxy-secret
+      namespace: openspeedtest
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: openspeedtest
+  namespace: openspeedtest
+spec:
+  hostnames:
+  - speed.srbii.com
+  parentRefs:
+  - name: kgateway-http
+    namespace: kgateway-system
+  rules:
+  - backendRefs:
+    - name: openspeedtest
+      port: 4180
+    matches:
+    - path:
+        type: PathPrefix
+        value: /
