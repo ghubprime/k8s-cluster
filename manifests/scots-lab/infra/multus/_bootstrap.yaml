@@ -241,6 +241,16 @@ spec:
         - mountPath: /host/opt/cni/bin
           mountPropagation: Bidirectional
           name: cnibin
+      - command:
+        - /install-cni.sh
+        image: ghcr.io/siderolabs/install-cni:v1.12.6
+        name: install-cni
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - mountPath: /host/opt/cni/bin
+          mountPropagation: Bidirectional
+          name: cnibin
       priorityClassName: system-node-critical
       serviceAccountName: multus
       terminationGracePeriodSeconds: 10
@@ -260,11 +270,11 @@ spec:
           path: /var/run/netns/
         name: host-run-netns
       - hostPath:
-          path: /etc/cni/net.d
-        name: cni
-      - hostPath:
           path: /opt/cni/bin
         name: cnibin
+      - hostPath:
+          path: /etc/cni/net.d
+        name: cni
       - hostPath:
           path: /
         name: hostroot
