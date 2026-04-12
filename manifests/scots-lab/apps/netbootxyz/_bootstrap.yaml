@@ -96,8 +96,8 @@ spec:
           value: "1000"
         - name: TZ
           value: America/Los_Angeles
-        image: lscr.io/linuxserver/netbootxyz:latest
-        imagePullPolicy: Always
+        image: linuxserver/netbootxyz:0.7.6
+        imagePullPolicy: IfNotPresent
         name: netbootxyz
         ports:
         - containerPort: 3000
