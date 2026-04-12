@@ -100,7 +100,7 @@ spec:
         - name: OPENID_AUTHORIZATION_ENDPOINT
           value: https://auth.srbii.com/realms/homelab/protocol/openid-connect/auth
         - name: OPENID_JWKS_ENDPOINT
-          value: https://auth.srbii.com/realms/homelab/protocol/openid-connect/certs
+          value: http://localhost:8081/realms/homelab/protocol/openid-connect/certs
         - name: OPENID_ISSUER
           value: https://auth.srbii.com/realms/homelab
         - name: OPENID_CLIENT_ID
@@ -140,6 +140,35 @@ spec:
           requests:
             cpu: 100m
             memory: 512Mi
+      - command:
+        - /bin/sh
+        - -c
+        - |
+          cat << 'EOF' > /etc/nginx/nginx.conf
+          events {}
+          http {
+            server {
+              listen 8081;
+              location / {
+                proxy_pass https://auth.srbii.com;
+                proxy_set_header Host auth.srbii.com;
+                proxy_set_header User-Agent 'curl/7.88.1';
+                proxy_ssl_server_name on;
+                proxy_ssl_name auth.srbii.com;
+              }
+            }
+          }
+          EOF
+          nginx -g 'daemon off;'
+        image: nginx:alpine
+        name: user-agent-spoofer
+        resources:
+          limits:
+            cpu: 50m
+            memory: 64Mi
+          requests:
+            cpu: 10m
+            memory: 32Mi
       initContainers:
       - command:
         - sh
