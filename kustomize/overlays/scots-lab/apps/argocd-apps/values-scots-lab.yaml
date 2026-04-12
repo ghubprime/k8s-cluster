@@ -233,4 +233,39 @@ argocdApplications:
     namespace: vert
     appCategory: apps
     syncWave: "3"
+  drawio:
+    disableAutomated: false
+    disable: false
+    name: drawio
+    namespace: drawio
+    appCategory: apps
+    syncWave: "3"
+  rackula:
+    disableAutomated: false
+    disable: false
+    name: rackula
+    namespace: rackula
+    appCategory: apps
+    syncWave: "3"
+  it-tools:
+    disableAutomated: false
+    disable: false
+    name: it-tools
+    namespace: it-tools
+    appCategory: apps
+    syncWave: "3"
+  homepage:
+    disableAutomated: false
+    disable: false
+    name: homepage
+    namespace: homepage
+    appCategory: apps
+    syncWave: "3"
+  openspeedtest:
+    disableAutomated: false
+    disable: false
+    name: openspeedtest
+    namespace: openspeedtest
+    appCategory: apps
+    syncWave: "3"
 

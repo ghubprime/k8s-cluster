@@ -1,0 +1,138 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: homepage-config
+  namespace: homepage
+data:
+  settings.yaml: |
+    title: Scots Lab
+    favicon: https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/png/kubernetes.png
+    theme: dark
+    color: slate
+    headerStyle: clean
+    layout:
+      Infrastructure:
+        style: row
+        columns: 3
+        icon: mdi-server-network
+      Applications:
+        style: row
+        columns: 3
+        icon: mdi-application
+      Tools:
+        style: row
+        columns: 3
+        icon: mdi-toolbox
+      Monitoring:
+        style: row
+        columns: 3
+        icon: mdi-chart-line
+
+  bookmarks.yaml: |
+    - Documentation:
+        - Talos Docs:
+            - href: https://www.talos.dev/latest/
+              icon: si-linux
+        - ArgoCD Docs:
+            - href: https://argo-cd.readthedocs.io/
+              icon: si-argo
+        - Rook-Ceph Docs:
+            - href: https://rook.io/docs/rook/latest/
+              icon: mdi-database
+        - Cilium Docs:
+            - href: https://docs.cilium.io/
+              icon: si-cilium
+
+  widgets.yaml: |
+    - greeting:
+        text_size: xl
+        text: Scots Lab 🏴󠁧󠁢󠁳󠁣󠁴󠁿
+
+  services.yaml: |
+    - Infrastructure:
+        - ArgoCD:
+            href: https://argocd-omni.proxy-us.srbii.com/
+            description: GitOps Engine
+            icon: argocd.png
+        - Ceph Dashboard:
+            href: https://cephdash-omni.proxy-us.srbii.com/
+            description: Storage Cluster
+            icon: ceph.png
+        - Grafana:
+            href: https://grafana-omni.proxy-us.srbii.com/
+            description: Observability
+            icon: grafana.png
+        - Hubble UI:
+            href: https://hubbleui-omni.proxy-us.srbii.com/
+            description: Network Observability
+            icon: cilium.png
+        - Uptime Kuma:
+            href: https://uptimekuma-omni.proxy-us.srbii.com/
+            description: Status Monitoring
+            icon: uptime-kuma.png
+        - Omni:
+            href: https://omni.srbii.com/
+            description: Cluster Management
+            icon: mdi-server
+
+    - Applications:
+        - Nextcloud:
+            href: https://files.srbii.com
+            description: File Storage
+            icon: nextcloud.png
+        - Vaultwarden:
+            href: https://vault.srbii.com
+            description: Password Manager
+            icon: vaultwarden.png
+        - PhotoPrism:
+            href: https://photos.srbii.com
+            description: Photo Gallery
+            icon: photoprism.png
+        - Paperless-ngx:
+            href: https://docs.srbii.com
+            description: Document Management
+            icon: paperless-ngx.png
+        - Keycloak:
+            href: https://auth.srbii.com
+            description: Identity Provider
+            icon: keycloak.png
+        - Guacamole:
+            href: https://guacamole-omni.proxy-us.srbii.com/
+            description: Remote Desktop
+            icon: guacamole.png
+
+    - Tools:
+        - Draw.io:
+            href: https://draw.srbii.com
+            description: Diagram Editor
+            icon: diagrams-net.png
+        - IT-Tools:
+            href: https://tools.srbii.com
+            description: Developer Utilities
+            icon: it-tools.png
+        - VERT:
+            href: https://vert.srbii.com
+            description: File Converter
+            icon: mdi-file-swap
+        - Rackula:
+            href: https://rack.srbii.com
+            description: Rack Planner
+            icon: mdi-server
+        - OpenSpeedTest:
+            href: https://speed.srbii.com
+            description: Network Speed Test
+            icon: mdi-speedometer
+        - Netboot.xyz:
+            href: https://boot.srbii.com
+            description: Network Boot Manager
+            icon: mdi-lan-connect
+
+    - Monitoring:
+        - Changedetection:
+            href: https://changes.srbii.com
+            description: Web Change Monitor
+            icon: changedetection-io.png
+        - Znuny:
+            href: https://tickets.srbii.com
+            description: Ticket System
+            icon: mdi-ticket-confirmation
