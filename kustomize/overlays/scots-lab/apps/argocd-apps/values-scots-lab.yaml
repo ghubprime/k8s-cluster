@@ -218,4 +218,11 @@ argocdApplications:
     name: guacamole
     namespace: guacamole
     appCategory: apps
+    syncWave: "3"
+  changedetection:
+    disableAutomated: false
+    disable: false
+    name: changedetection
+    namespace: changedetection
+    appCategory: apps
     syncWave: "3"

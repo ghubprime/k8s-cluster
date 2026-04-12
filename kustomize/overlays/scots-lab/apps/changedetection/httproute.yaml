@@ -1,0 +1,20 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: changedetection
+  namespace: changedetection
+spec:
+  parentRefs:
+    - name: kgateway-http
+      namespace: kgateway-system
+  hostnames:
+    - "changes.srbii.com"
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        # Route to oauth2-proxy sidecar service, NOT directly to changedetection
+        - name: changedetection-app
+          port: 4180
