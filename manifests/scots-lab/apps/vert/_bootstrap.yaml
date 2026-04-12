@@ -1,0 +1,107 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: vert
+  namespace: vert
+spec:
+  ports:
+  - name: proxy
+    port: 4180
+    targetPort: 4180
+  selector:
+    app: vert
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: vert
+  name: vert
+  namespace: vert
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vert
+  template:
+    metadata:
+      labels:
+        app: vert
+    spec:
+      containers:
+      - image: ghcr.io/vert-sh/vert:latest
+        name: vert
+        ports:
+        - containerPort: 3000
+          name: http
+        resources:
+          limits:
+            cpu: 500m
+            memory: 512Mi
+          requests:
+            cpu: 10m
+            memory: 64Mi
+      - args:
+        - --provider=oidc
+        - --oidc-issuer-url=https://auth.srbii.com/realms/homelab
+        - --upstream=http://127.0.0.1:3000
+        - --http-address=0.0.0.0:4180
+        - --email-domain=*
+        - --pass-user-headers=true
+        - --pass-authorization-header=true
+        - --cookie-secure=true
+        - --redirect-url=https://vert.srbii.com/oauth2/callback
+        - --cookie-domain=.srbii.com
+        - --whitelist-domain=.srbii.com
+        - --skip-provider-button=true
+        envFrom:
+        - secretRef:
+            name: oauth2-proxy-secret
+        image: quay.io/oauth2-proxy/oauth2-proxy:v7.6.0
+        name: oauth2-proxy
+        ports:
+        - containerPort: 4180
+          name: proxy
+        resources:
+          limits:
+            cpu: 100m
+            memory: 128Mi
+          requests:
+            cpu: 10m
+            memory: 32Mi
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  name: oauth2-proxy-secret
+  namespace: vert
+spec:
+  encryptedData:
+    OAUTH2_PROXY_COOKIE_SECRET: AgBQVxJgbLj582u0k71VAVSjxpyNFRgJA8nebHJ7WEDShmGW10kmK064dfEMUos/AXGq2Idit/KGN0+wtDjB/hUn+OBPSeFayLTTWd9qsPYzZmSyDQ0QG4ud0FpElciHOWYyC5sPzcZ1JMBD7lH2jGpMr1AGM/Ew9pLUQxcEq0cAuy5PNo5nwHQLMO5kLBJfceNR2+kL+Ugma44REG2tigdzKs7T2O2TpmwH2qv7LLw6898qwbzvh4EyLEtx8qYxIfy8OhGkmH2JWZjqE8lsztRjm8BgWsoTPGjoQlo8gZQ5gBuxWMAE97nqXo6oPvEdrhaKz82ZvqpSVVBUz1s2hsVJayrb7nHtt4Jd+/lAwPBaO4XxTnLfLHs1JI1qeJao+QF/vj1wtH+1Svt2+QuK3QZpRqtRmPKV7EqoguBXw6gHkUxOge0h+eVjxivh+IpuLU4tL1N3Qoc6tWDWo9VDFC0ogkzQOjccfCHLUO1rWRA48BVicTwVcrjz3Rcfmza3cUF5PFhDTm8EulIM26nbmv6hW+evwHTno06x/GxRSqgJ86ZN7qBy2EcX/Uztm3oK5wd18CmcsQwmktdIX1n2xMtUJsyAYNt5tTqn4dFjJ74QM0oFkH9rhvSEsvE5MrdYkU2Wwc86Oet3hCoOW3CIQvKwCPZ/xxkbBmdWGYELchf/6fV5H5YJfg3bBDhsO16Y33JB7QEjYd/Bfv+vtkdyVA+jiiFO8Iqz2EykWq5gn6XEav48HDsWQzOPBYR+/A==
+    OIDC_CLIENT_ID: AgCSm57doJzZFEI9r7TlVCOkt7v2MiHQULwHuI/ApXINs0cJH6n401cfmW0ml/eL0HgkKG0PktT9IWozar6y95wGzYwG78yY3bSnXy9cveyhM+IjjxdeNKSL5J2Cvq0YGzEOKM0l1x7suwlVjmhyId+exyyYslj4m4bMVgHlus2tkBos1+PcJCyvfJIjAZAwxHwiZ8zAe49ypScn55D3Bdzqy2fmYJ+qkov03/t5pCIxM2ckqNObHWeXmdCqw53R1dCkx0MMpzbdlmdXhvwjFXiYNwX9mzXFch9NrB3MuhGglNXirEdljlMoPNniOkCP0k04UinEG7c8xU5FyND1c/RyagNJfbh48t6zKOTWm1hUv1KxTC0iFhD5TD6P+2TD79EfrPRxMRpURukJcWm/iq+20IuteC8AvOFO1dwEQAY1OL2tV1NQZixjIZ46ShYnEZ1Om1+7jdL9ycX96UAp5GicXJ6sUD9ax+8oScR+22IL7KbP42LWz53tp3gXBuwk0nCYnS/YcHoO739m3TGIH6O3kpjqTKDTBA/05tqDsOC9e7nEA2+dpAzHAm281j5fpQ72U9+mFDSYPjqd0RddGZCge7Mg5uAFAXfEAYX6MwaJ1qlGhJ/w35kJ3sNxfkMRNFJGntbihTyeCZAW8AXfpqtWayoth1ZCWAUVDfrchXTYinhwjZfJ/b7i9D//JI7Cd9TakvkLOquKnCSxEg==
+    OIDC_CLIENT_SECRET: AgBTWrVOhVtWCMB5EX0Cu3g2x7GM79FmTCIiSOFctRpwXdc2MqcqKUwQuO4CPg+2MzKJeNiO5UOuHQDB8X4VBzTP7a93J0ZOkrdb70usXHIh3p+DaT2234mMxmCdxOv+fC6syMWG9qqADHXGD5Ung6bk+SPnyoHEqzq/5rlVIHpQKYZnEbg+8KzssfjioEYcZedV1TSTST95mWu959nfslZY9fsBbbG7WIvd3ysu29gC3caP0XIV3k+hGjJIIVOOX1mH79E8lj6VUEbQT1tO84xOxwva/VTqJXxVgvF0Sa5mJdrJgPxyngY2xWUr3+1z/GHe5VvN54mBdxDGyl3vAXzQEaXTwqJXjQyTzfH7ObvLrqnvE/hpMYGocwD8WT0DlnPIVgX2xx7vFVOpsJlF3M7OXVyt3cDjsarR8ggl9HURja0Dhh7TtO7PaEHekm/ZwFCspl2JsBX2g2rFH/KOOITV3plKhErArCtH2qV8EApCQAexTmp2owfb5N3gJU5EdEDnTbNPEQ3fqFHu6fJr/ylOMU6pfzQDdgEsJdb454Z1ZvVZVZj+jnF+L8GMD1ol6BKzbbyje6SZ+wYlSqwR73ErQFCW3At+OlYMG/g8MPZYG8yr0us/rf9kw+GfVaQy09ZiBT/N+FjFKdCbTEBgAhHCv81DpeDyi3LZL0wWZ2iFjojF1Jz/IgRbX8p9STtgcVzuxgTltCO7zh0NJf+n6qmNjTkmy4QQDSsfLogvXW1UYg==
+    OIDC_ISSUER_URL: AgBziNeQop36EeJfYn//yptAeSR4MzKxvYTt0Uc6OHa+EAQp+1ngAb6yBsP7zQ+lcG+8sQQlkAf7saqWIWCUJmWJx9kihQPOill0y3OeEuxTO1LAnqgAWhI6FZ8nuOmIqNdIPZm3EFR95GKaG8XnT5ZmKag+3YKkAvH+OBaER9rDI4oSskeBC4HL7KL87x9o791qIb+zmlwFaQOHOXVkAm5ud9Fo5K+q9yWtEyVmkZaAkgPoA7cZyag7873jIA0dR66F5UTMr/beuBxJKj5hwM1xFuYwVfA/xUxqrDfjgTAAkOgzc7SkBDLgixTF5KB5bg3fdlq2NEMJmbjmKOlGOt7Af8qB0ZZgCW+sR8iQjUQrFp1jXKdStS7ZI+7iAPWhFS4McE1iWNyBSDusDGjcg+Ly8/UJXRpxZtmXB5LhyE7UarAo8ODoYbRlIKsqlIDAxanl++EligRbVUZdd5Z/o6oT/pfvdSBU1b8IlnMjcGMz3mglE0IEHIJVgoZNX4ovh9M/jMigPUvJ0Rugmho2z6bUPnfuaZKcrni9tBXAqb0Ld78vFjuqX+Lh5JVIsZFlKYfc/8RCc60NNIc+PCk+OcAOfGsZthVuLsQj0rE7w78um43YtB3xKQ6zobWyY2mWDSRN8p3ELGb1UGkby32s3erHoXjPeu8m43proUAb8pG1WVEUBD9Qr+moT92upIRDRO2Roaz2n7lmCTBpwSPVysc356hTdKMKdOcDFtndQRKUnIw0KwjV
+  template:
+    metadata:
+      name: oauth2-proxy-secret
+      namespace: vert
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: vert
+  namespace: vert
+spec:
+  hostnames:
+  - vert.srbii.com
+  parentRefs:
+  - name: kgateway-http
+    namespace: kgateway-system
+  rules:
+  - backendRefs:
+    - name: vert
+      port: 4180
+    matches:
+    - path:
+        type: PathPrefix
+        value: /
