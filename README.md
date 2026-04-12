@@ -15,7 +15,7 @@ The primary repository defining the `k8s-scots-lab` bare-metal Kubernetes cluste
 │       ├─ Multus CNI                             │
 │       ├─ Gateway API CRDs                       │
 │       ├─ ArgoCD                                 │
-│       └─ ArgoCD App-of-Apps (17 applications)   │
+│       └─ ArgoCD App-of-Apps (19 applications)   │
 └─────────────────────────────────────────────────┘
          │
          ▼  omnictl cluster template sync
@@ -28,13 +28,13 @@ The primary repository defining the `k8s-scots-lab` bare-metal Kubernetes cluste
          │
          ▼  ArgoCD syncs from manifests/
 ┌─────────────────────────────────────────────────┐
-│  Live Cluster (17 ArgoCD Applications)          │
+│  Live Cluster (19 ArgoCD Applications)          │
 │  Wave -1: CRDs (Gateway API, kGateway)          │
 │  Wave  0: Infra (Cilium, Multus, Whereabouts)   │
 │  Wave  1: Core (ArgoCD, cert-manager, Ceph,     │
 │           Velero, SealedSecrets, CrowdSec)       │
 │  Wave  2: Services (Ceph Cluster, kGateway)     │
-│  Wave  3: Monitoring (kube-prometheus-stack)     │
+│  Wave  3: Apps & Monitoring (kube-prometheus...) │
 └─────────────────────────────────────────────────┘
 ```
 

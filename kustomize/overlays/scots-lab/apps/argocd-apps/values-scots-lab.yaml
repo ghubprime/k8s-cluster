@@ -225,4 +225,12 @@ argocdApplications:
     name: changedetection
     namespace: changedetection
     appCategory: apps
-    syncWave: "3"
+    syncWave: "3"
+  vert:
+    disableAutomated: false
+    disable: false
+    name: vert
+    namespace: vert
+    appCategory: apps
+    syncWave: "3"
+
