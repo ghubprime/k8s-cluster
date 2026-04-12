@@ -185,8 +185,6 @@ spec:
         volumeMounts:
         - mountPath: /app/config
           name: config
-        - mountPath: /app/config/logs
-          name: logs
       - args:
         - --provider=oidc
         - --oidc-issuer-url=https://auth.srbii.com/realms/homelab
@@ -215,12 +213,24 @@ spec:
           requests:
             cpu: 10m
             memory: 32Mi
+      initContainers:
+      - command:
+        - sh
+        - -c
+        - cp /configmap-data/* /app-config/
+        image: busybox:1.36
+        name: copy-config
+        volumeMounts:
+        - mountPath: /app-config
+          name: config
+        - mountPath: /configmap-data
+          name: configmap-data
       volumes:
+      - emptyDir: {}
+        name: config
       - configMap:
           name: homepage-config
-        name: config
-      - emptyDir: {}
-        name: logs
+        name: configmap-data
 ---
 apiVersion: bitnami.com/v1alpha1
 kind: SealedSecret
