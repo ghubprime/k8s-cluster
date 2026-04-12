@@ -167,7 +167,10 @@ spec:
         app: homepage
     spec:
       containers:
-      - image: ghcr.io/gethomepage/homepage:latest
+      - env:
+        - name: HOMEPAGE_ALLOWED_HOSTS
+          value: home.srbii.com
+        image: ghcr.io/gethomepage/homepage:latest
         name: homepage
         ports:
         - containerPort: 3000
@@ -182,6 +185,8 @@ spec:
         volumeMounts:
         - mountPath: /app/config
           name: config
+        - mountPath: /app/config/logs
+          name: logs
       - args:
         - --provider=oidc
         - --oidc-issuer-url=https://auth.srbii.com/realms/homelab
@@ -214,6 +219,8 @@ spec:
       - configMap:
           name: homepage-config
         name: config
+      - emptyDir: {}
+        name: logs
 ---
 apiVersion: bitnami.com/v1alpha1
 kind: SealedSecret
