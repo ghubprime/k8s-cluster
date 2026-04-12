@@ -1,0 +1,3 @@
+cluster:
+  extraManifests:
+    - https://raw.githubusercontent.com/ghubprime/k8s-cluster/refs/heads/main/manifests/scots-lab/apps/changedetection/_bootstrap.yaml
