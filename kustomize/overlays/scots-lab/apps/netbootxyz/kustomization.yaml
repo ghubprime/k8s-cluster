@@ -9,4 +9,5 @@ resources:
   - service.yaml
   - service-web.yaml
   - httproute.yaml
+  - httproute-pxe.yaml
   - sealed-oauth2-proxy-secret.yaml
