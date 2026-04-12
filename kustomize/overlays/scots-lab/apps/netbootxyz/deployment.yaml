@@ -21,8 +21,8 @@ spec:
     spec:
       containers:
         - name: netbootxyz
-          image: lscr.io/linuxserver/netbootxyz:latest
-          imagePullPolicy: Always
+          image: linuxserver/netbootxyz:0.7.6
+          imagePullPolicy: IfNotPresent
           env:
             - name: PUID
               value: "1000"
