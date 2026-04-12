@@ -3,6 +3,7 @@ kind: Namespace
 metadata:
   labels:
     name: netbootxyz
+    pod-security.kubernetes.io/enforce: privileged
   name: netbootxyz
 ---
 apiVersion: v1
