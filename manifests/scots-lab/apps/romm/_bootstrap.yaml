@@ -114,6 +114,8 @@ spec:
             secretKeyRef:
               key: DB_PASSWD
               name: romm-secret
+        - name: PGDATA
+          value: /var/lib/postgresql/data/pgdata
         image: postgres:16-bookworm
         name: postgres
         ports:

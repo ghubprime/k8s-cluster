@@ -116,6 +116,8 @@ spec:
             secretKeyRef:
               key: POSTGRES_PASSWORD
               name: linkwarden-secret
+        - name: PGDATA
+          value: /var/lib/postgresql/data/pgdata
         image: postgres:16-bookworm
         name: postgres
         ports:
