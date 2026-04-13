@@ -178,32 +178,7 @@ spec:
               cpu: 500m
               memory: 512Mi
 
-      initContainers:
-        - name: minio-init
-          image: minio/mc:latest
-          command:
-            - /bin/sh
-            - -c
-            - |
-              # Wait for MinIO to start
-              until mc alias set local http://127.0.0.1:9000 "$MINIO_ROOT_USER" "$MINIO_ROOT_PASSWORD" 2>/dev/null; do
-                echo "Waiting for MinIO..."
-                sleep 2
-              done
-              mc mb --ignore-existing local/outline-data
-              echo "Bucket created successfully"
-          env:
-            - name: MINIO_ROOT_USER
-              valueFrom:
-                secretKeyRef:
-                  name: outline-secret
-                  key: MINIO_ROOT_USER
-            - name: MINIO_ROOT_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: outline-secret
-                  key: MINIO_ROOT_PASSWORD
-          restartPolicy: Always
+
 
       volumes:
         - name: postgres-data

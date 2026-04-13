@@ -6,7 +6,9 @@ metadata:
   labels:
     app: emulatorjs
 spec:
-  replicas: 1
+  # PAUSED: LinuxServer.io EmulatorJS image has no amd64 manifest resolvable by containerd on Talos.
+  # See walkthrough for details. Re-enable when upstream fixes manifest or alternative image found.
+  replicas: 0
   strategy:
     type: Recreate
   selector:
