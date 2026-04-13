@@ -15,5 +15,5 @@ spec:
             type: PathPrefix
             value: /
       backendRefs:
-        - name: romm
+        - name: romm-svc
           port: 4180
