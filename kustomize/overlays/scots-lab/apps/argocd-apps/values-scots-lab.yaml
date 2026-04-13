@@ -275,4 +275,60 @@ argocdApplications:
     namespace: onetimesecret
     appCategory: apps
     syncWave: "3"
+  umami:
+    disableAutomated: false
+    disable: false
+    name: umami
+    namespace: umami
+    appCategory: apps
+    syncWave: "3"
+  outline:
+    disableAutomated: false
+    disable: false
+    name: outline
+    namespace: outline
+    appCategory: apps
+    syncWave: "3"
+  actual-budget:
+    disableAutomated: false
+    disable: false
+    name: actual-budget
+    namespace: actual-budget
+    appCategory: apps
+    syncWave: "3"
+  ntfy:
+    disableAutomated: false
+    disable: false
+    name: ntfy
+    namespace: ntfy
+    appCategory: apps
+    syncWave: "3"
+  linkwarden:
+    disableAutomated: false
+    disable: false
+    name: linkwarden
+    namespace: linkwarden
+    appCategory: apps
+    syncWave: "3"
+  stirling-pdf:
+    disableAutomated: false
+    disable: false
+    name: stirling-pdf
+    namespace: stirling-pdf
+    appCategory: apps
+    syncWave: "3"
+  romm:
+    disableAutomated: false
+    disable: false
+    name: romm
+    namespace: romm
+    appCategory: apps
+    syncWave: "3"
+  emulatorjs:
+    disableAutomated: false
+    disable: false
+    name: emulatorjs
+    namespace: emulatorjs
+    appCategory: apps
+    syncWave: "3"
 

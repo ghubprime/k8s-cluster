@@ -1,0 +1,115 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: romm
+  namespace: romm
+  labels:
+    app: romm
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: romm
+  template:
+    metadata:
+      labels:
+        app: romm
+    spec:
+      containers:
+        - name: romm
+          image: rommapp/romm:latest
+          ports:
+            - containerPort: 8080
+              name: http
+          env:
+            - name: DB_HOST
+              value: "127.0.0.1"
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_NAME
+              value: "romm"
+            - name: ROMM_BASE_PATH
+              value: "/"
+          envFrom:
+            - secretRef:
+                name: romm-secret
+          volumeMounts:
+            - name: library
+              mountPath: /romm/library
+            - name: resources
+              mountPath: /romm/resources
+          resources:
+            requests:
+              cpu: 50m
+              memory: 256Mi
+            limits:
+              cpu: "1"
+              memory: 1Gi
+
+        - name: postgres
+          image: postgres:16-bookworm
+          ports:
+            - containerPort: 5432
+              name: postgres
+          env:
+            - name: POSTGRES_DB
+              value: "romm"
+            - name: POSTGRES_USER
+              value: "romm"
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: romm-secret
+                  key: DB_PASSWD
+          volumeMounts:
+            - name: postgres-data
+              mountPath: /var/lib/postgresql/data
+          resources:
+            requests:
+              cpu: 10m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+
+        - name: oauth2-proxy
+          image: quay.io/oauth2-proxy/oauth2-proxy:v7.6.0
+          args:
+            - --provider=oidc
+            - --oidc-issuer-url=https://auth.srbii.com/realms/homelab
+            - --upstream=http://127.0.0.1:8080
+            - --http-address=0.0.0.0:4180
+            - --email-domain=*
+            - --pass-user-headers=true
+            - --pass-authorization-header=true
+            - --cookie-secure=true
+            - --redirect-url=https://roms.srbii.com/oauth2/callback
+            - --cookie-domain=.srbii.com
+            - --whitelist-domain=.srbii.com
+            - --skip-provider-button=true
+          envFrom:
+            - secretRef:
+                name: oauth2-proxy-secret
+          ports:
+            - containerPort: 4180
+              name: proxy
+          resources:
+            requests:
+              cpu: 10m
+              memory: 32Mi
+            limits:
+              cpu: 100m
+              memory: 128Mi
+
+      volumes:
+        - name: library
+          persistentVolumeClaim:
+            claimName: romm-library
+        - name: resources
+          persistentVolumeClaim:
+            claimName: romm-resources
+        - name: postgres-data
+          persistentVolumeClaim:
+            claimName: romm-postgres-data

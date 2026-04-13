@@ -1,0 +1,87 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: emulatorjs
+  namespace: emulatorjs
+  labels:
+    app: emulatorjs
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: emulatorjs
+  template:
+    metadata:
+      labels:
+        app: emulatorjs
+    spec:
+      containers:
+        - name: emulatorjs
+          image: lscr.io/linuxserver/emulatorjs:latest
+          ports:
+            - containerPort: 3000
+              name: frontend
+            - containerPort: 80
+              name: backend
+          env:
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: TZ
+              value: "America/Los_Angeles"
+          # Rule #22: s6-overlay requires UID 0 for init bootstrapping
+          securityContext:
+            runAsUser: 0
+            runAsNonRoot: false
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: data
+              mountPath: /data
+          resources:
+            requests:
+              cpu: 50m
+              memory: 256Mi
+            limits:
+              cpu: "1"
+              memory: 1Gi
+
+        - name: oauth2-proxy
+          image: quay.io/oauth2-proxy/oauth2-proxy:v7.6.0
+          args:
+            - --provider=oidc
+            - --oidc-issuer-url=https://auth.srbii.com/realms/homelab
+            - --upstream=http://127.0.0.1:3000
+            - --http-address=0.0.0.0:4180
+            - --email-domain=*
+            - --pass-user-headers=true
+            - --pass-authorization-header=true
+            - --cookie-secure=true
+            - --redirect-url=https://play.srbii.com/oauth2/callback
+            - --cookie-domain=.srbii.com
+            - --whitelist-domain=.srbii.com
+            - --skip-provider-button=true
+          envFrom:
+            - secretRef:
+                name: oauth2-proxy-secret
+          ports:
+            - containerPort: 4180
+              name: proxy
+          resources:
+            requests:
+              cpu: 10m
+              memory: 32Mi
+            limits:
+              cpu: 100m
+              memory: 128Mi
+
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: emulatorjs-config
+        - name: data
+          persistentVolumeClaim:
+            claimName: emulatorjs-data
