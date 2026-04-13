@@ -10,9 +10,9 @@ metadata:
   namespace: romm
 spec:
   ports:
-  - name: proxy
-    port: 4180
-    targetPort: 4180
+  - name: http
+    port: 8080
+    targetPort: 8080
   selector:
     app: romm
 ---
@@ -134,33 +134,6 @@ spec:
         volumeMounts:
         - mountPath: /var/lib/mysql
           name: mariadb-data
-      - args:
-        - --provider=oidc
-        - --oidc-issuer-url=https://auth.srbii.com/realms/homelab
-        - --upstream=http://127.0.0.1:8080
-        - --http-address=0.0.0.0:4180
-        - --email-domain=*
-        - --pass-user-headers=true
-        - --cookie-secure=true
-        - --redirect-url=https://roms.srbii.com/oauth2/callback
-        - --cookie-domain=.srbii.com
-        - --whitelist-domain=.srbii.com
-        - --skip-provider-button=true
-        envFrom:
-        - secretRef:
-            name: oauth2-proxy-secret
-        image: quay.io/oauth2-proxy/oauth2-proxy:v7.6.0
-        name: oauth2-proxy
-        ports:
-        - containerPort: 4180
-          name: proxy
-        resources:
-          limits:
-            cpu: 100m
-            memory: 128Mi
-          requests:
-            cpu: 10m
-            memory: 32Mi
       enableServiceLinks: false
       volumes:
       - name: library
@@ -217,7 +190,7 @@ spec:
   rules:
   - backendRefs:
     - name: romm-svc
-      port: 4180
+      port: 8080
     matches:
     - path:
         type: PathPrefix

@@ -10,9 +10,9 @@ metadata:
   namespace: actual-budget
 spec:
   ports:
-  - name: proxy
-    port: 4180
-    targetPort: 4180
+  - name: http
+    port: 5006
+    targetPort: 5006
   selector:
     app: actual-budget
 ---
@@ -64,33 +64,6 @@ spec:
         volumeMounts:
         - mountPath: /data
           name: data
-      - args:
-        - --provider=oidc
-        - --oidc-issuer-url=https://auth.srbii.com/realms/homelab
-        - --upstream=http://127.0.0.1:5006
-        - --http-address=0.0.0.0:4180
-        - --email-domain=*
-        - --pass-user-headers=true
-        - --cookie-secure=true
-        - --redirect-url=https://budget.srbii.com/oauth2/callback
-        - --cookie-domain=.srbii.com
-        - --whitelist-domain=.srbii.com
-        - --skip-provider-button=true
-        envFrom:
-        - secretRef:
-            name: oauth2-proxy-secret
-        image: quay.io/oauth2-proxy/oauth2-proxy:v7.6.0
-        name: oauth2-proxy
-        ports:
-        - containerPort: 4180
-          name: proxy
-        resources:
-          limits:
-            cpu: 100m
-            memory: 128Mi
-          requests:
-            cpu: 10m
-            memory: 32Mi
       volumes:
       - name: data
         persistentVolumeClaim:
@@ -125,7 +98,7 @@ spec:
   rules:
   - backendRefs:
     - name: actual-budget
-      port: 4180
+      port: 5006
     matches:
     - path:
         type: PathPrefix
