@@ -7,6 +7,6 @@ spec:
   selector:
     app: romm
   ports:
-    - name: proxy
-      port: 4180
-      targetPort: 4180
+    - name: http
+      port: 8080
+      targetPort: 8080

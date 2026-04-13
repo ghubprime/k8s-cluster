@@ -16,4 +16,4 @@ spec:
             value: /
       backendRefs:
         - name: romm-svc
-          port: 4180
+          port: 8080

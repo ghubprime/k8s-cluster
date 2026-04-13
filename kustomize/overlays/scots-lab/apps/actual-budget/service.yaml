@@ -7,6 +7,6 @@ spec:
   selector:
     app: actual-budget
   ports:
-    - name: proxy
-      port: 4180
-      targetPort: 4180
+    - name: http
+      port: 5006
+      targetPort: 5006
