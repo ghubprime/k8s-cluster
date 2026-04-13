@@ -6,7 +6,7 @@ metadata:
 apiVersion: v1
 kind: Service
 metadata:
-  name: romm
+  name: romm-svc
   namespace: romm
 spec:
   ports:
@@ -161,6 +161,7 @@ spec:
           requests:
             cpu: 10m
             memory: 32Mi
+      enableServiceLinks: false
       volumes:
       - name: library
         persistentVolumeClaim:
@@ -215,7 +216,7 @@ spec:
     namespace: kgateway-system
   rules:
   - backendRefs:
-    - name: romm
+    - name: romm-svc
       port: 4180
     matches:
     - path:
