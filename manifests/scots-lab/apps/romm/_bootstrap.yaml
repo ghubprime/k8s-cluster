@@ -32,7 +32,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: romm-postgres-data
+  name: romm-mariadb-data
   namespace: romm
 spec:
   accessModes:
@@ -79,7 +79,7 @@ spec:
         - name: DB_HOST
           value: 127.0.0.1
         - name: DB_PORT
-          value: "5432"
+          value: "3306"
         - name: DB_NAME
           value: romm
         - name: ROMM_BASE_PATH
@@ -105,22 +105,25 @@ spec:
         - mountPath: /romm/resources
           name: resources
       - env:
-        - name: POSTGRES_DB
+        - name: MYSQL_DATABASE
           value: romm
-        - name: POSTGRES_USER
+        - name: MYSQL_USER
           value: romm
-        - name: POSTGRES_PASSWORD
+        - name: MYSQL_PASSWORD
           valueFrom:
             secretKeyRef:
               key: DB_PASSWD
               name: romm-secret
-        - name: PGDATA
-          value: /var/lib/postgresql/data/pgdata
-        image: postgres:16-bookworm
-        name: postgres
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: DB_PASSWD
+              name: romm-secret
+        image: mariadb:11-jammy
+        name: mariadb
         ports:
-        - containerPort: 5432
-          name: postgres
+        - containerPort: 3306
+          name: mariadb
         resources:
           limits:
             cpu: 500m
@@ -129,8 +132,8 @@ spec:
             cpu: 10m
             memory: 128Mi
         volumeMounts:
-        - mountPath: /var/lib/postgresql/data
-          name: postgres-data
+        - mountPath: /var/lib/mysql
+          name: mariadb-data
       - args:
         - --provider=oidc
         - --oidc-issuer-url=https://auth.srbii.com/realms/homelab
@@ -138,7 +141,6 @@ spec:
         - --http-address=0.0.0.0:4180
         - --email-domain=*
         - --pass-user-headers=true
-        - --pass-authorization-header=true
         - --cookie-secure=true
         - --redirect-url=https://roms.srbii.com/oauth2/callback
         - --cookie-domain=.srbii.com
@@ -166,9 +168,9 @@ spec:
       - name: resources
         persistentVolumeClaim:
           claimName: romm-resources
-      - name: postgres-data
+      - name: mariadb-data
         persistentVolumeClaim:
-          claimName: romm-postgres-data
+          claimName: romm-mariadb-data
 ---
 apiVersion: bitnami.com/v1alpha1
 kind: SealedSecret
