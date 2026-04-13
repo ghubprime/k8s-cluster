@@ -37,6 +37,8 @@ spec:
       - env:
         - name: DOCKER_ENABLE_SECURITY
           value: "false"
+        - name: SECURITY_ENABLELOGIN
+          value: "false"
         image: frooodle/s-pdf:latest
         name: stirling-pdf
         ports:
