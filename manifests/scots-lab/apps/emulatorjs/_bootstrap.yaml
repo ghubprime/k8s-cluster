@@ -1,0 +1,165 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    pod-security.kubernetes.io/enforce: privileged
+  name: emulatorjs
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: emulatorjs
+  namespace: emulatorjs
+spec:
+  ports:
+  - name: proxy
+    port: 4180
+    targetPort: 4180
+  selector:
+    app: emulatorjs
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: emulatorjs-config
+  namespace: emulatorjs
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: ceph-block
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: emulatorjs-data
+  namespace: emulatorjs
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 50Gi
+  storageClassName: ceph-block
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: emulatorjs
+  name: emulatorjs
+  namespace: emulatorjs
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: emulatorjs
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: emulatorjs
+    spec:
+      containers:
+      - env:
+        - name: PUID
+          value: "1000"
+        - name: PGID
+          value: "1000"
+        - name: TZ
+          value: America/Los_Angeles
+        image: lscr.io/linuxserver/emulatorjs:latest
+        name: emulatorjs
+        ports:
+        - containerPort: 3000
+          name: frontend
+        - containerPort: 80
+          name: backend
+        resources:
+          limits:
+            cpu: "1"
+            memory: 1Gi
+          requests:
+            cpu: 50m
+            memory: 256Mi
+        securityContext:
+          runAsNonRoot: false
+          runAsUser: 0
+        volumeMounts:
+        - mountPath: /config
+          name: config
+        - mountPath: /data
+          name: data
+      - args:
+        - --provider=oidc
+        - --oidc-issuer-url=https://auth.srbii.com/realms/homelab
+        - --upstream=http://127.0.0.1:3000
+        - --http-address=0.0.0.0:4180
+        - --email-domain=*
+        - --pass-user-headers=true
+        - --pass-authorization-header=true
+        - --cookie-secure=true
+        - --redirect-url=https://play.srbii.com/oauth2/callback
+        - --cookie-domain=.srbii.com
+        - --whitelist-domain=.srbii.com
+        - --skip-provider-button=true
+        envFrom:
+        - secretRef:
+            name: oauth2-proxy-secret
+        image: quay.io/oauth2-proxy/oauth2-proxy:v7.6.0
+        name: oauth2-proxy
+        ports:
+        - containerPort: 4180
+          name: proxy
+        resources:
+          limits:
+            cpu: 100m
+            memory: 128Mi
+          requests:
+            cpu: 10m
+            memory: 32Mi
+      volumes:
+      - name: config
+        persistentVolumeClaim:
+          claimName: emulatorjs-config
+      - name: data
+        persistentVolumeClaim:
+          claimName: emulatorjs-data
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  name: oauth2-proxy-secret
+  namespace: emulatorjs
+spec:
+  encryptedData:
+    OAUTH2_PROXY_CLIENT_ID: AgAmRrTJ6UU8qtF+6yZP3LwQxv2BAIQHTnyzeNriaXVqdQrJyAly90gVVpezKpjXcU4BGB/5YulWoQ1YRybSooT1PD5+mhLXORIHulKzgnK1nWmEWZ9Yt3yoZ1OqEquwRlhbjWkwUzfNMDz3h5q6U1hI9pbZ2ENpvA6KgGp+BaAs6lPBoUqRh4d3YYqHBMq6P/5d36qVwFCnxbhmg6SQ9n139JGTrituy02yZXyt3vWY+2/IilGIl3+dHUHh8qIngbJhDbkSe25cfAf50otuyoGUwuHA2UGx7Wrp2ooQBqznKn7jCDjB0OZQfCq6w3WWRVJYvMdRcfAMJ+xYE+/JVCFQCo65OTs9p6i8hoaQJuINMtPpiwugEHSMvusPO3mOBTCVxbH8nkqenffUlkSQuYS/ckv6NUPUtrqk/p/MXTnExn+XtqTFKrxj2wX7OoOpDmRqbaGE0Afxnr3eBCzWU3Q1E7/MierM63cb5dxB8BK1djdTD3YrhrCVNEJ8OUDZ+i7WD0JqufqwzC6QYvp4doO1aVwJFHAxTxvew34pfeia3pvESTXrhry36vqnaiAfWe8S1sVBvMepx+nwpFpINO/qCw1WPEZ8AKufkoN0q92ZjYf7mQLgRXQVrAeWI/BgThE18uKCnu4mg0htngtauLxhlYcEuvNQjyS4v8HEMhR2wo0PJGHuW2qgC7JhpoTMYr83W6eMMHu/4RBil05WPrz1Iw==
+    OAUTH2_PROXY_CLIENT_SECRET: AgBgAxSr9+Hy8EwErk/UjjiGvQIMAWrqwQYZHssS54v364aY81DFYNPIApNoEiXPsskmJMqVMRyhKYfWXjL8ilpZRr6I9av5rPJ43OF936MSKN3nNGB0JwNwVAA7i9oVueQLAnSxUf+AFdWKEQuVbfZ4yffyoa+Gbi24xZtyKlW9yg5gNoS8PR7E73w62Aed5kxwXX3vZBX5sZQhyUStNhOvwYitESVD9VB7Cqc944fAvCbHhrZgwMKevXBvmsP57FXQHg4URl13546wg/u+2Z9s4YLaupjm19bxg0/qBqTiS3eknsZPv1H7Mg2oVxydvlkPDMGw+j4nD/dwh9iU2hrkOs0aGFQl4myoBLAkfcejB+dr9AVCn9Ks1I5p6T1rxz3WquiAr8L3olpGAqZKggmTb+EHAGop7b2w3mwh+A4heSumIEky6nHYsKgDLok2fh2qyS0l/Jqza8TGTD4/XIEdHW+JxX2b96+H6mkTe+rkw1qTvDnaouQQ7tPqrtHM5sH9nvp4AjLlPuur/YTW1m7PBjVsTNuUreOiLPwAZ/0WNjKYnS39JE1S0p7+uWPbfiRsy68oxpOxrVk6n3e1238CDdhMtqdfQ6Q8ZGeqcHioJN3l55LY5iWI7sJxZOPVkEyPW//Z5GYMNH8kX+mtHBc61ZVpPyKr+n74Xo2f22Y1v0eCUKKnjeoRt5I++/PXHjgd4lFPlbZSjvGj2y9dcClDZmt4O/GIAZByMo59GDGzgg==
+    OAUTH2_PROXY_COOKIE_SECRET: AgCftpU+wiDijgLRpLLUMGX3CI1tT++AmrCtjNFCggrjxkl5VdkJ3NqVlycVz5RrZKTGX3y1AeBaBIwMWlAsL/A6Ol0zXlWp981In8Yfiuf/G3DQ5JO/CX812/vghz+oZbOMvRxg1P1dkj4aaW7UUTJL/v8E/n4QOVMoM2CF5bYEfkBwrDP6j08RScf62zyPDq6cQtyAuO8qmdFBR6shbvJaLQrZHiCt/ROx/adyBwKSp7/wrEwcaY8TYoF6PwLL1IcG6Q5bVScAQ2JRJDdry/ICnJS1txO02jRp6gVqCSAo+LpLkiju6jQqPutLeysU2jaW622nCb2vMKubtY6HeXDiOQsjYmX27N8LcYOEAmjnp6G8OPETG1hWK+ELgldOlPq7wMAy8l6Lrp/uUVsZkHJYHAv6rbC0vFOWe+owhl62yBdbcjGIiFj4lc4ND1f/Olht5EUd9UCNAV1fPjyz/nK5je7soM8G/qmJBNkkcpDHIzxJizaRGb+LM65mB64uGI8cvGWL3rqgqCvYsbe3I6AwlqR9fo1kohT7dpEiylCErwAIOXFmFRZljJGsa82E7oU/+zjNLaE8vJn+APiuZLWNM+0aIr0jpTJACGXHSoN5JW8DrnEEHgcfpx1ytnlbfXo82SjK4m85w3o2UtyJ+mkemmOfj9K8NDwYHjizkM8c5uNkKcYR8hD2EHVAWqZY81DfkP6yDOobWS23y8TFUv/tXCrd/PF7JeOJogbGV2vP1ASf4MlZB2fA8XUJsw==
+  template:
+    metadata:
+      name: oauth2-proxy-secret
+      namespace: emulatorjs
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: emulatorjs
+  namespace: emulatorjs
+spec:
+  hostnames:
+  - play.srbii.com
+  parentRefs:
+  - name: kgateway-http
+    namespace: kgateway-system
+  rules:
+  - backendRefs:
+    - name: emulatorjs
+      port: 4180
+    matches:
+    - path:
+        type: PathPrefix
+        value: /

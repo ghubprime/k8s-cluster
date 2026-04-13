@@ -2,6 +2,28 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   annotations:
+    argocd.argoproj.io/sync-wave: "3"
+  name: actual-budget-scots-lab
+  namespace: argocd
+spec:
+  destination:
+    namespace: actual-budget
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: manifests/scots-lab/apps/actual-budget
+    repoURL: https://github.com/ghubprime/k8s-cluster.git
+    targetRevision: HEAD
+  syncPolicy:
+    automated:
+      allowEmpty: false
+      prune: true
+      selfHeal: true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  annotations:
     argocd.argoproj.io/sync-wave: "2"
   name: adguard-home-scots-lab
   namespace: argocd
@@ -203,6 +225,28 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   annotations:
+    argocd.argoproj.io/sync-wave: "3"
+  name: emulatorjs-scots-lab
+  namespace: argocd
+spec:
+  destination:
+    namespace: emulatorjs
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: manifests/scots-lab/apps/emulatorjs
+    repoURL: https://github.com/ghubprime/k8s-cluster.git
+    targetRevision: HEAD
+  syncPolicy:
+    automated:
+      allowEmpty: false
+      prune: true
+      selfHeal: true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  annotations:
     argocd.argoproj.io/sync-wave: "-1"
   name: gateway-api-crds-scots-lab
   namespace: argocd
@@ -358,6 +402,28 @@ kind: Application
 metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "3"
+  name: linkwarden-scots-lab
+  namespace: argocd
+spec:
+  destination:
+    namespace: linkwarden
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: manifests/scots-lab/apps/linkwarden
+    repoURL: https://github.com/ghubprime/k8s-cluster.git
+    targetRevision: HEAD
+  syncPolicy:
+    automated:
+      allowEmpty: false
+      prune: true
+      selfHeal: true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
   name: loki-scots-lab
   namespace: argocd
 spec:
@@ -445,6 +511,28 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   annotations:
+    argocd.argoproj.io/sync-wave: "3"
+  name: ntfy-scots-lab
+  namespace: argocd
+spec:
+  destination:
+    namespace: ntfy
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: manifests/scots-lab/apps/ntfy
+    repoURL: https://github.com/ghubprime/k8s-cluster.git
+    targetRevision: HEAD
+  syncPolicy:
+    automated:
+      allowEmpty: false
+      prune: true
+      selfHeal: true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  annotations:
     argocd.argoproj.io/sync-wave: "1"
   name: omni-scots-lab
   namespace: argocd
@@ -515,6 +603,28 @@ kind: Application
 metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "3"
+  name: outline-scots-lab
+  namespace: argocd
+spec:
+  destination:
+    namespace: outline
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: manifests/scots-lab/apps/outline
+    repoURL: https://github.com/ghubprime/k8s-cluster.git
+    targetRevision: HEAD
+  syncPolicy:
+    automated:
+      allowEmpty: false
+      prune: true
+      selfHeal: true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
   name: paperless-scots-lab
   namespace: argocd
 spec:
@@ -568,6 +678,28 @@ spec:
   project: default
   source:
     path: manifests/scots-lab/apps/rackula
+    repoURL: https://github.com/ghubprime/k8s-cluster.git
+    targetRevision: HEAD
+  syncPolicy:
+    automated:
+      allowEmpty: false
+      prune: true
+      selfHeal: true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+  name: romm-scots-lab
+  namespace: argocd
+spec:
+  destination:
+    namespace: romm
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: manifests/scots-lab/apps/romm
     repoURL: https://github.com/ghubprime/k8s-cluster.git
     targetRevision: HEAD
   syncPolicy:
@@ -651,6 +783,28 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   annotations:
+    argocd.argoproj.io/sync-wave: "3"
+  name: stirling-pdf-scots-lab
+  namespace: argocd
+spec:
+  destination:
+    namespace: stirling-pdf
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: manifests/scots-lab/apps/stirling-pdf
+    repoURL: https://github.com/ghubprime/k8s-cluster.git
+    targetRevision: HEAD
+  syncPolicy:
+    automated:
+      allowEmpty: false
+      prune: true
+      selfHeal: true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  annotations:
     argocd.argoproj.io/sync-wave: "1"
   name: talos-scots-lab
   namespace: argocd
@@ -661,6 +815,28 @@ spec:
   project: default
   source:
     path: manifests/scots-lab/cluster/talos
+    repoURL: https://github.com/ghubprime/k8s-cluster.git
+    targetRevision: HEAD
+  syncPolicy:
+    automated:
+      allowEmpty: false
+      prune: true
+      selfHeal: true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+  name: umami-scots-lab
+  namespace: argocd
+spec:
+  destination:
+    namespace: umami
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: manifests/scots-lab/apps/umami
     repoURL: https://github.com/ghubprime/k8s-cluster.git
     targetRevision: HEAD
   syncPolicy:

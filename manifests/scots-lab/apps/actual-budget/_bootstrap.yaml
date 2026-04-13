@@ -1,0 +1,133 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: actual-budget
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: actual-budget
+  namespace: actual-budget
+spec:
+  ports:
+  - name: proxy
+    port: 4180
+    targetPort: 4180
+  selector:
+    app: actual-budget
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: actual-budget-data
+  namespace: actual-budget
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+  storageClassName: ceph-block
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: actual-budget
+  name: actual-budget
+  namespace: actual-budget
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: actual-budget
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: actual-budget
+    spec:
+      containers:
+      - image: actualbudget/actual-server:latest
+        name: actual-budget
+        ports:
+        - containerPort: 5006
+          name: http
+        resources:
+          limits:
+            cpu: 500m
+            memory: 512Mi
+          requests:
+            cpu: 10m
+            memory: 128Mi
+        volumeMounts:
+        - mountPath: /data
+          name: data
+      - args:
+        - --provider=oidc
+        - --oidc-issuer-url=https://auth.srbii.com/realms/homelab
+        - --upstream=http://127.0.0.1:5006
+        - --http-address=0.0.0.0:4180
+        - --email-domain=*
+        - --pass-user-headers=true
+        - --pass-authorization-header=true
+        - --cookie-secure=true
+        - --redirect-url=https://budget.srbii.com/oauth2/callback
+        - --cookie-domain=.srbii.com
+        - --whitelist-domain=.srbii.com
+        - --skip-provider-button=true
+        envFrom:
+        - secretRef:
+            name: oauth2-proxy-secret
+        image: quay.io/oauth2-proxy/oauth2-proxy:v7.6.0
+        name: oauth2-proxy
+        ports:
+        - containerPort: 4180
+          name: proxy
+        resources:
+          limits:
+            cpu: 100m
+            memory: 128Mi
+          requests:
+            cpu: 10m
+            memory: 32Mi
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: actual-budget-data
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  name: oauth2-proxy-secret
+  namespace: actual-budget
+spec:
+  encryptedData:
+    OAUTH2_PROXY_CLIENT_ID: AgAG5LeZlI8J8fA3g/m0r83alHqJxkA9QmkpFnvXsZ+qWZVbYoQtQ2ircINfB1/sz9+R+riPJf4cz+4mA3durIdeXNiza530Rk4D1uixdpifgOXh98ak2+8ZedLxJbP72Pjf2reuG9nhXsvVMZ2uzsgWfJXCJh4X+lu+TKQgPnIeQj9Oxq65xfMqf8P9uM7mzOXPIn+9wLuxd1MBoDPJ7Yi0H2Rk60kE0XAZmRENvd2lKe0RMEO+qWHOmLKRiurdokRDkbdsCYXSgKT0ITFaarvP5+nR2yYCmuVaYUt1t44T+GAm7xCrjKoV/AYe4phkVev8B2pj5NBZGL2NL5kIeiGEWDS0c/DX5MNBUrRX7d+XjzBYldkXTBw0LaZIJ06Vjuz1vieN4vtCBb3/b12DNnAW6WvIo0YXFKVoRD38jilJIyqLnuagf83ttqM04N9BCSX+2SOlfdnST8LXWkLSwbjOBYNRs46HEHv3YnI4EAdhs4Yx7QQFxZjunoL/osv2Sf5qKZ81IVZQyKzWRPCg0rfpQgfpX+tTTgMjG4V7HG7zFuNjISNmKgG0lfwKAtnynI/SqAj7tz7sLOmwoom53n+tn5hZhNjCVb6nahRVQRHfVgUvL7KAkuzLVI18+It72CWn/PLnhfZ6mH14j3SmwKm2RvfQwgqh35ljsVAA/quCeSa9C9/YxGy/cwiVRWtuKf4CYOiI2mob/wtCIO0UcjkCXIivmQ==
+    OAUTH2_PROXY_CLIENT_SECRET: AgC0eRXZxEVkn6sWXfrTITUBCs8RoflqNmGLJBGDIX1wcTBeG+A36KMgp3Ea12ZElh4vHanOVQXQ0GFLU2DgfMZS/F113gpvCSQcMB5AHzIP6bc0zRkDLgvEA2t8zu2ev1qEmJOwpF0OhgQC+Z+uMxuHPLkHwDQIvDf727ssWcJwix/9doDDAB/hKCjm4l92YOf99nLoJf/OcFMbUlK+QlmGqz0oZyxqESrVJfJHGhpbuKGHM3Jlnewv/gOkoRULlGS2MOYBA6JUlpvlqyzzohuQpL80OLtLtNp0StTDVcKEyjSHPVe/Ocw367gp5B4lmkPTyJMm7A8TJBUcAicBj2+XkKb9dUoeJ9jnt7md/WUPaRh6WZVBvAFS7Xlb70/YSMMv4Fecj4iOspDzeKPz96/gpFkKhbj/NJJ66dStpiyfkZNMjRzAkP6IqqLNyVjUXqPnQH0fsjbx1nNmRrujHkfcfZUrs81UtQDYWD7LuNmvWjsrFYAcU2Fzbls+gJEIW24q9OvaH7pgkiC5BrrLg2FoiuTMSlDTqeSGWZYkfHA/nNWVuOww6sWGFAcMVChwHDogo+OqaKdVkY2qtYSJa1wxZV2awjWiOEhZfho3c7y1W9DfJWDmokBvXTkIdrnyB4yURVHaQl5ihy07V51zW9//OufUVmbdS54q16nTeeURGfgbLRXTzq1pBUCRXfsj0zN3zGqBCGfNYl8peNGkXcSftfYtxrjdz9xTAzeiazASow==
+    OAUTH2_PROXY_COOKIE_SECRET: AgACaWJsf3TEiH7gT5yKzt8tG9arEfFe/7DiMEWfiUAaqOaMO+zqjmShRmU4yoAelFAKINmMXrsPU/RVR02Gq64at3DSvuCHNsCwbA3U+PIGORmCYSoeuELsEPUw8PUQukJLRCoPoMi7GFSMNEVwxTzASq6EC5H+rMC0xo5zxN/LzvXTFDHQPVwMszMk/wIQLomRBUaFbEa/Gk3Oq4I8ePCvZV3pDROeplDwzF7Cl/cLXOtFduTkrP7bEIMChgWwQL1WyywgqryO4fqj0kQavGDtUgfCN23ywRCqyUQvvXfQbVbyKzdoVAuZdMVmsf03IMj4J7srFnWJq3ehNqwUoTwkry5KX1VmDNSNRPtnK+yHoSBNnlEcBE9TdiGCvpowD1/q4DhH4sf/KGYmgFeYXhFqTSlz812kzKMgCrEFMgGlZQR9etB2xHZZIwrHqvelSYhQVVSOTFGqPc/MVornlwtTiUfsrJ4K9d/W+YtFE5BI4CX2rc9Hd4xcfbVQlouOzGek9G9Gl2m0oetkZftqyFbq06s9efHY0ANO4tQMeCnLwKdQF2+dClTmjdbVoHfp56LWum2LgDqDHmlPllUiN23IAGyudNQbsQcAzf+VRY6jZTeIZDReQiiFfVzJa7hVSk1JS8m0W9K6Ge6Fghejk4V0jnIwssKncmkrkuePBg1bduE1Sn3EBjTWup9hVURWM5kVUx1JLjvhaKZHpBZ6j7T35x9zdU/zRO3PNKjcA+e0c+r69hu90hxzoTGw9Q==
+  template:
+    metadata:
+      name: oauth2-proxy-secret
+      namespace: actual-budget
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: actual-budget
+  namespace: actual-budget
+spec:
+  hostnames:
+  - budget.srbii.com
+  parentRefs:
+  - name: kgateway-http
+    namespace: kgateway-system
+  rules:
+  - backendRefs:
+    - name: actual-budget
+      port: 4180
+    matches:
+    - path:
+        type: PathPrefix
+        value: /
