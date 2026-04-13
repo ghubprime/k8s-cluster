@@ -71,6 +71,26 @@ data:
             href: https://guacamole-omni.proxy-us.srbii.com/
             description: Remote Desktop
             icon: guacamole.png
+        - Outline:
+            href: https://kb.srbii.com
+            description: Knowledge Base
+            icon: outline.png
+        - Linkwarden:
+            href: https://links.srbii.com
+            description: Bookmark Manager
+            icon: linkwarden.png
+        - Actual Budget:
+            href: https://budget.srbii.com
+            description: Personal Finance
+            icon: actual-budget.png
+        - RomM:
+            href: https://roms.srbii.com
+            description: ROM Manager
+            icon: mdi-controller-classic
+        - Ntfy:
+            href: https://ntfy-omni.proxy-us.srbii.com/
+            description: Push Notifications
+            icon: ntfy.png
 
     - Tools:
         - Draw.io:
@@ -81,6 +101,10 @@ data:
             href: https://tools.srbii.com
             description: Developer Utilities
             icon: it-tools.png
+        - Stirling-PDF:
+            href: https://pdf.srbii.com
+            description: PDF Toolkit
+            icon: stirling-pdf.png
         - VERT:
             href: https://vert.srbii.com
             description: File Converter
@@ -103,10 +127,18 @@ data:
             href: https://changes.srbii.com
             description: Web Change Monitor
             icon: changedetection-io.png
+        - Umami:
+            href: https://umami-omni.proxy-us.srbii.com/
+            description: Web Analytics
+            icon: umami.png
         - Znuny:
             href: https://tickets.srbii.com
             description: Ticket System
             icon: mdi-ticket-confirmation
+        - OneTimeSecret:
+            href: https://expires.srbii.com
+            description: Secure Secret Sharing
+            icon: mdi-lock-clock
   settings.yaml: |
     title: Scots Lab
     favicon: https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/png/kubernetes.png
