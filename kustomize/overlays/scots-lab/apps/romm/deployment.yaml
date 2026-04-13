@@ -63,6 +63,8 @@ spec:
                 secretKeyRef:
                   name: romm-secret
                   key: DB_PASSWD
+            - name: PGDATA
+              value: "/var/lib/postgresql/data/pgdata"
           volumeMounts:
             - name: postgres-data
               mountPath: /var/lib/postgresql/data
