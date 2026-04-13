@@ -27,7 +27,7 @@ spec:
             - name: DB_HOST
               value: "127.0.0.1"
             - name: DB_PORT
-              value: "5432"
+              value: "3306"
             - name: DB_NAME
               value: "romm"
             - name: ROMM_BASE_PATH
@@ -48,26 +48,29 @@ spec:
               cpu: "1"
               memory: 1Gi
 
-        - name: postgres
-          image: postgres:16-bookworm
+        - name: mariadb
+          image: mariadb:11-jammy
           ports:
-            - containerPort: 5432
-              name: postgres
+            - containerPort: 3306
+              name: mariadb
           env:
-            - name: POSTGRES_DB
+            - name: MYSQL_DATABASE
               value: "romm"
-            - name: POSTGRES_USER
+            - name: MYSQL_USER
               value: "romm"
-            - name: POSTGRES_PASSWORD
+            - name: MYSQL_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: romm-secret
                   key: DB_PASSWD
-            - name: PGDATA
-              value: "/var/lib/postgresql/data/pgdata"
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: romm-secret
+                  key: DB_PASSWD
           volumeMounts:
-            - name: postgres-data
-              mountPath: /var/lib/postgresql/data
+            - name: mariadb-data
+              mountPath: /var/lib/mysql
           resources:
             requests:
               cpu: 10m
@@ -85,7 +88,6 @@ spec:
             - --http-address=0.0.0.0:4180
             - --email-domain=*
             - --pass-user-headers=true
-            - --pass-authorization-header=true
             - --cookie-secure=true
             - --redirect-url=https://roms.srbii.com/oauth2/callback
             - --cookie-domain=.srbii.com
@@ -112,6 +114,6 @@ spec:
         - name: resources
           persistentVolumeClaim:
             claimName: romm-resources
-        - name: postgres-data
+        - name: mariadb-data
           persistentVolumeClaim:
-            claimName: romm-postgres-data
+            claimName: romm-mariadb-data

@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: romm-postgres-data
+  name: romm-mariadb-data
   namespace: romm
 spec:
   accessModes:
