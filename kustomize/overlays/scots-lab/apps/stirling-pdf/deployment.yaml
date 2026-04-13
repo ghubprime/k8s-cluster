@@ -24,6 +24,8 @@ spec:
           env:
             - name: DOCKER_ENABLE_SECURITY
               value: "false"
+            - name: SECURITY_ENABLELOGIN
+              value: "false"
           resources:
             requests:
               cpu: 50m

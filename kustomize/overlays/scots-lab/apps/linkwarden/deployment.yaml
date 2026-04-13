@@ -25,7 +25,9 @@ spec:
               name: http
           env:
             - name: NEXTAUTH_URL
-              value: "https://links.srbii.com"
+              value: "https://links.srbii.com/api/v1/auth"
+            - name: NEXTAUTH_URL_INTERNAL
+              value: "http://localhost:3000/api/v1/auth"
             - name: NEXT_PUBLIC_DISABLE_REGISTRATION
               value: "true"
             - name: NEXTAUTH_SECRET
