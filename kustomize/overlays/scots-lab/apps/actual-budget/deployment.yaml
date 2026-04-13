@@ -23,6 +23,26 @@ spec:
           ports:
             - containerPort: 5006
               name: http
+          env:
+            # Native OpenID Connect via Keycloak
+            - name: ACTUAL_OPENID_DISCOVERY_URL
+              value: "https://auth.srbii.com/realms/homelab/.well-known/openid-configuration"
+            - name: ACTUAL_OPENID_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: oauth2-proxy-secret
+                  key: OAUTH2_PROXY_CLIENT_ID
+            - name: ACTUAL_OPENID_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: oauth2-proxy-secret
+                  key: OAUTH2_PROXY_CLIENT_SECRET
+            - name: ACTUAL_OPENID_SERVER_HOSTNAME
+              value: "https://budget.srbii.com"
+            - name: ACTUAL_LOGIN_METHOD
+              value: "openid"
+            - name: ACTUAL_USER_CREATION_MODE
+              value: "login"
           volumeMounts:
             - name: data
               mountPath: /data
