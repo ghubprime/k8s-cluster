@@ -69,3 +69,14 @@ cephClusterSpec:
 toolbox:
   enabled: true
 
+cephBlockPoolsVolumeSnapshotClass:
+  enabled: true
+  name: ceph-block
+  isDefault: true
+  deletionPolicy: Retain
+
+cephFileSystemVolumeSnapshotClass:
+  enabled: true
+  name: ceph-filesystem
+  isDefault: false
+  deletionPolicy: Retain

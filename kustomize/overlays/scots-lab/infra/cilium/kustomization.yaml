@@ -3,6 +3,7 @@ kind: Kustomization
 resources:
   - ../../../../base/infra/cilium/
   - pool.yaml
+  - cilium-pdb.yaml
 generators:
   - ../../../../../helm/overlays/scots-lab/infra/cilium/
 patches:

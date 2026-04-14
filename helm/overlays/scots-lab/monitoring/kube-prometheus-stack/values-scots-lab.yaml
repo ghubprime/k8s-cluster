@@ -32,15 +32,50 @@ prometheus:
     # Required for Talos/kubelet certs if they are self-signed or have host mismatches
     # But usually not strictly needed with metrics-server if correctly provisioned.
     # Leaving standard.
+  service:
+    annotations:
+      omni-kube-service-exposer.sidero.dev/port: "50089"
+      omni-kube-service-exposer.sidero.dev/label: "Prometheus"
+      omni-kube-service-exposer.sidero.dev/prefix: "prometheus"
 
 alertmanager:
   alertmanagerSpec:
     replicas: 1
+  config:
+    route:
+      receiver: ntfy
+      group_wait: 30s
+      group_interval: 5m
+      repeat_interval: 4h
+      routes:
+      - match:
+          severity: critical
+        receiver: ntfy
+        repeat_interval: 1h
+    receivers:
+    - name: ntfy
+      webhook_configs:
+      - url: http://ntfy.ntfy.svc.cluster.local/alerts
+        send_resolved: true
   namespaceOverride: kube-prometheus-system
 
 grafana:
   enabled: true
   adminPassword: "admin" # To be replaced by sealed-secrets or real config if needed. We'll leave it as default or let the user change it.
+  envFromSecret: grafana-oidc-secret
+  grafana.ini:
+    server:
+      root_url: https://grafana.srbii.com
+    auth.generic_oauth:
+      enabled: true
+      name: Keycloak
+      allow_sign_up: true
+      client_id: grafana-client
+      scopes: openid email profile
+      auth_url: https://auth.srbii.com/realms/homelab/protocol/openid-connect/auth
+      token_url: https://auth.srbii.com/realms/homelab/protocol/openid-connect/token
+      api_url: https://auth.srbii.com/realms/homelab/protocol/openid-connect/userinfo
+      role_attribute_path: contains(roles[*], 'admin') && 'Admin' || contains(roles[*], 'editor') && 'Editor' || 'Viewer'
   namespaceOverride: kube-prometheus-system
   service:
     annotations:

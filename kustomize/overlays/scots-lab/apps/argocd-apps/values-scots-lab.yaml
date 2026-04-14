@@ -66,6 +66,20 @@ argocdApplications:
     namespace: kube-system
     appCategory: infra
     syncWave: "0"
+  csi-snapshotter:
+    disableAutomated: false
+    disable: false
+    name: csi-snapshotter
+    namespace: kube-system
+    appCategory: infra
+    syncWave: "0"
+  health-check:
+    disableAutomated: false
+    disable: false
+    name: health-check
+    namespace: kube-system
+    appCategory: infra
+    syncWave: "3"
   gateway-api-crds:
     disableAutomated: false
     disable: false
@@ -324,11 +338,5 @@ argocdApplications:
     namespace: romm
     appCategory: apps
     syncWave: "3"
-  emulatorjs:
-    disableAutomated: false
-    disable: false
-    name: emulatorjs
-    namespace: emulatorjs
-    appCategory: apps
-    syncWave: "3"
+
 
