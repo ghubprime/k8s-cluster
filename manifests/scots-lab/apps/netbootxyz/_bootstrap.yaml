@@ -133,8 +133,8 @@ spec:
         - --http-address=0.0.0.0:4180
         - --email-domain=*
         - --pass-user-headers=true
-        - --pass-authorization-header=true
         - --cookie-secure=true
+        - --cookie-name=_oauth2_boot
         - --redirect-url=https://boot.srbii.com/oauth2/callback
         - --cookie-domain=.srbii.com
         - --whitelist-domain=.srbii.com

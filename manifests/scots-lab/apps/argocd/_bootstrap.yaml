@@ -24602,6 +24602,12 @@ data:
   application.instanceLabelKey: argocd.argoproj.io/instance
   application.sync.impersonation.enabled: "false"
   exec.enabled: "false"
+  oidc.config: |-
+    name: Keycloak
+    issuer: https://auth.srbii.com/realms/homelab
+    clientID: argocd-client
+    clientSecret: $argocd-oidc-secret:oidc.keycloak.clientSecret
+    requestedScopes: ["openid", "profile", "email", "groups"]
   resource.customizations.ignoreResourceUpdates.ConfigMap: |
     jqPathExpressions:
       # Ignore the cluster-autoscaler status
@@ -24699,7 +24705,7 @@ data:
   statusbadge.enabled: "false"
   timeout.hard.reconciliation: 0s
   timeout.reconciliation: 180s
-  url: https://argocd.example.com
+  url: https://argocd.srbii.com
 kind: ConfigMap
 metadata:
   labels:
@@ -25329,7 +25335,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/cm: c12fe87db06372118525150ab593a7d27d3c46881b824de4de9c338aeeb96539
+        checksum/cm: b1a47f63fae698b5104043eedc3dc8bc2a00b491b7e7747e493b421d054a9e94
         checksum/cmd-params: 620fabf6ede5d6f2d861889bf074d0a872aa2855d4fb6702330bfffe0e20c9b9
       labels:
         app.kubernetes.io/component: repo-server
@@ -25741,7 +25747,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/cm: c12fe87db06372118525150ab593a7d27d3c46881b824de4de9c338aeeb96539
+        checksum/cm: b1a47f63fae698b5104043eedc3dc8bc2a00b491b7e7747e493b421d054a9e94
         checksum/cmd-params: 620fabf6ede5d6f2d861889bf074d0a872aa2855d4fb6702330bfffe0e20c9b9
       labels:
         app.kubernetes.io/component: server
@@ -26204,7 +26210,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/cm: c12fe87db06372118525150ab593a7d27d3c46881b824de4de9c338aeeb96539
+        checksum/cm: b1a47f63fae698b5104043eedc3dc8bc2a00b491b7e7747e493b421d054a9e94
         checksum/cmd-params: 620fabf6ede5d6f2d861889bf074d0a872aa2855d4fb6702330bfffe0e20c9b9
       labels:
         app.kubernetes.io/component: application-controller
@@ -26571,6 +26577,17 @@ spec:
           optional: true
         name: argocd-cmd-params-cm
 ---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: argocd-application-controller-pdb
+  namespace: argocd
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: argocd-application-controller
+---
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -26631,6 +26648,19 @@ spec:
       restartPolicy: OnFailure
       serviceAccountName: argo-cd-argocd-redis-secret-init
   ttlSecondsAfterFinished: 60
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  name: argocd-oidc-secret
+  namespace: argocd
+spec:
+  encryptedData:
+    oidc.keycloak.clientSecret: AgAcgQfaCUW06J7hLGVWH0KC/Qmm+M9FXitm0VCjfrKciRMcG5yE2lZrBYurbgGgVDVIWus0thSJgsEW2NMR1F3oT5aFTx47GXukZqD06wpji5fs9pXLqCMPVik3BVOwybRf4lt21F35z5LSODGRSZhvYDaiPz7nKYWEw6b2OzINVla0HSI1uvjiS8KoWF+MAFp6aITIOabCGgc3O97n7ErdDhzieNSeSr5AjsSf383fQzlukQUS2IQFpbCCr/7rTDQcTidOpC/on+6G/F/fQsRprCvjMzO7BngJtwi1ZWDJlxzqXf9FYKTEqTrFfcRJ6BhfxO9E6t1xlFWGH2k0sDCSgZJ0Ld3QxMeWs80d/jOd4n2o3gtFu7BfaTjNINnqdAgvSI+DPIMt1AuuSJE4oLcvIzKOw924ZMGphGT12dX+YT5oMvCGbxdHVg6gak2czZi3yiHfcy+vN2BNauK0KQNL0DUfVRq6JbLid6vBiaACtCkRUj0BBp7cDC/c2+nXG27v4Jfn97H1Lw+95SfeyV4YfFhUz0LyhCal6K/3CmzEoSNCrXOuKt4vUS4QrGL0uZb0KIMjpUGycxIum4Dc0iLnD+6qfzyBUa9Gj+Dq2Bw+kAOyv7dRmGPg51E4x6A/9suIPTrtzjZavpj2L+4mbqK7T3aFIjPhg34nxyvPugaM2dJ1P944fKl3vh2FpfmPHZgD+LOX3fwe+QKKOC059Z/t7b3iWQq+3klMoLfMNxz6zQ==
+  template:
+    metadata:
+      name: argocd-oidc-secret
+      namespace: argocd
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy

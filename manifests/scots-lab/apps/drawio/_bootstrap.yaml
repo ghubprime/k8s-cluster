@@ -34,7 +34,7 @@ spec:
         app: drawio
     spec:
       containers:
-      - image: jgraph/drawio:latest
+      - image: jgraph/drawio:26.2.5
         name: drawio
         ports:
         - containerPort: 8080
@@ -53,8 +53,8 @@ spec:
         - --http-address=0.0.0.0:4180
         - --email-domain=*
         - --pass-user-headers=true
-        - --pass-authorization-header=true
         - --cookie-secure=true
+        - --cookie-name=_oauth2_drawio
         - --redirect-url=https://draw.srbii.com/oauth2/callback
         - --cookie-domain=.srbii.com
         - --whitelist-domain=.srbii.com
@@ -89,6 +89,34 @@ spec:
     metadata:
       name: oauth2-proxy-secret
       namespace: drawio
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: drawio-isolation-baseline
+  namespace: drawio
+spec:
+  egress:
+  - toEndpoints:
+    - matchLabels:
+        io.kubernetes.pod.namespace: drawio
+  - toEndpoints:
+    - matchLabels:
+        io.kubernetes.pod.namespace: kube-system
+        k8s-app: kube-dns
+  - toEntities:
+    - world
+    - host
+  - toCIDR:
+    - 0.0.0.0/0
+  endpointSelector: {}
+  ingress:
+  - fromEndpoints:
+    - matchLabels:
+        io.kubernetes.pod.namespace: kgateway-system
+  - fromEndpoints:
+    - matchLabels:
+        io.kubernetes.pod.namespace: kube-prometheus-system
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute

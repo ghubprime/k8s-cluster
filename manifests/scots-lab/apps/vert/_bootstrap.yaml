@@ -34,7 +34,7 @@ spec:
         app: vert
     spec:
       containers:
-      - image: ghcr.io/vert-sh/vert:latest
+      - image: ghcr.io/vert-sh/vert:v2.1.0
         name: vert
         ports:
         - containerPort: 80
@@ -53,8 +53,8 @@ spec:
         - --http-address=0.0.0.0:4180
         - --email-domain=*
         - --pass-user-headers=true
-        - --pass-authorization-header=true
         - --cookie-secure=true
+        - --cookie-name=_oauth2_vert
         - --redirect-url=https://vert.srbii.com/oauth2/callback
         - --cookie-domain=.srbii.com
         - --whitelist-domain=.srbii.com

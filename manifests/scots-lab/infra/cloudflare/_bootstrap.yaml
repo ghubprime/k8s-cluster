@@ -30,7 +30,7 @@ spec:
             secretKeyRef:
               key: TUNNEL_TOKEN
               name: cloudflare-token-secret
-        image: cloudflare/cloudflared:latest
+        image: cloudflare/cloudflared:2025.4.0
         name: cloudflared
         resources:
           limits:

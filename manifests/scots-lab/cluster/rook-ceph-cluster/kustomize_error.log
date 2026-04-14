@@ -1,0 +1,1 @@
+Error: add operation does not apply: doc is missing path: "/metadata/labels/velero.io~1csi-volumesnapshot-class": missing value

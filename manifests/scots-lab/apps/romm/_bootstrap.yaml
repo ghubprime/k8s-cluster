@@ -87,7 +87,7 @@ spec:
         envFrom:
         - secretRef:
             name: romm-secret
-        image: rommapp/romm:latest
+        image: rommapp/romm:3.7.3
         name: romm
         ports:
         - containerPort: 8080
