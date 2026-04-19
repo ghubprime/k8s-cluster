@@ -568,8 +568,8 @@ metadata:
 ---
 apiVersion: v1
 data:
-  csLapiSecret: dCtvWUdSckp4OWQ7L3N7LzwiSUhwMFJDaGUzUDdHSTkuaS8nRF44O3I/fF1AYlo+PnxkamMrOEBvOjp8YTtCaA==
-  registrationToken: c0JocG1KMkMxMkhvaXhhdEV2aFBISEVmQm1yamtUNVQ0ZkpWVzRRUUFoR242d0x1
+  csLapiSecret: LXsqcWllMlhOd3xJNmJ4Z0l+MDJoQDdXJ3xGai57JHBJZGJXXitXdCp0S20nLiwwYSx2M29bJlExZ1Y/XiFFbQ==
+  registrationToken: MWNoNjNhSW4zQkxuaTJUZm1WTGxUVW1qVnRwaVpuUTcycFIxbFkxRHllczhZOVoy
 kind: Secret
 metadata:
   labels:
@@ -666,11 +666,13 @@ spec:
     spec:
       containers:
       - env:
-        - name: CROWDSEC_KUBERNETES_BOUNCER_API_KEY
+        - name: CROWDSEC_BOUNCER_API_KEY
           value: kubernetes-bouncer-static-key
-        - name: CROWDSEC_LAPI_URL
+        - name: CROWDSEC_URL
           value: http://crowdsec-service.crowdsec.svc.cluster.local:8080
-        image: docker.io/crowdsecurity/kubernetes-bouncer:latest
+        - name: CILIUM_POLICY_NAME
+          value: crowdsec-cilium-bouncer
+        image: ghcr.io/hydazz/crowdsec-cilium-bouncer:0.0.4
         name: bouncer
         resources:
           limits:
@@ -701,7 +703,7 @@ spec:
     metadata:
       annotations:
         checksum/lapi-configmap: c6da5ddbb4d70478a94b244bf42e02fc53c27d4ee4021dab500aa603513c2d11
-        checksum/lapi-secret: 96fba76a90d2fb938a61034410212e52bd900707a10eb8fe3d1944cff40377c4
+        checksum/lapi-secret: 9c9ed0aea343489cd785044c813bac3632485676750eda71ced65c155acc1d41
       labels:
         k8s-app: crowdsec
         type: lapi
