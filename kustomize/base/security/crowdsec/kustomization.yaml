@@ -3,4 +3,4 @@ kind: Kustomization
 namespace: crowdsec
 resources:
   - namespace.yaml
-  - kubernetes-bouncer.yaml
+  # - kubernetes-bouncer.yaml
