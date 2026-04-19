@@ -9,7 +9,5 @@ agent:
 lapi:
   env:
     - name: BOUNCER_KEY_KUBERNETES
-      valueFrom:
-        secretKeyRef:
-          name: crowdsec-bouncer-key
-          key: bouncer-key
+      value: "kubernetes-bouncer-static-key"
+

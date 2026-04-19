@@ -1,5 +1,70 @@
 # kube-prometheus-stack values for Talos and dynamic discovery
-# NOTE: This is a REFERENCE COPY. The authoritative file consumed by the
-# helmCharts generator in kustomization.yaml is located at:
-#   k8s-cluster/helm/overlays/scots-lab/monitoring/kube-prometheus-stack/values-scots-lab.yaml
-# See that file for the actual values used during rendering.
+defaultRules:
+  create: true
+  rules:
+    kubeScheduler: false
+    kubeProxy: false
+    kubeControllerManager: false
+    etcd: false
+
+kubeControllerManager:
+  enabled: false
+
+kubeScheduler:
+  enabled: false
+
+kubeProxy:
+  enabled: false
+
+kubeEtcd:
+  enabled: false
+
+prometheus:
+  prometheusSpec:
+    # Discover all PodMonitors and ServiceMonitors without needing matching labels
+    podMonitorSelectorNilUsesHelmValues: false
+    serviceMonitorSelectorNilUsesHelmValues: false
+    probeSelectorNilUsesHelmValues: false
+    ruleSelectorNilUsesHelmValues: false
+    retention: 15d
+    retentionSize: 20GB
+    scrapeConfigSelectorNilUsesHelmValues: false
+    # Required for Talos/kubelet certs if they are self-signed or have host mismatches
+    # But usually not strictly needed with metrics-server if correctly provisioned.
+    # Leaving standard.
+
+alertmanager:
+  alertmanagerSpec:
+    replicas: 1
+  namespaceOverride: kube-prometheus-system
+
+grafana:
+  enabled: true
+  adminPassword: "admin" # To be replaced by sealed-secrets or real config if needed. We'll leave it as default or let the user change it.
+  namespaceOverride: kube-prometheus-system
+  service:
+    annotations:
+      omni-kube-service-exposer.sidero.dev/port: "50086"
+      omni-kube-service-exposer.sidero.dev/label: "Grafana"
+      omni-kube-service-exposer.sidero.dev/prefix: "grafana"
+  additionalDataSources:
+    - name: Loki
+      type: loki
+      url: http://loki.loki.svc.cluster.local:3100
+      access: proxy
+      isDefault: false
+
+kube-state-metrics:
+  enabled: true
+  namespaceOverride: kube-prometheus-system
+  metricLabelsAllowlist:
+    - pods=[*]
+    - nodes=[*]
+
+prometheus-node-exporter:
+  namespaceOverride: kube-prometheus-system
+  hostRootFsMount:
+    enabled: true
+
+namespaceOverride: kube-prometheus-system
+
