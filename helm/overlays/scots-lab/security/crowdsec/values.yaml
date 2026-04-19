@@ -11,3 +11,10 @@ lapi:
     - name: BOUNCER_KEY_KUBERNETES
       value: "kubernetes-bouncer-static-key"
 
+config:
+  capi_whitelists.yaml: |
+    ips:
+      - 34.82.1.163
+    cidrs:
+      - 192.168.8.0/24
+

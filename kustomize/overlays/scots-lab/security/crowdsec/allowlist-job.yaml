@@ -1,0 +1,47 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: crowdsec-allowlist-provisioner
+  namespace: crowdsec
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+spec:
+  ttlSecondsAfterFinished: 600
+  template:
+    metadata:
+      labels:
+        app: crowdsec-allowlist-provisioner
+    spec:
+      serviceAccountName: crowdsec-allowlist-provisioner
+      containers:
+        - name: provisioner
+          image: bitnami/kubectl:latest
+          command:
+            - /bin/sh
+            - -e
+            - -c
+            - |
+              echo "Waiting for Crowdsec LAPI deployment to be fully available (up to 120s)..."
+              kubectl wait -n crowdsec --for=condition=available deployment/crowdsec-lapi --timeout=120s
+              
+              echo "Creating Centralized Allowlist for omni-proxy..."
+              kubectl exec -n crowdsec deploy/crowdsec-lapi -- cscli allowlists create omni-proxy-whitelist -d "Sidero Omni Control Plane Proxy & internal networks" || true
+              
+              echo "Adding Proxy IP and Node subnet..."
+              kubectl exec -n crowdsec deploy/crowdsec-lapi -- cscli allowlists add omni-proxy-whitelist 34.82.1.163 || true
+              kubectl exec -n crowdsec deploy/crowdsec-lapi -- cscli allowlists add omni-proxy-whitelist 192.168.8.0/24 || true
+              
+              echo "Purging ghost decisions from CAPI blocklist..."
+              kubectl exec -n crowdsec deploy/crowdsec-lapi -- cscli decisions delete --ip 34.82.1.163 || true
+              
+              echo "Restarting bouncer daemonset to sever active memory cache..."
+              kubectl rollout restart -n crowdsec deployment crowdsec-kubernetes-bouncer || true
+              
+              echo "Wait for Bouncer rollout..."
+              kubectl rollout status -n crowdsec deployment crowdsec-kubernetes-bouncer --timeout=60s || true
+
+              echo "Executing global mopping sequence..."
+              kubectl delete ccwnp --all || true
+
+              echo "Provisioning sequence complete!"
+      restartPolicy: OnFailure
