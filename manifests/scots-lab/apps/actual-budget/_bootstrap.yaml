@@ -68,7 +68,7 @@ spec:
           value: openid
         - name: ACTUAL_USER_CREATION_MODE
           value: login
-        image: actualbudget/actual-server:25.4.0
+        image: actualbudget/actual-server:latest
         name: actual-budget
         ports:
         - containerPort: 5006

@@ -138,7 +138,7 @@ spec:
           value: preferred_username
         - name: OIDC_SCOPES
           value: openid profile email
-        image: outlinewiki/outline:0.81.1
+        image: outlinewiki/outline:latest
         name: outline
         ports:
         - containerPort: 3000

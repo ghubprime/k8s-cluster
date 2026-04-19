@@ -59,7 +59,7 @@ spec:
             secretKeyRef:
               key: DATABASE_URL
               name: umami-secret
-        image: ghcr.io/umami-software/umami:postgresql-v2.15.1
+        image: ghcr.io/umami-software/umami:postgresql-latest
         name: umami
         ports:
         - containerPort: 3000

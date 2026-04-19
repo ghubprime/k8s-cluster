@@ -34,7 +34,7 @@ spec:
         app: vert
     spec:
       containers:
-      - image: ghcr.io/vert-sh/vert:v2.1.0
+      - image: ghcr.io/vert-sh/vert:latest
         name: vert
         ports:
         - containerPort: 80
