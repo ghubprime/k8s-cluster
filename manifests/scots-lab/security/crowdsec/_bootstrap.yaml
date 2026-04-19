@@ -13,12 +13,6 @@ metadata:
   name: crowdsec-allowlist-provisioner
   namespace: crowdsec
 ---
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: crowdsec-kubernetes-bouncer
-  namespace: crowdsec
----
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
@@ -65,46 +59,6 @@ rules:
   - patch
 ---
 apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  name: crowdsec-kubernetes-bouncer
-rules:
-- apiGroups:
-  - networking.k8s.io
-  resources:
-  - networkpolicies
-  verbs:
-  - get
-  - list
-  - watch
-  - create
-  - update
-  - patch
-  - delete
-- apiGroups:
-  - cilium.io
-  resources:
-  - ciliumnetworkpolicies
-  - ciliumclusterwidenetworkpolicies
-  verbs:
-  - get
-  - list
-  - watch
-  - create
-  - update
-  - patch
-  - delete
-- apiGroups:
-  - ""
-  resources:
-  - namespaces
-  - pods
-  verbs:
-  - get
-  - list
-  - watch
----
-apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: crowdsec-allowlist-provisioner
@@ -129,19 +83,6 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: crowdsec-allowlist-provisioner
-  namespace: crowdsec
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: crowdsec-kubernetes-bouncer
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: crowdsec-kubernetes-bouncer
-subjects:
-- kind: ServiceAccount
-  name: crowdsec-kubernetes-bouncer
   namespace: crowdsec
 ---
 apiVersion: v1
@@ -568,8 +509,8 @@ metadata:
 ---
 apiVersion: v1
 data:
-  csLapiSecret: aGBUYXJURHxvOWxrU1xYOHAqdmgpIUY3ezVZNks0NCJyYDBhY2tiS1N7IXdlWDI8P1dTT0VBIHNAQEUvLHcoVQ==
-  registrationToken: ZTBXb1F5V2ptZzh4dmtsb3UyaGc1YnNRRFhyMnFHVUNKTHk4azJHSGMyaVVzUVhy
+  csLapiSecret: YVREIExoVTImbExhWHtMK2l4Un1xPDdLWTcvaXMyMSRGQnspOU1GOmxgdCUqPjg1ez5BZTo5PWpudkxZQ0l6PA==
+  registrationToken: YlBPQWhzNTFkV29jVjNCTnFRa3gyaTVJUVpabmhwd2V2bXd1VnROcU02QlFHRjJn
 kind: Secret
 metadata:
   labels:
@@ -652,40 +593,6 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: crowdsec-kubernetes-bouncer
-  namespace: crowdsec
-spec:
-  replicas: 0
-  selector:
-    matchLabels:
-      app: crowdsec-kubernetes-bouncer
-  template:
-    metadata:
-      labels:
-        app: crowdsec-kubernetes-bouncer
-    spec:
-      containers:
-      - env:
-        - name: CROWDSEC_BOUNCER_API_KEY
-          value: kubernetes-bouncer-static-key
-        - name: CROWDSEC_URL
-          value: http://crowdsec-service.crowdsec.svc.cluster.local:8080
-        - name: CILIUM_POLICY_NAME
-          value: crowdsec-cilium-bouncer
-        image: ghcr.io/hydazz/crowdsec-cilium-bouncer:latest
-        name: bouncer
-        resources:
-          limits:
-            cpu: 100m
-            memory: 128Mi
-          requests:
-            cpu: 10m
-            memory: 32Mi
-      serviceAccountName: crowdsec-kubernetes-bouncer
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
   labels:
     k8s-app: crowdsec
     type: lapi
@@ -703,7 +610,7 @@ spec:
     metadata:
       annotations:
         checksum/lapi-configmap: c6da5ddbb4d70478a94b244bf42e02fc53c27d4ee4021dab500aa603513c2d11
-        checksum/lapi-secret: d07533193561b8b4a7af269411ffeafd8fcf7f6fa00818f7bc979aed2585fefc
+        checksum/lapi-secret: ac27b821b2b6ccad97364bf10fbb1d60aeb9f7737df6d2669d79160725d95a7e
       labels:
         k8s-app: crowdsec
         type: lapi
