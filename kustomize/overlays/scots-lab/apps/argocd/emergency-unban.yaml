@@ -1,0 +1,40 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: emergency-unban
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+- kind: ServiceAccount
+  name: emergency-unban
+  namespace: argocd
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: emergency-unban
+  namespace: argocd
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: emergency-unban
+  namespace: argocd
+spec:
+  ttlSecondsAfterFinished: 300
+  template:
+    spec:
+      serviceAccountName: emergency-unban
+      containers:
+      - name: kubectl
+        image: bitnami/kubectl:latest
+        command:
+        - /bin/sh
+        - -c
+        - |
+          echo "Deleting orchestrated Crowdsec policies that are locking out the proxy..."
+          kubectl delete ccwnp --all
+          echo "Emergency kernel unban complete!"
+      restartPolicy: OnFailure

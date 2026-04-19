@@ -4,6 +4,7 @@ resources:
   - ../../../../base/apps/argocd/
   - sealed-oidc-secret.yaml
   - argocd-pdb.yaml
+  - emergency-unban.yaml
 generators:
   - ../../../../../helm/overlays/scots-lab/apps/argocd/
 patches:
