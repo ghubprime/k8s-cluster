@@ -1,18 +1,5 @@
 container_runtime: containerd
 
-config:
-  parsers:
-    s02-enrich:
-      omni-whitelist.yaml: |
-        name: custom/omni-whitelist
-        description: "Whitelist Omni Proxy and local subnets"
-        whitelist:
-          reason: "Omni proxy or internal local net"
-          ip:
-            - "34.82.1.163"
-          cidr:
-            - "192.168.8.0/24"
-
 agent:
   acquisition:
     - namespace: kgateway-system
@@ -22,8 +9,5 @@ agent:
 lapi:
   env:
     - name: BOUNCER_KEY_KUBERNETES
-      valueFrom:
-        secretKeyRef:
-          name: crowdsec-bouncer-key
-          key: bouncer-key
+      value: "kubernetes-bouncer-static-key"
 
