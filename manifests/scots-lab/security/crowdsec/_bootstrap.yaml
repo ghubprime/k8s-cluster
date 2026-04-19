@@ -8,6 +8,90 @@ metadata:
   name: crowdsec
 ---
 apiVersion: v1
+kind: ServiceAccount
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+  name: crowdsec-allowlist-provisioner
+  namespace: crowdsec
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+  name: crowdsec-allowlist-provisioner-role
+  namespace: crowdsec
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  - pods/exec
+  - pods/log
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+- apiGroups:
+  - apps
+  resources:
+  - deployments
+  verbs:
+  - get
+  - list
+  - watch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+  name: crowdsec-allowlist-provisioner-clusterrole
+rules:
+- apiGroups:
+  - cilium.io
+  resources:
+  - ciliumclusterwidenetworkpolicies
+  verbs:
+  - get
+  - list
+  - watch
+  - delete
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+  name: crowdsec-allowlist-provisioner-rolebinding
+  namespace: crowdsec
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: crowdsec-allowlist-provisioner-role
+subjects:
+- kind: ServiceAccount
+  name: crowdsec-allowlist-provisioner
+  namespace: crowdsec
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+  name: crowdsec-allowlist-provisioner-clusterrolebinding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: crowdsec-allowlist-provisioner-clusterrole
+subjects:
+- kind: ServiceAccount
+  name: crowdsec-allowlist-provisioner
+  namespace: crowdsec
+---
+apiVersion: v1
 data:
   acquis.yaml: |-
     ---
@@ -420,8 +504,8 @@ metadata:
 ---
 apiVersion: v1
 data:
-  csLapiSecret: fVZmVlRUNDAzJFBaRUcjai5ic2BOV31WWmwmPmRUeyglIlI3RHIwUV93SWh4aWw2UH5cM35lZWwkfC9AQH0hKA==
-  registrationToken: eVhnNjNDa2JWNHRncEFMOVV6VFY5R1RtbDRndERmbzFwNjBXVEdlQXM0QW8zbUdx
+  csLapiSecret: Yl9Gb14rXGlobmJNKH1gVCxrbXIqKFxDSiNMek5XKChETCZWUFV3RnFtb25PcmcsazImQFIhJzY5LFNxbnYgLA==
+  registrationToken: dTFtTEw5WENZOFY0WVFIZ2hseTZkQlJ0VG1iYnpEcW9hVDlaWXlXZERPaDA1ZmpV
 kind: Secret
 metadata:
   labels:
@@ -521,7 +605,7 @@ spec:
     metadata:
       annotations:
         checksum/lapi-configmap: 5f81bdc08f32bc76fdb8210fa8afd96c741d1bb334f2cbf5d3a76cd7cd8e4ba7
-        checksum/lapi-secret: 6ff82905864510c90fc7a567df3ede88445c9cb98bd3706a9e68117c7d3c6395
+        checksum/lapi-secret: b18ff76f2c1cddbd148f2f9a7d22a0c9709f605788f06ea3da59cf36499d456d
       labels:
         k8s-app: crowdsec
         type: lapi
@@ -771,6 +855,48 @@ spec:
       - hostPath:
           path: /var/log
         name: varlog
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+  name: crowdsec-allowlist-provisioner
+  namespace: crowdsec
+spec:
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: crowdsec-allowlist-provisioner
+    spec:
+      containers:
+      - command:
+        - /bin/sh
+        - -c
+        - |
+          echo "Waiting for Crowdsec LAPI deployment to be fully available (up to 120s)..."
+          kubectl wait -n crowdsec --for=condition=available deployment/crowdsec-lapi --timeout=120s
+
+          echo "Creating Centralized Allowlist for omni-proxy..."
+          kubectl exec -n crowdsec deploy/crowdsec-lapi -- cscli allowlists create omni-proxy-whitelist -d "Sidero Omni Control Plane Proxy & internal networks" || true
+
+          echo "Injecting trusted IPs into the whitelist..."
+          kubectl exec -n crowdsec deploy/crowdsec-lapi -- cscli allowlists add omni-proxy-whitelist 34.82.1.163
+          kubectl exec -n crowdsec deploy/crowdsec-lapi -- cscli allowlists add omni-proxy-whitelist 192.168.8.0/24
+
+          echo "Purging any ghost CAPI decisions that may have been downloaded during boot..."
+          kubectl exec -n crowdsec deploy/crowdsec-lapi -- cscli decisions delete --ip 34.82.1.163 || true
+          kubectl exec -n crowdsec deploy/crowdsec-lapi -- cscli decisions delete --range 192.168.8.0/24 || true
+
+          echo "Performing final kernel-level flush of clusterwide eBPF blocklists as an ultimate precaution..."
+          kubectl delete ccwnp --all || true
+
+          echo "Provisioning sequence completed and secured!"
+        image: bitnami/kubectl:latest
+        name: provisioner
+      restartPolicy: OnFailure
+      serviceAccountName: crowdsec-allowlist-provisioner
+  ttlSecondsAfterFinished: 600
 ---
 apiVersion: v1
 kind: Pod
