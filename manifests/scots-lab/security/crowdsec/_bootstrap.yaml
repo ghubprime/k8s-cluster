@@ -568,8 +568,8 @@ metadata:
 ---
 apiVersion: v1
 data:
-  csLapiSecret: RFBwdXBKWHNPMlxHKVZ3d2YhRSVEPCEvKFA6dUh6az0zXVFcbVNLO2I5LmIqOFopTTM4TWF6Qmd0c0ZfaHgneA==
-  registrationToken: dlp4MzhlTkdSUEVVMzVtdEMweXlHQXBYVTB4Um95WVFVRm1DRjZBZXpHa1NoTDlj
+  csLapiSecret: aGBUYXJURHxvOWxrU1xYOHAqdmgpIUY3ezVZNks0NCJyYDBhY2tiS1N7IXdlWDI8P1dTT0VBIHNAQEUvLHcoVQ==
+  registrationToken: ZTBXb1F5V2ptZzh4dmtsb3UyaGc1YnNRRFhyMnFHVUNKTHk4azJHSGMyaVVzUVhy
 kind: Secret
 metadata:
   labels:
@@ -655,7 +655,7 @@ metadata:
   name: crowdsec-kubernetes-bouncer
   namespace: crowdsec
 spec:
-  replicas: 1
+  replicas: 0
   selector:
     matchLabels:
       app: crowdsec-kubernetes-bouncer
@@ -703,7 +703,7 @@ spec:
     metadata:
       annotations:
         checksum/lapi-configmap: c6da5ddbb4d70478a94b244bf42e02fc53c27d4ee4021dab500aa603513c2d11
-        checksum/lapi-secret: 066d7f648aeffb821c3ae092d2b959254464415ac9a232d05e24b049dc781c51
+        checksum/lapi-secret: d07533193561b8b4a7af269411ffeafd8fcf7f6fa00818f7bc979aed2585fefc
       labels:
         k8s-app: crowdsec
         type: lapi
