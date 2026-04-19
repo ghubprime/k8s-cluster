@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: stirling-pdf
-          image: frooodle/s-pdf:0.36.7
+          image: frooodle/s-pdf:latest
           ports:
             - containerPort: 8080
               name: http

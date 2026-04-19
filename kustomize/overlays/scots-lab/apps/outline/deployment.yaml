@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: outline
-          image: outlinewiki/outline:0.81.1
+          image: outlinewiki/outline:latest
           ports:
             - containerPort: 3000
               name: http
