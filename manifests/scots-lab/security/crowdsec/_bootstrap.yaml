@@ -568,8 +568,8 @@ metadata:
 ---
 apiVersion: v1
 data:
-  csLapiSecret: NmdCPl0uZ3h9Uz1eSVYgeUEkJEJHWVthUkQ7OkNvWEdxL0ZHPHwzY3tlX2FpJStVIXFuJWhUXS9MeGYocF1XSw==
-  registrationToken: RTZLUlNhSW5LbkFBOFVxV1ZEUlg3am91VnFWWk5sdlhjc1diRjh3RDYwSm8wMlpa
+  csLapiSecret: UV5dTEIge1B3IyJfSmZRREROKEU3SkdUNEIlSmo+ciEvNjh7XCpWYzIjQiR5Ll5jLit6PzxUMG8jRHZZOzJSJw==
+  registrationToken: Z0VxVTFlaWdySHIyWG1KR2tMY0xjOXBoNWlkaTVacmV4YVhXa1Z1eFI0bXdUWTFY
 kind: Secret
 metadata:
   labels:
@@ -672,7 +672,7 @@ spec:
           value: http://crowdsec-service.crowdsec.svc.cluster.local:8080
         - name: CILIUM_POLICY_NAME
           value: crowdsec-cilium-bouncer
-        image: ghcr.io/hydazz/crowdsec-cilium-bouncer:0.0.4
+        image: ghcr.io/hydazz/crowdsec-cilium-bouncer:latest
         name: bouncer
         resources:
           limits:
@@ -703,7 +703,7 @@ spec:
     metadata:
       annotations:
         checksum/lapi-configmap: c6da5ddbb4d70478a94b244bf42e02fc53c27d4ee4021dab500aa603513c2d11
-        checksum/lapi-secret: 2800ecec709fa4eff9f9efeb6d9a725140b02daa475c63a0ab4c563901d453f8
+        checksum/lapi-secret: 8b90a50fe18282cf054add4d8b1ff99e1e684368a29ed55f7a16e4e1c1b0b3d7
       labels:
         k8s-app: crowdsec
         type: lapi
