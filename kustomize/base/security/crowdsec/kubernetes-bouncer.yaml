@@ -38,7 +38,7 @@ metadata:
   name: crowdsec-kubernetes-bouncer
   namespace: crowdsec
 spec:
-  replicas: 1
+  replicas: 0
   selector:
     matchLabels:
       app: crowdsec-kubernetes-bouncer
