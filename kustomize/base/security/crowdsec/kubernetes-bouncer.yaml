@@ -50,12 +50,14 @@ spec:
       serviceAccountName: crowdsec-kubernetes-bouncer
       containers:
         - name: bouncer
-          image: docker.io/crowdsecurity/kubernetes-bouncer:latest
+          image: ghcr.io/hydazz/crowdsec-cilium-bouncer:0.0.4
           env:
-            - name: CROWDSEC_KUBERNETES_BOUNCER_API_KEY
+            - name: CROWDSEC_BOUNCER_API_KEY
               value: "kubernetes-bouncer-static-key"
-            - name: CROWDSEC_LAPI_URL
+            - name: CROWDSEC_URL
               value: "http://crowdsec-service.crowdsec.svc.cluster.local:8080"
+            - name: CILIUM_POLICY_NAME
+              value: "crowdsec-cilium-bouncer"
           resources:
             requests:
               cpu: "10m"
