@@ -420,8 +420,8 @@ metadata:
 ---
 apiVersion: v1
 data:
-  csLapiSecret: bzI6P2g4QGx2XkUtLU9gSHtnKGFHOGskMHYidmkiK2s+PEYoIE87L0BBYClCIjkhXjJfX3VhRGFeMkM1IWpWcQ==
-  registrationToken: RjNjM3dmUjVrOGg3RmlTcngwdGpuUkllazQ4Wll2V0ZBd2x0UjlSejdlbkY0eFpa
+  csLapiSecret: LDwzVWBGQVdzPH5OTil1IilbRWNeV0pwbCxAXSJTMz1jST9SKUBxOG9EMz1iZTZVVFN5bTRJRjVpP2dDK3QiJQ==
+  registrationToken: RDlNS1BpVW56bjM0SExQcGF4eHRwdXlKVk43alExWmoxb1B0ZXdRUmV1SHJKdWc5
 kind: Secret
 metadata:
   labels:
@@ -521,7 +521,7 @@ spec:
     metadata:
       annotations:
         checksum/lapi-configmap: 5f81bdc08f32bc76fdb8210fa8afd96c741d1bb334f2cbf5d3a76cd7cd8e4ba7
-        checksum/lapi-secret: 1f2f6be30ae1357ceb7a56612534c2e7ea168b227744c4ad941782773889543d
+        checksum/lapi-secret: 5439239595016f70f222b4886d8baec4c8d868604d1cfb517eba1d5a74b4f7c5
       labels:
         k8s-app: crowdsec
         type: lapi
@@ -555,10 +555,7 @@ spec:
             fieldRef:
               fieldPath: metadata.name
         - name: BOUNCER_KEY_KUBERNETES
-          valueFrom:
-            secretKeyRef:
-              key: bouncer-key
-              name: crowdsec-bouncer-key
+          value: kubernetes-bouncer-static-key
         image: crowdsecurity/crowdsec:v1.7.6
         imagePullPolicy: IfNotPresent
         livenessProbe:
@@ -774,19 +771,6 @@ spec:
       - hostPath:
           path: /var/log
         name: varlog
----
-apiVersion: bitnami.com/v1alpha1
-kind: SealedSecret
-metadata:
-  name: crowdsec-bouncer-key
-  namespace: crowdsec
-spec:
-  encryptedData:
-    bouncer-key: AgAFigo7a2n+wPl/B+WYVCtg7hBPYtmsGvKbIkwg8rfjfxsXGOWDm6ZyHMdt5+wodwp+9EBlhIKV9Rgus++vNr0djumE2Xk2ryX/Ox/3py7DliLnSJD2KBMeceABhVW9SNeyiAjdT0EqIWcR9/1W3J4F4VS54XWupny0w8JgW+8O4Mvb2ckj3d/Z+0Bvy83B8ybbsQOelr7pwPagssCkgnDKclaCyB1EicRqRs5qevpEw7FhLf7Q+2ms2Cw7mSB76Ab/2G7JbBMU3AbUZVYbXYiciWZMmFbnWiM8eJi6fSKYJ+ceK4O321TACcw75jitjzPw/mZxIuqc9djW86VkM2rvGh02Qi3JnmL+tTRDSfokssug7b1Pb+U3fwos/SD/T7Gp69qeJeXbzNJvAcLB3B9bDMRYJSXw3pbuJf7ObDVYi31gscqb61vvhc3a6KpYXr2S6FIs/TUkCwID7M+3tz2M4ivHh+7wGbG4dJwHjY8t+a/r19AsYY2fRf8D9xAmOc4arA8xQCao8nrZkWTc7/EEJDuKcZnJjN9ecaA1+8bghFZVKAzip9GxHW/Eg9KmpTUhj6CTFLDRsrK1ktU7tQvXWtLWLhqJ8v3kXNDOWmzHS4u+OcM1kR0M3wEstApGDRuodPX5f8SiJBBLifEtOUCLnrZuhB7SscxlTyGWlxqFrgl1vsnvCGRaaMjrZCtDq+05XQOfJvDv85ErAtdJWcTpk+VgMwR0u9u+qViMUw==
-  template:
-    metadata:
-      name: crowdsec-bouncer-key
-      namespace: crowdsec
 ---
 apiVersion: v1
 kind: Pod
