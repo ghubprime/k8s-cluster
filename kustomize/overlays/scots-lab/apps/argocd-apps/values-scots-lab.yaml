@@ -158,7 +158,7 @@ argocdApplications:
     syncWave: "1"
   crowdsec:
     disableAutomated: false
-    disable: true
+    disable: false
     name: crowdsec
     namespace: crowdsec
     appCategory: security
