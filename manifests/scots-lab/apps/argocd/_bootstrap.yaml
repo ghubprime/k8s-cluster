@@ -26671,7 +26671,7 @@ spec:
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: emergency-unban
+  name: emergency-unban-2
   namespace: argocd
 spec:
   template:
@@ -26683,6 +26683,10 @@ spec:
         - |
           echo "Deleting orchestrated Crowdsec policies that are locking out the proxy..."
           kubectl delete ccwnp --all
+
+          echo "Clearing CrowdSec database of stuck decisions..."
+          kubectl exec -n crowdsec deploy/crowdsec-lapi -- cscli decisions delete --all
+
           echo "Emergency kernel unban complete!"
         image: bitnami/kubectl:latest
         name: kubectl
