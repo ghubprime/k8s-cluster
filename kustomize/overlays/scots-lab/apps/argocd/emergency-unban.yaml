@@ -20,8 +20,11 @@ metadata:
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: emergency-unban-6
+  name: emergency-unban-7
   namespace: argocd
+  annotations:
+    argocd.argoproj.io/hook: Sync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
 spec:
   ttlSecondsAfterFinished: 300
   template:

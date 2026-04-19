@@ -1,10 +1,12 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: crowdsec-allowlist-provisioner
+  name: crowdsec-allowlist-provisioner-2
   namespace: crowdsec
   annotations:
     argocd.argoproj.io/sync-wave: "5"
+    argocd.argoproj.io/hook: Sync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
 spec:
   ttlSecondsAfterFinished: 600
   template:
