@@ -62,8 +62,8 @@ alertmanager:
     receivers:
     - name: ntfy
       webhook_configs:
-        - url: 'http://ntfy.ntfy.svc.cluster.local/alerts'
-          send_resolved: true
+      - url: http://ntfy.ntfy.svc.cluster.local/alerts
+        send_resolved: true
   namespaceOverride: kube-prometheus-system
 
 grafana:
@@ -95,6 +95,36 @@ grafana:
       url: http://loki.loki.svc.cluster.local:3100
       access: proxy
       isDefault: false
+  sidecar:
+    dashboards:
+      enabled: true
+      searchNamespace: ALL
+  dashboardProviders:
+    dashboardproviders.yaml:
+      apiVersion: 1
+      providers:
+        - name: community
+          orgId: 1
+          folder: Community
+          type: file
+          disableDeletion: false
+          editable: true
+          options:
+            path: /var/lib/grafana/dashboards/community
+  dashboards:
+    community:
+      node-exporter-full:
+        gnetId: 1860
+        revision: 37
+        datasource: Prometheus
+      ceph-cluster:
+        gnetId: 2842
+        revision: 18
+        datasource: Prometheus
+      argocd:
+        gnetId: 14584
+        revision: 1
+        datasource: Prometheus
 
 kube-state-metrics:
   enabled: true
