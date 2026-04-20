@@ -14,11 +14,19 @@ helmCharts:
     namespace: rook-ceph
     includeCRDs: true
     valuesFile: ../../../../../helm/overlays/scots-lab/cluster/rook-ceph-cluster/values-scots-lab.yaml
-labels:
-  - pairs:
-      velero.io/csi-volumesnapshot-class: "true"
-    includeSelectors: false
-    includeTemplates: false
-    targets:
-      - kind: VolumeSnapshotClass
+patches:
+  - patch: |-
+      apiVersion: snapshot.storage.k8s.io/v1
+      kind: VolumeSnapshotClass
+      metadata:
+        name: ceph-block
+        labels:
+          velero.io/csi-volumesnapshot-class: "true"
+  - patch: |-
+      apiVersion: snapshot.storage.k8s.io/v1
+      kind: VolumeSnapshotClass
+      metadata:
+        name: ceph-filesystem
+        labels:
+          velero.io/csi-volumesnapshot-class: "true"
 # Trigger CI rebuild
