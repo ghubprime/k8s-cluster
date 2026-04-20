@@ -1,1 +1,1 @@
-Error: add operation does not apply: doc is missing path: "/metadata/labels/velero.io~1csi-volumesnapshot-class": missing value
+Error: invalid Kustomization: json: unknown field "targets"

@@ -159,5 +159,7 @@ spec:
     namespace: kgateway-system
   rules:
   - backendRefs:
-    - name: adguard-home
+    - group: ""
+      kind: Service
+      name: adguard-home-main
       port: 80
