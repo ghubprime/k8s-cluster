@@ -41,7 +41,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: immich-redis
+  name: immich-redis-master
   namespace: immich
 spec:
   ports:
@@ -189,7 +189,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: immich-redis
+  name: immich-redis-master
   namespace: immich
 spec:
   replicas: 1
