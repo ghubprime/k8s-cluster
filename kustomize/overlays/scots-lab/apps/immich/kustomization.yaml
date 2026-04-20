@@ -4,6 +4,7 @@ namespace: immich
 resources:
   - ../../../../base/apps/immich/
   - httproute.yaml
+  - pvc.yaml
 helmCharts:
   - name: immich
     repo: https://immich-app.github.io/immich-charts

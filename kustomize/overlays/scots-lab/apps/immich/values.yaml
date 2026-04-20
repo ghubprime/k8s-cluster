@@ -29,3 +29,8 @@ redis:
 
 postgresql:
   enabled: true
+
+immich:
+  persistence:
+    library:
+      existingClaim: immich-library-pvc
