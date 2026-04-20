@@ -28,7 +28,13 @@ redis:
   architecture: standalone
 
 postgresql:
-  enabled: true
+  enabled: false
+
+env:
+  DB_HOSTNAME: "immich-postgres"
+  DB_USERNAME: "immich"
+  DB_PASSWORD: "immich"
+  DB_DATABASE_NAME: "immich"
 
 immich:
   persistence:
