@@ -1,6 +1,8 @@
 env:
-  # The OIDC configurations will be performed inside the Web UI as per Immich docs
-  # But we must ensure external access works correctly.
+  DB_HOSTNAME: "immich-postgres"
+  DB_USERNAME: "immich"
+  DB_PASSWORD: "immich"
+  DB_DATABASE_NAME: "immich"
 
 server:
   resources:
@@ -23,15 +25,11 @@ machine-learning:
 redis:
   enabled: true
   architecture: standalone
+  image:
+    tag: latest
 
 postgresql:
   enabled: false
-
-env:
-  DB_HOSTNAME: "immich-postgres"
-  DB_USERNAME: "immich"
-  DB_PASSWORD: "immich"
-  DB_DATABASE_NAME: "immich"
 
 immich:
   persistence:
