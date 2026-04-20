@@ -1,0 +1,31 @@
+image:
+  tag: latest
+
+env:
+  # The OIDC configurations will be performed inside the Web UI as per Immich docs
+  # But we must ensure external access works correctly.
+
+server:
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 1000m
+      memory: 1Gi
+
+machine-learning:
+  resources:
+    requests:
+      cpu: 100m
+      memory: 500Mi
+    limits:
+      cpu: 2000m
+      memory: 2Gi
+
+redis:
+  enabled: true
+  architecture: standalone
+
+postgresql:
+  enabled: true

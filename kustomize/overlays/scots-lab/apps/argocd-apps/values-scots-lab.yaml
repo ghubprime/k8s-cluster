@@ -338,5 +338,25 @@ argocdApplications:
     namespace: romm
     appCategory: apps
     syncWave: "3"
-
+  homebox:
+    disableAutomated: false
+    disable: false
+    name: homebox
+    namespace: homebox
+    appCategory: apps
+    syncWave: "3"
+  healthchecks:
+    disableAutomated: false
+    disable: false
+    name: healthchecks
+    namespace: healthchecks
+    appCategory: apps
+    syncWave: "3"
+  immich:
+    disableAutomated: false
+    disable: false
+    name: immich
+    namespace: immich
+    appCategory: apps
+    syncWave: "3"
 

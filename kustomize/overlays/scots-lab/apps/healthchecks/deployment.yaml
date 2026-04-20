@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: healthchecks
+  namespace: healthchecks
+  labels:
+    app: healthchecks
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: healthchecks
+  template:
+    metadata:
+      labels:
+        app: healthchecks
+    spec:
+      containers:
+        - name: healthchecks
+          image: lscr.io/linuxserver/healthchecks:latest
+          securityContext:
+            runAsUser: 0
+            runAsNonRoot: false
+          env:
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: TZ
+              value: "Etc/UTC"
+            - name: SITE_ROOT
+              value: "https://ping.srbii.com"
+            - name: SITE_NAME
+              value: "Scots Lab Healthchecks"
+          volumeMounts:
+            - name: data
+              mountPath: /config
+          resources:
+            requests:
+              cpu: 10m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+        - name: oauth2-proxy
+          image: quay.io/oauth2-proxy/oauth2-proxy:v7.6.0
+          args:
+            - --provider=oidc
+            - --provider-display-name=Keycloak
+            - --oidc-issuer-url=https://auth.srbii.com/realms/homelab
+            - --cookie-domain=.srbii.com
+            - --email-domain=*
+            - --upstream=http://127.0.0.1:80
+            - --http-address=0.0.0.0:4180
+            - --skip-auth-route=^/ping/.*
+            - --pass-user-headers=true
+          envFrom:
+            - secretRef:
+                name: healthchecks-oauth2-proxy-secret
+          ports:
+            - containerPort: 4180
+              name: proxy
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: healthchecks-data
