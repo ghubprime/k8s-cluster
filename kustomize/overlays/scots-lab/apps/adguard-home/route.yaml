@@ -5,7 +5,7 @@ metadata:
   namespace: adguard-home
 spec:
   parentRefs:
-    - name: kgateway
+    - name: kgateway-http
       namespace: kgateway-system
   hostnames:
     - adguard.srbii.com

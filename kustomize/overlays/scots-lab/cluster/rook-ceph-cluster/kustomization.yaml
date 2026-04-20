@@ -21,3 +21,4 @@ patches:
       - op: add
         path: /metadata/labels/velero.io~1csi-volumesnapshot-class
         value: "true"
+# Trigger CI rebuild
