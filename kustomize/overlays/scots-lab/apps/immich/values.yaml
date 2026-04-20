@@ -1,6 +1,3 @@
-image:
-  tag: latest
-
 env:
   # The OIDC configurations will be performed inside the Web UI as per Immich docs
   # But we must ensure external access works correctly.
