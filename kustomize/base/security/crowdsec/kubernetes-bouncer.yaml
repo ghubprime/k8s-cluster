@@ -50,7 +50,7 @@ spec:
       serviceAccountName: crowdsec-kubernetes-bouncer
       containers:
         - name: bouncer
-          image: ghcr.io/hydazz/crowdsec-cilium-bouncer:latest
+          image: crowdsecurity/crowdsec-bouncer-cilium:latest
           env:
             - name: CROWDSEC_BOUNCER_API_KEY
               value: "kubernetes-bouncer-static-key"

@@ -14,11 +14,11 @@ helmCharts:
     namespace: rook-ceph
     includeCRDs: true
     valuesFile: ../../../../../helm/overlays/scots-lab/cluster/rook-ceph-cluster/values-scots-lab.yaml
-patches:
-  - target:
-      kind: VolumeSnapshotClass
-    patch: |-
-      - op: add
-        path: /metadata/labels/velero.io~1csi-volumesnapshot-class
-        value: "true"
+labels:
+  - pairs:
+      velero.io/csi-volumesnapshot-class: "true"
+    includeSelectors: false
+    includeTemplates: false
+    targets:
+      - kind: VolumeSnapshotClass
 # Trigger CI rebuild
