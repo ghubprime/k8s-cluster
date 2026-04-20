@@ -6,6 +6,7 @@ resources:
   - httproute.yaml
   - pvc.yaml
   - postgres.yaml
+  - redis.yaml
 helmCharts:
   - name: immich
     repo: https://immich-app.github.io/immich-charts

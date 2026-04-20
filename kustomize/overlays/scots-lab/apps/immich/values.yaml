@@ -3,6 +3,7 @@ env:
   DB_USERNAME: "immich"
   DB_PASSWORD: "immich"
   DB_DATABASE_NAME: "immich"
+  REDIS_HOSTNAME: "immich-redis"
 
 server:
   resources:
@@ -21,15 +22,6 @@ machine-learning:
     limits:
       cpu: 2000m
       memory: 2Gi
-
-redis:
-  enabled: true
-  architecture: standalone
-  image:
-    tag: latest
-
-postgresql:
-  enabled: false
 
 immich:
   persistence:
