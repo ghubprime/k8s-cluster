@@ -1,4 +1,4 @@
-Error: Error: execution error at (immich/templates/checks.yaml:1:64): .Values.immich.persistence.library.existingClaim is required.
+Error: Error: execution error at (immich/templates/checks.yaml:5:7): The postgres subchart is deprecated. Please see https://github.com/immich-app/immich-charts/issues/149 for more detail.
 
 Use --debug flag to render out invalid YAML
-: unable to run: 'helm template immich /home/runner/work/k8s-cluster/k8s-cluster/kustomize/overlays/scots-lab/apps/immich/charts/immich-0.9.1/immich --namespace immich -f /tmp/kustomize-helm-4289210741/immich-kustomize-values.yaml' with env=[HELM_CONFIG_HOME=/tmp/kustomize-helm-4289210741/helm HELM_CACHE_HOME=/tmp/kustomize-helm-4289210741/helm/.cache HELM_DATA_HOME=/tmp/kustomize-helm-4289210741/helm/.data] (is 'helm' installed?): exit status 1
+: unable to run: 'helm template immich /home/runner/work/k8s-cluster/k8s-cluster/kustomize/overlays/scots-lab/apps/immich/charts/immich-0.9.1/immich --namespace immich -f /tmp/kustomize-helm-3793453682/immich-kustomize-values.yaml' with env=[HELM_CONFIG_HOME=/tmp/kustomize-helm-3793453682/helm HELM_CACHE_HOME=/tmp/kustomize-helm-3793453682/helm/.cache HELM_DATA_HOME=/tmp/kustomize-helm-3793453682/helm/.data] (is 'helm' installed?): exit status 1
