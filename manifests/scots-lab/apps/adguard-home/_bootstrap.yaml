@@ -155,7 +155,7 @@ spec:
   hostnames:
   - adguard.srbii.com
   parentRefs:
-  - name: kgateway
+  - name: kgateway-http
     namespace: kgateway-system
   rules:
   - backendRefs:
