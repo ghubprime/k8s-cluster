@@ -1,0 +1,134 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: healthchecks
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: healthchecks
+  namespace: healthchecks
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: proxy
+  selector:
+    app: healthchecks
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: healthchecks-data
+  namespace: healthchecks
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: healthchecks
+  name: healthchecks
+  namespace: healthchecks
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: healthchecks
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: healthchecks
+    spec:
+      containers:
+      - env:
+        - name: PUID
+          value: "1000"
+        - name: PGID
+          value: "1000"
+        - name: TZ
+          value: Etc/UTC
+        - name: SITE_ROOT
+          value: https://ping.srbii.com
+        - name: SITE_NAME
+          value: Scots Lab Healthchecks
+        image: lscr.io/linuxserver/healthchecks:latest
+        name: healthchecks
+        resources:
+          limits:
+            cpu: 500m
+            memory: 512Mi
+          requests:
+            cpu: 10m
+            memory: 128Mi
+        securityContext:
+          runAsNonRoot: false
+          runAsUser: 0
+        volumeMounts:
+        - mountPath: /config
+          name: data
+      - args:
+        - --provider=oidc
+        - --provider-display-name=Keycloak
+        - --oidc-issuer-url=https://auth.srbii.com/realms/homelab
+        - --cookie-domain=.srbii.com
+        - --email-domain=*
+        - --upstream=http://127.0.0.1:80
+        - --http-address=0.0.0.0:4180
+        - --skip-auth-route=^/ping/.*
+        - --pass-user-headers=true
+        envFrom:
+        - secretRef:
+            name: healthchecks-oauth2-proxy-secret
+        image: quay.io/oauth2-proxy/oauth2-proxy:v7.6.0
+        name: oauth2-proxy
+        ports:
+        - containerPort: 4180
+          name: proxy
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: healthchecks-data
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  name: healthchecks-oauth2-proxy-secret
+  namespace: healthchecks
+spec:
+  encryptedData:
+    OAUTH2_PROXY_CLIENT_ID: AgCJuZhUl6cykkbKkWBLw+IeczQnbFl0hZv6wk2Z+k4iQt3tlhlTAD+tE9iH89th9ArWvDc3xc65F1qviJDX3wL34XcvfB2noxqvZqyJu8D3U1/F/rmdoY2sC5cl10+3V/DdcAh2ZxmzLXNuewk0KADNO0ehZ/HyV0T/5fh+4mGVKhjBWLQmUz+ZI2VCJcbjiQc9UpPWhOatMpDYyoUjkLVXCgwGSLENXjrEnkEYg069qx8xYk4cM16UDrE9C5hbQ4omv8TKYLSwwnu0y3qpFDwkYtYRoJgkAPZKGvwZpUxU7bOQTqInmMsn+Vs8wTDauziSJnsnxcztiEXppxadDGlC67wRJuLBp9SKgtEUgWaYRgORTYZfR384Q/RmCYCogyxT9jd0c+LRJoxahwB+n4iJroehvSEfKSXUGAPYOGOTm2YUV9vlVJ9qxB7G04x2aF4HyluWSAcy1aIUyQZGZEe81UMLDlOk92f4koOv49w7R7jlA7ALOrADCcltUX0m8NtmlYy1uxCd28qRmicy5vibn1ZV1y4IqwRnl4QgC80NkxVEPEIrpZlKD9gM8j3HRJbp4TWB1PBGk3hdvk/4QocqsG6Zipgh9V7TBizGyc7E4dvOCpFR54WbjkbrhcnvetiHCLW276HZ0rdNxBc7AzSEWSXZmt1HU+ALgJzQK0ZIjh8xCh5S2Z/6F7fj5oyvLqZnd2bsXXkRD5UV1gw=
+    OAUTH2_PROXY_CLIENT_SECRET: AgBRvUG/tNu/V5ABSMzrjqzwx6K0XshzwmDUXzwvRyiNyqwqw9QXtOgk23BSjB29wtvABbGAXbIeV6kXzhL2zr8qE+miEzGbhRs6/yv+1Fw8bsETiCD4Ls7HRQVOctyTnyckITFjykxC+LGDjsHYQmHQldrHjG8h3RoDZ0SPsvZCMcoda0tnQjTKLxqYhkWUAjtfD/lvtduomCXR8licixlXa9znQ2zzMcuj/QgIB6SnzYKHHsivYfuBTeHcsnRnGvzKW5z/B8FIXzPKqpOsWl/QLLq6DqWuqVed4HfxWQAj0cCVPkycRH50xO8iy3K/F4CUexJFeoNDjLLOJXqkxMIB19raVKIQeNLX8WLQQncePybGawOLHoDkvrbWrT43qr5DYBhgsLHBBpFmAdtb9s0Cx9uk0K1JLy6JfV/zgt8KznCQQP3a1N/xHxEAa4biuIQTKcaZCnIlPkEuc+mD6+xpnkfhidoaJEdNa//EgOYMGh1D7z0ybfg6PoLolczIm2kJQzpkEcg///APG6iwFLe8x49uiu1Kgok9hGcN3c9RpTpafeJN9DGaXR/tQfCXnprqsabAsxa8kdf95aCHDC/Lx33lBK7sEe1FwNYL1DvjeDDRF274KEmC9qUMSrdPMlHT1uf5utrSf7yxngewoH5BXCHKELX9GK7dwVtT7E8ze09HJIQEKP74dJvc5IlwoS7j/WiyFExLs6O9oFxFkdriwaCEVrqZA9vKxkY/dbEWhg==
+    OAUTH2_PROXY_COOKIE_SECRET: AgCRfXQPFId0qloCMb7/syTLKW3yHxEGBw/K2Ge06ZWC+/7O4Rz3DNZkS/u/CNzQi5mS8DxsA5ywAKqPVuWj8Ulf6HQGWNIEEOHpazmms5EP+Mx9jqSbRgLPL3k9VHzsCbaQu0F5Et44wG+Kckv6/KxsQ13RDvKU8ihI8EUY0+XPhp0RM3w3AlhO11qvPhEd7a4aaFwz6/dPbkXB7LwSvyQ3lb+KiuWwTzESMul3ttwVBBwftYGdFoe4YVWr9e7b6wOCnjGOegkFGjSI4szXD632W6f/PpyN1YFak895Z3m5+rUb2F0OGYBXPAvVqR1d6KjXSWf+rgNTU6xw5EUyRMovGKJI0jRiLov/L7wKDCFpcArWWLKGZeos6hEWa6wySZcbUrHnttJVtS8wDK4e/dnRON4YFgBlg+v+2sZVy/HcD8fKvcrkGZEVbjL9ASeisrslmO/CiWZlavyZjS6ZzFdgfm4qIy/6VkGHpdj4jousi0X9DiH4FrpeVUuHX7UN/+ApCUjvd9I87/cM60xJi/demEoOlT2A3QvG9gIkxAuz2AmCfJ/ONWJQHVgdsZh4G0Ba05HNlB2LDWqcuwDnSEsDCYYqYICDkzXyR8lx8myJuWhUH1+I4+YrTcHHTypYqY+xxfLNCX2IwTSG2pLnw2xVTJVTJ4VtULtKaPBj2QiB23MYR8GGpc8SqPryT+Jo08If/fS9pPvfxctV7R1jFoAsuCKa3wK0Ad8ck5ALOG2LjzTy/wSg/Gq1vcDxDA==
+  template:
+    metadata:
+      name: healthchecks-oauth2-proxy-secret
+      namespace: healthchecks
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: healthchecks
+  namespace: healthchecks
+spec:
+  hostnames:
+  - ping.srbii.com
+  parentRefs:
+  - name: kgateway-http
+    namespace: kgateway-system
+  rules:
+  - backendRefs:
+    - name: healthchecks
+      port: 80
+    matches:
+    - path:
+        type: PathPrefix
+        value: /

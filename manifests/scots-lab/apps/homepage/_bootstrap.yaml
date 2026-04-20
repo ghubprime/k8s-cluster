@@ -91,6 +91,14 @@ data:
             href: https://ntfy-omni.proxy-us.srbii.com/
             description: Push Notifications
             icon: ntfy.png
+        - Homebox:
+            href: https://inventory.srbii.com
+            description: Inventory Management
+            icon: mdi-package-variant-closed
+        - Immich:
+            href: https://media.srbii.com
+            description: Photo & Video Backup
+            icon: immich.png
 
     - Tools:
         - Draw.io:
@@ -139,6 +147,10 @@ data:
             href: https://expires.srbii.com
             description: Secure Secret Sharing
             icon: mdi-lock-clock
+        - Healthchecks:
+            href: https://ping.srbii.com
+            description: Cron Monitoring
+            icon: healthchecks.png
   settings.yaml: |
     title: Scots Lab
     favicon: https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/png/kubernetes.png
