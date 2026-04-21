@@ -138,6 +138,8 @@ spec:
           value: immich-postgres
         - name: DB_PASSWORD
           value: immich
+        - name: DB_URL
+          value: postgresql://immich:immich@immich-postgres:5432/immich?sslmode=disable
         - name: DB_USERNAME
           value: immich
         - name: HF_XET_CACHE
@@ -260,6 +262,8 @@ spec:
           value: immich-postgres
         - name: DB_PASSWORD
           value: immich
+        - name: DB_URL
+          value: postgresql://immich:immich@immich-postgres:5432/immich?sslmode=disable
         - name: DB_USERNAME
           value: immich
         - name: IMMICH_MACHINE_LEARNING_URL
