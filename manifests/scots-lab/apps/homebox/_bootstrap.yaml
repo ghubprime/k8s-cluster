@@ -115,6 +115,12 @@ spec:
   - backendRefs:
     - name: homebox
       port: 7745
+    filters:
+    - requestHeaderModifier:
+        set:
+        - name: X-Forwarded-Proto
+          value: https
+      type: RequestHeaderModifier
     matches:
     - path:
         type: PathPrefix

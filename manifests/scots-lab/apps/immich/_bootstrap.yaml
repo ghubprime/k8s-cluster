@@ -348,6 +348,12 @@ spec:
   - backendRefs:
     - name: immich-server
       port: 2283
+    filters:
+    - requestHeaderModifier:
+        set:
+        - name: X-Forwarded-Proto
+          value: https
+      type: RequestHeaderModifier
     matches:
     - path:
         type: PathPrefix
