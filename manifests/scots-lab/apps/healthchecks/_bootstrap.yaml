@@ -60,6 +60,8 @@ spec:
           value: https://ping.srbii.com
         - name: SITE_NAME
           value: Scots Lab Healthchecks
+        - name: REMOTE_USER_HEADER
+          value: HTTP_X_FORWARDED_EMAIL
         image: lscr.io/linuxserver/healthchecks:latest
         name: healthchecks
         resources:
