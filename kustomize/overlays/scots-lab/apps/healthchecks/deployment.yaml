@@ -52,7 +52,7 @@ spec:
             - --oidc-issuer-url=https://auth.srbii.com/realms/homelab
             - --cookie-domain=.srbii.com
             - --email-domain=*
-            - --upstream=http://127.0.0.1:80
+            - --upstream=http://127.0.0.1:8000
             - --http-address=0.0.0.0:4180
             - --skip-auth-route=^/ping/.*
             - --pass-user-headers=true
