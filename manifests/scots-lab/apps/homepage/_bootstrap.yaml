@@ -41,6 +41,10 @@ data:
             href: https://uptimekuma-omni.proxy-us.srbii.com/
             description: Status Monitoring
             icon: uptime-kuma.png
+        - AdGuard Home:
+            href: https://adguard.srbii.com
+            description: DNS Resolver
+            icon: adguard-home.png
         - Omni:
             href: https://omni.srbii.com/
             description: Cluster Management
