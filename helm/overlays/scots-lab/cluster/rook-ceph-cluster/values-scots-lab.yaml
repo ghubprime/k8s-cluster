@@ -11,9 +11,21 @@ monitoring:
 cephClusterSpec:
   skipUpgradeChecks: true
   storage:
-    useAllNodes: true
+    useAllNodes: false
     useAllDevices: false
-    deviceFilter: "^sd[c-z]$"
+    nodes:
+    - name: talos-vzo-5on
+      devices:
+      - name: sdc
+      - name: sdd
+    - name: talos-f8k-btg
+      devices:
+      - name: sdc
+      - name: sdd
+    - name: talos-tdl-fge
+      devices:
+      - name: sdc
+      - name: sdd
   network:
     provider: host
   dashboard:
