@@ -455,7 +455,8 @@ spec:
         memory: 50Mi
   skipUpgradeChecks: true
   storage:
-    useAllDevices: true
+    deviceFilter: ^sd[c-z]$
+    useAllDevices: false
     useAllNodes: true
   upgradeOSDRequiresHealthyPGs: false
   waitTimeoutForHealthyOSDInMinutes: 10
