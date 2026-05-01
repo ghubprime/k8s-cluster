@@ -10,6 +10,10 @@ monitoring:
 
 cephClusterSpec:
   skipUpgradeChecks: true
+  storage:
+    useAllNodes: true
+    useAllDevices: false
+    deviceFilter: "^sd[c-z]$"
   network:
     provider: host
   dashboard:
