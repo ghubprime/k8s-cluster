@@ -2,6 +2,5 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - ../../../../base/apps/velero/
-  - sealed-velero-credentials.yaml
 generators:
   - ../../../../../helm/overlays/scots-lab/apps/velero/
