@@ -455,6 +455,7 @@ spec:
         memory: 50Mi
   skipUpgradeChecks: true
   storage:
+    deviceFilter: ^sd[bcd]$
     nodes:
     - devices:
       - name: sdc
