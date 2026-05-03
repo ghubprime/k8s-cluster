@@ -35,24 +35,30 @@ kubectl:
 
 upgradeCRDs: false
 
-# Homelab resource override — default 500m CPU is excessive for scheduled backups
+# Homelab resource override — OOMKill threshold must exceed CRD discovery peak
+# The cluster has 42+ ArgoCD apps with heavy CRDs (Cilium, Rook, Gateway API)
+# which causes Velero to spike above 1Gi during the item_collector enumeration phase
 resources:
   requests:
     cpu: 100m
-    memory: 256Mi
+    memory: 512Mi
   limits:
     cpu: 1
-    memory: 1Gi
+    memory: 2Gi
 
 schedules:
-  daily-cluster-backup:
+  # Tier 1: Lightweight — K8s resources + CSI snapshots only (no filesystem copy)
+  # Runs every 6 hours — fast, low-cost, captures all K8s object state + point-in-time PVC snapshots
+  cluster-backup:
     disabled: false
-    schedule: "0 2 * * *"
+    schedule: "0 */6 * * *"
     template:
       ttl: "720h"
       includedNamespaces:
         - '*'
       snapshotVolumes: true
+  # Tier 2: Heavy — Full filesystem-level volume backup (byte-for-byte PVC copy)
+  # Runs weekly — the "restore everything" safety net for full data recovery
   weekly-deep-backup:
     disabled: false
     schedule: "0 1 * * 0"
