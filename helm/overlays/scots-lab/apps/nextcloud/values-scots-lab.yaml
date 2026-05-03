@@ -45,6 +45,23 @@ nextcloud:
         'overwriteprotocol' => 'https',
       );
 
+  livenessProbe:
+    enabled: true
+    initialDelaySeconds: 600
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+    successThreshold: 1
+  readinessProbe:
+    enabled: true
+    initialDelaySeconds: 600
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+    successThreshold: 1
+
+
+
 persistence:
   enabled: true
   storageClass: ceph-block
