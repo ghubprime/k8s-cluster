@@ -13,6 +13,7 @@ cephClusterSpec:
   storage:
     useAllNodes: false
     useAllDevices: false
+    deviceFilter: ^sd[bcd]$
     nodes:
     - name: talos-vzo-5on
       devices:
