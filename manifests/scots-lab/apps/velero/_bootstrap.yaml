@@ -3322,10 +3322,10 @@ spec:
         resources:
           limits:
             cpu: 1
-            memory: 1Gi
+            memory: 2Gi
           requests:
             cpu: 100m
-            memory: 256Mi
+            memory: 512Mi
         volumeMounts:
         - mountPath: /plugins
           name: plugins
@@ -3398,10 +3398,10 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: velero
     helm.sh/chart: velero-5.4.1
-  name: velero-daily-cluster-backup
+  name: velero-cluster-backup
   namespace: velero
 spec:
-  schedule: 0 2 * * *
+  schedule: 0 */6 * * *
   template:
     includedNamespaces:
     - '*'
