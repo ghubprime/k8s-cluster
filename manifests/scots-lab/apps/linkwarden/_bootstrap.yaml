@@ -189,3 +189,22 @@ spec:
     - path:
         type: PathPrefix
         value: /
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: baseline-isolation
+  namespace: linkwarden
+spec:
+  ingress:
+  - from:
+    - podSelector: {}
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kgateway-system
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-prometheus-system
+  podSelector: {}
+  policyTypes:
+  - Ingress
