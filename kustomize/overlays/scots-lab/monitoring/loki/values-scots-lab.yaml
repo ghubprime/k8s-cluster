@@ -26,7 +26,7 @@ loki:
           period: 24h
 
   limits_config:
-    retention_period: 360h  # 15 days, matching Prometheus retention
+    retention_period: 1080h  # 45 days
     ingestion_rate_mb: 10
     ingestion_burst_size_mb: 20
     max_query_series: 5000
@@ -42,7 +42,7 @@ singleBinary:
   replicas: 1
   persistence:
     enabled: true
-    size: 10Gi
+    size: 20Gi
     storageClass: ceph-block
   resources:
     requests:
