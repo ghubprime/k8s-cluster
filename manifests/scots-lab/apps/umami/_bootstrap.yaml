@@ -116,3 +116,22 @@ spec:
     metadata:
       name: umami-secret
       namespace: umami
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: baseline-isolation
+  namespace: umami
+spec:
+  ingress:
+  - from:
+    - podSelector: {}
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kgateway-system
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-prometheus-system
+  podSelector: {}
+  policyTypes:
+  - Ingress
