@@ -4,8 +4,7 @@ kind: Kustomization
 namespace: adguard-home
 
 resources:
-  - network-policy.yaml
-  - namespace.yaml
+    - namespace.yaml
   - pvc.yaml
   - route.yaml
 

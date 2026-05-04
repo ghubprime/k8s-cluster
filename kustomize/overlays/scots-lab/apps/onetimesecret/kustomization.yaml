@@ -3,8 +3,7 @@ kind: Kustomization
 namespace: onetimesecret
 
 resources:
-  - network-policy.yaml
-  - namespace.yaml
+    - namespace.yaml
   - deployment.yaml
   - service.yaml
   - httproute.yaml

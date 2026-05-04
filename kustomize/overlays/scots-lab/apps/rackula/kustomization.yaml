@@ -3,8 +3,7 @@ kind: Kustomization
 namespace: rackula
 
 resources:
-  - network-policy.yaml
-  - namespace.yaml
+    - namespace.yaml
   - pvc.yaml
   - deployment.yaml
   - service.yaml

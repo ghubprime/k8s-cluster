@@ -3,8 +3,7 @@ kind: Kustomization
 namespace: guacamole
 
 resources:
-  - network-policy.yaml
-  - namespace.yaml
+    - namespace.yaml
   - postgresql.yaml
   - guacd.yaml
   - guacamole.yaml
