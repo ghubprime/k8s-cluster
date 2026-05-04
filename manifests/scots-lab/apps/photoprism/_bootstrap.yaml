@@ -129,7 +129,7 @@ spec:
         - name: PHOTOPRISM_OIDC_URI
           value: https://auth.srbii.com/realms/homelab
         - name: PHOTOPRISM_OIDC_USERNAME
-          value: email
+          value: preferred_username
         - name: PHOTOPRISM_OIDC_WEBDAV
           value: "false"
         - name: PHOTOPRISM_APP_COLOR
