@@ -3416,10 +3416,10 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: velero
     helm.sh/chart: velero-5.4.1
-  name: velero-weekly-deep-backup
+  name: velero-deep-cluster-backup
   namespace: velero
 spec:
-  schedule: 0 1 * * 0
+  schedule: 0 1 */2 * *
   template:
     defaultVolumesToFsBackup: true
     includedNamespaces:
