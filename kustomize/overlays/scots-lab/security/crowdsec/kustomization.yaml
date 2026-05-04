@@ -4,7 +4,6 @@ resources:
   - ../../../../base/security/crowdsec/
   - allowlist-rbac.yaml
   - allowlist-job.yaml
-  - coredns-protection.yaml
 helmCharts:
   - name: crowdsec
     repo: https://crowdsecurity.github.io/helm-charts
