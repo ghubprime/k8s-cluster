@@ -20,7 +20,7 @@ spec:
       enableServiceLinks: false
       containers:
         - name: romm
-          image: rommapp/romm:4.8.1
+          image: rommapp/romm:latest
           ports:
             - containerPort: 8080
               name: http
