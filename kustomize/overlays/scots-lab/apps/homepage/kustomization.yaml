@@ -3,6 +3,7 @@ kind: Kustomization
 namespace: homepage
 
 resources:
+  - network-policy.yaml
   - namespace.yaml
   - rbac.yaml
   - configmap.yaml

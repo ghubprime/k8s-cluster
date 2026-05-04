@@ -3,6 +3,7 @@ kind: Kustomization
 namespace: it-tools
 
 resources:
+  - network-policy.yaml
   - namespace.yaml
   - deployment.yaml
   - service.yaml

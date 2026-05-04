@@ -3,6 +3,7 @@ kind: Kustomization
 namespace: umami
 
 resources:
+  - network-policy.yaml
   - namespace.yaml
   - deployment.yaml
   - service.yaml
