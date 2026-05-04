@@ -3,6 +3,7 @@ kind: Kustomization
 namespace: romm
 
 resources:
+  - network-policy.yaml
   - namespace.yaml
   - deployment.yaml
   - service.yaml
