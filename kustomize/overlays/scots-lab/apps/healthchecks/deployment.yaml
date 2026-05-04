@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: healthchecks
-          image: lscr.io/linuxserver/healthchecks:latest
+          image: lscr.io/linuxserver/healthchecks@sha256:2973440afcdcf5884b334782a70b7a7c292595810ad3a162f0289d2e878f2c80
           securityContext:
             runAsUser: 0
             runAsNonRoot: false
