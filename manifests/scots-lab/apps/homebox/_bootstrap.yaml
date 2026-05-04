@@ -107,6 +107,14 @@ spec:
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
+  annotations:
+    gethomepage.dev/description: Inventory Management
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/group: Applications
+    gethomepage.dev/href: https://inventory.srbii.com
+    gethomepage.dev/icon: mdi-package-variant-closed
+    gethomepage.dev/name: Homebox
+    gethomepage.dev/weight: "27"
   name: homebox
   namespace: homebox
 spec:

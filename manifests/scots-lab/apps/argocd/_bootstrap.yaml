@@ -26710,6 +26710,14 @@ spec:
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
+  annotations:
+    gethomepage.dev/description: GitOps Engine
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/group: Infrastructure
+    gethomepage.dev/href: https://argocd-omni.proxy-us.srbii.com/
+    gethomepage.dev/icon: argocd.png
+    gethomepage.dev/name: ArgoCD
+    gethomepage.dev/weight: "10"
   name: argocd-server
   namespace: argocd
 spec:

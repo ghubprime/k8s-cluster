@@ -180,6 +180,14 @@ spec:
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
+  annotations:
+    gethomepage.dev/description: Network Boot Manager
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/group: Tools
+    gethomepage.dev/href: https://boot.srbii.com
+    gethomepage.dev/icon: mdi-lan-connect
+    gethomepage.dev/name: Netboot.xyz
+    gethomepage.dev/weight: "46"
   name: netbootxyz
   namespace: netbootxyz
 spec:

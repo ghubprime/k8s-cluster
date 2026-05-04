@@ -364,6 +364,14 @@ spec:
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
+  annotations:
+    gethomepage.dev/description: Photo & Video Backup
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/group: Applications
+    gethomepage.dev/href: https://media.srbii.com
+    gethomepage.dev/icon: immich.png
+    gethomepage.dev/name: Immich
+    gethomepage.dev/weight: "28"
   name: immich
   namespace: immich
 spec:

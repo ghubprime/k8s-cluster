@@ -122,6 +122,14 @@ spec:
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
+  annotations:
+    gethomepage.dev/description: Cron Monitoring
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/group: Monitoring
+    gethomepage.dev/href: https://ping.srbii.com
+    gethomepage.dev/icon: healthchecks.png
+    gethomepage.dev/name: Healthchecks
+    gethomepage.dev/weight: "53"
   name: healthchecks
   namespace: healthchecks
 spec:

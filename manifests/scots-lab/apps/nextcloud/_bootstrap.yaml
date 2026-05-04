@@ -121,7 +121,7 @@ metadata:
 apiVersion: v1
 data:
   nextcloud-password: Y2hhbmdlbWU=
-  nextcloud-token: TmhQZDhZckdvTw==
+  nextcloud-token: TmQ5MlhIZWdRMg==
   nextcloud-username: YWRtaW4=
 kind: Secret
 metadata:
@@ -152,7 +152,7 @@ type: Opaque
 apiVersion: v1
 data:
   password: Y2hhbmdlbWU=
-  postgres-password: WERtNmZKSXphdw==
+  postgres-password: YkluRHoybDdRRg==
 kind: Secret
 metadata:
   labels:
@@ -605,6 +605,14 @@ spec:
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
+  annotations:
+    gethomepage.dev/description: File Storage
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/group: Applications
+    gethomepage.dev/href: https://files.srbii.com
+    gethomepage.dev/icon: nextcloud.png
+    gethomepage.dev/name: Nextcloud
+    gethomepage.dev/weight: "20"
   name: nextcloud
   namespace: nextcloud
 spec:

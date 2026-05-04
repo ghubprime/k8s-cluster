@@ -1244,6 +1244,14 @@ spec:
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
+  annotations:
+    gethomepage.dev/description: Document Management
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/group: Applications
+    gethomepage.dev/href: https://docs.srbii.com
+    gethomepage.dev/icon: paperless-ngx.png
+    gethomepage.dev/name: Paperless-ngx
+    gethomepage.dev/weight: "22"
   name: paperless
   namespace: paperless
 spec:

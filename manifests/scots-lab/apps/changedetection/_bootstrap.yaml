@@ -213,6 +213,14 @@ spec:
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
+  annotations:
+    gethomepage.dev/description: Web Change Monitor
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/group: Monitoring
+    gethomepage.dev/href: https://changes.srbii.com
+    gethomepage.dev/icon: changedetection-io.png
+    gethomepage.dev/name: Changedetection
+    gethomepage.dev/weight: "50"
   name: changedetection
   namespace: changedetection
 spec:

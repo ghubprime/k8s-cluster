@@ -244,6 +244,14 @@ spec:
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
+  annotations:
+    gethomepage.dev/description: Photo Gallery
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/group: Applications
+    gethomepage.dev/href: https://photos.srbii.com
+    gethomepage.dev/icon: photoprism.png
+    gethomepage.dev/name: PhotoPrism
+    gethomepage.dev/weight: "21"
   name: photoprism
   namespace: photoprism
 spec:

@@ -333,6 +333,14 @@ spec:
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
+  annotations:
+    gethomepage.dev/description: Ticket System
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/group: Monitoring
+    gethomepage.dev/href: https://tickets.srbii.com
+    gethomepage.dev/icon: mdi-ticket-confirmation
+    gethomepage.dev/name: Znuny
+    gethomepage.dev/weight: "51"
   name: znuny
   namespace: znuny
 spec:
