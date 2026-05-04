@@ -208,6 +208,11 @@ spec:
           requests:
             cpu: 10m
             memory: 64Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
         volumeMounts:
         - mountPath: /app/config
           name: config
@@ -239,6 +244,11 @@ spec:
           requests:
             cpu: 10m
             memory: 32Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
       initContainers:
       - command:
         - sh
@@ -246,11 +256,23 @@ spec:
         - cp /configmap-data/* /app-config/
         image: busybox:1.36
         name: copy-config
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
         volumeMounts:
         - mountPath: /app-config
           name: config
         - mountPath: /configmap-data
           name: configmap-data
+      securityContext:
+        fsGroup: 1000
+        runAsGroup: 1000
+        runAsNonRoot: true
+        runAsUser: 1000
+        seccompProfile:
+          type: RuntimeDefault
       serviceAccountName: homepage
       volumes:
       - emptyDir: {}
