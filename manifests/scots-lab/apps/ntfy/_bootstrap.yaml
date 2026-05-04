@@ -68,7 +68,7 @@ spec:
       containers:
       - args:
         - serve
-        image: binwiederhier/ntfy@sha256:d8b3408c75d5ae78e03339af6103e7e6195e56573eea6f1ad34bb4dc4f44f340
+        image: binwiederhier/ntfy:latest
         name: ntfy
         ports:
         - containerPort: 80
