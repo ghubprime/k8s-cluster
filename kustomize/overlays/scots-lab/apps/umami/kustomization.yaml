@@ -3,7 +3,7 @@ kind: Kustomization
 namespace: umami
 
 resources:
-    - namespace.yaml
+  - namespace.yaml
   - deployment.yaml
   - service.yaml
   - pvc.yaml
