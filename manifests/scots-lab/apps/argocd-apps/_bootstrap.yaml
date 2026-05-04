@@ -19,6 +19,12 @@ spec:
       allowEmpty: false
       prune: true
       selfHeal: true
+    retry:
+      backoff:
+        duration: 30s
+        factor: 2
+        maxDuration: 5m
+      limit: 5
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -41,6 +47,12 @@ spec:
       allowEmpty: false
       prune: true
       selfHeal: true
+    retry:
+      backoff:
+        duration: 30s
+        factor: 2
+        maxDuration: 5m
+      limit: 5
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -66,6 +78,12 @@ spec:
       allowEmpty: false
       prune: true
       selfHeal: true
+    retry:
+      backoff:
+        duration: 30s
+        factor: 2
+        maxDuration: 5m
+      limit: 5
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -88,6 +106,12 @@ spec:
       allowEmpty: false
       prune: true
       selfHeal: true
+    retry:
+      backoff:
+        duration: 30s
+        factor: 2
+        maxDuration: 5m
+      limit: 5
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -110,6 +134,12 @@ spec:
       allowEmpty: false
       prune: true
       selfHeal: true
+    retry:
+      backoff:
+        duration: 30s
+        factor: 2
+        maxDuration: 5m
+      limit: 5
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -132,6 +162,12 @@ spec:
       allowEmpty: false
       prune: true
       selfHeal: true
+    retry:
+      backoff:
+        duration: 30s
+        factor: 2
+        maxDuration: 5m
+      limit: 5
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -154,6 +190,12 @@ spec:
       allowEmpty: false
       prune: true
       selfHeal: true
+    retry:
+      backoff:
+        duration: 30s
+        factor: 2
+        maxDuration: 5m
+      limit: 5
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -176,6 +218,12 @@ spec:
       allowEmpty: false
       prune: true
       selfHeal: true
+    retry:
+      backoff:
+        duration: 30s
+        factor: 2
+        maxDuration: 5m
+      limit: 5
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -198,6 +246,12 @@ spec:
       allowEmpty: false
       prune: true
       selfHeal: true
+    retry:
+      backoff:
+        duration: 30s
+        factor: 2
+        maxDuration: 5m
+      limit: 5
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -220,6 +274,12 @@ spec:
       allowEmpty: false
       prune: true
       selfHeal: true
+    retry:
+      backoff:
+        duration: 30s
+        factor: 2
+        maxDuration: 5m
+      limit: 5
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -242,6 +302,12 @@ spec:
       allowEmpty: false
       prune: true
       selfHeal: true
+    retry:
+      backoff:
+        duration: 30s
+        factor: 2
+        maxDuration: 5m
+      limit: 5
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -264,6 +330,12 @@ spec:
       allowEmpty: false
       prune: true
       selfHeal: true
+    retry:
+      backoff:
+        duration: 30s
+        factor: 2
+        maxDuration: 5m
+      limit: 5
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -286,6 +358,12 @@ spec:
       allowEmpty: false
       prune: true
       selfHeal: true
+    retry:
+      backoff:
+        duration: 30s
+        factor: 2
+        maxDuration: 5m
+      limit: 5
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -308,6 +386,12 @@ spec:
       allowEmpty: false
       prune: true
       selfHeal: true
+    retry:
+      backoff:
+        duration: 30s
+        factor: 2
+        maxDuration: 5m
+      limit: 5
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -330,6 +414,12 @@ spec:
       allowEmpty: false
       prune: true
       selfHeal: true
+    retry:
+      backoff:
+        duration: 30s
+        factor: 2
+        maxDuration: 5m
+      limit: 5
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -352,6 +442,12 @@ spec:
       allowEmpty: false
       prune: true
       selfHeal: true
+    retry:
+      backoff:
+        duration: 30s
+        factor: 2
+        maxDuration: 5m
+      limit: 5
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -374,6 +470,12 @@ spec:
       allowEmpty: false
       prune: true
       selfHeal: true
+    retry:
+      backoff:
+        duration: 30s
+        factor: 2
+        maxDuration: 5m
+      limit: 5
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -396,6 +498,12 @@ spec:
       allowEmpty: false
       prune: true
       selfHeal: true
+    retry:
+      backoff:
+        duration: 30s
+        factor: 2
+        maxDuration: 5m
+      limit: 5
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -418,6 +526,12 @@ spec:
       allowEmpty: false
       prune: true
       selfHeal: true
+    retry:
+      backoff:
+        duration: 30s
+        factor: 2
+        maxDuration: 5m
+      limit: 5
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -440,6 +554,12 @@ spec:
       allowEmpty: false
       prune: true
       selfHeal: true
+    retry:
+      backoff:
+        duration: 30s
+        factor: 2
+        maxDuration: 5m
+      limit: 5
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -462,6 +582,12 @@ spec:
       allowEmpty: false
       prune: true
       selfHeal: true
+    retry:
+      backoff:
+        duration: 30s
+        factor: 2
+        maxDuration: 5m
+      limit: 5
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -484,6 +610,12 @@ spec:
       allowEmpty: false
       prune: true
       selfHeal: true
+    retry:
+      backoff:
+        duration: 30s
+        factor: 2
+        maxDuration: 5m
+      limit: 5
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -506,6 +638,12 @@ spec:
       allowEmpty: false
       prune: true
       selfHeal: true
+    retry:
+      backoff:
+        duration: 30s
+        factor: 2
+        maxDuration: 5m
+      limit: 5
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -528,6 +666,12 @@ spec:
       allowEmpty: false
       prune: true
       selfHeal: true
+    retry:
+      backoff:
+        duration: 30s
+        factor: 2
+        maxDuration: 5m
+      limit: 5
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -550,6 +694,12 @@ spec:
       allowEmpty: false
       prune: true
       selfHeal: true
+    retry:
+      backoff:
+        duration: 30s
+        factor: 2
+        maxDuration: 5m
+      limit: 5
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -572,6 +722,12 @@ spec:
       allowEmpty: false
       prune: true
       selfHeal: true
+    retry:
+      backoff:
+        duration: 30s
+        factor: 2
+        maxDuration: 5m
+      limit: 5
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -594,6 +750,12 @@ spec:
       allowEmpty: false
       prune: true
       selfHeal: true
+    retry:
+      backoff:
+        duration: 30s
+        factor: 2
+        maxDuration: 5m
+      limit: 5
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -616,6 +778,12 @@ spec:
       allowEmpty: false
       prune: true
       selfHeal: true
+    retry:
+      backoff:
+        duration: 30s
+        factor: 2
+        maxDuration: 5m
+      limit: 5
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -641,6 +809,12 @@ spec:
       allowEmpty: false
       prune: true
       selfHeal: true
+    retry:
+      backoff:
+        duration: 30s
+        factor: 2
+        maxDuration: 5m
+      limit: 5
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -663,6 +837,12 @@ spec:
       allowEmpty: false
       prune: true
       selfHeal: true
+    retry:
+      backoff:
+        duration: 30s
+        factor: 2
+        maxDuration: 5m
+      limit: 5
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -685,6 +865,12 @@ spec:
       allowEmpty: false
       prune: true
       selfHeal: true
+    retry:
+      backoff:
+        duration: 30s
+        factor: 2
+        maxDuration: 5m
+      limit: 5
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -707,6 +893,12 @@ spec:
       allowEmpty: false
       prune: true
       selfHeal: true
+    retry:
+      backoff:
+        duration: 30s
+        factor: 2
+        maxDuration: 5m
+      limit: 5
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -729,6 +921,12 @@ spec:
       allowEmpty: false
       prune: true
       selfHeal: true
+    retry:
+      backoff:
+        duration: 30s
+        factor: 2
+        maxDuration: 5m
+      limit: 5
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -751,6 +949,12 @@ spec:
       allowEmpty: false
       prune: true
       selfHeal: true
+    retry:
+      backoff:
+        duration: 30s
+        factor: 2
+        maxDuration: 5m
+      limit: 5
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -773,6 +977,12 @@ spec:
       allowEmpty: false
       prune: true
       selfHeal: true
+    retry:
+      backoff:
+        duration: 30s
+        factor: 2
+        maxDuration: 5m
+      limit: 5
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -795,6 +1005,12 @@ spec:
       allowEmpty: false
       prune: true
       selfHeal: true
+    retry:
+      backoff:
+        duration: 30s
+        factor: 2
+        maxDuration: 5m
+      limit: 5
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -822,6 +1038,12 @@ spec:
       allowEmpty: false
       prune: true
       selfHeal: true
+    retry:
+      backoff:
+        duration: 30s
+        factor: 2
+        maxDuration: 5m
+      limit: 5
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -844,6 +1066,12 @@ spec:
       allowEmpty: false
       prune: true
       selfHeal: true
+    retry:
+      backoff:
+        duration: 30s
+        factor: 2
+        maxDuration: 5m
+      limit: 5
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -866,6 +1094,12 @@ spec:
       allowEmpty: false
       prune: true
       selfHeal: true
+    retry:
+      backoff:
+        duration: 30s
+        factor: 2
+        maxDuration: 5m
+      limit: 5
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -888,6 +1122,12 @@ spec:
       allowEmpty: false
       prune: true
       selfHeal: true
+    retry:
+      backoff:
+        duration: 30s
+        factor: 2
+        maxDuration: 5m
+      limit: 5
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -910,6 +1150,12 @@ spec:
       allowEmpty: false
       prune: true
       selfHeal: true
+    retry:
+      backoff:
+        duration: 30s
+        factor: 2
+        maxDuration: 5m
+      limit: 5
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -932,6 +1178,12 @@ spec:
       allowEmpty: false
       prune: true
       selfHeal: true
+    retry:
+      backoff:
+        duration: 30s
+        factor: 2
+        maxDuration: 5m
+      limit: 5
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -954,6 +1206,12 @@ spec:
       allowEmpty: false
       prune: true
       selfHeal: true
+    retry:
+      backoff:
+        duration: 30s
+        factor: 2
+        maxDuration: 5m
+      limit: 5
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -976,6 +1234,12 @@ spec:
       allowEmpty: false
       prune: true
       selfHeal: true
+    retry:
+      backoff:
+        duration: 30s
+        factor: 2
+        maxDuration: 5m
+      limit: 5
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -998,6 +1262,12 @@ spec:
       allowEmpty: false
       prune: true
       selfHeal: true
+    retry:
+      backoff:
+        duration: 30s
+        factor: 2
+        maxDuration: 5m
+      limit: 5
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -1020,6 +1290,12 @@ spec:
       allowEmpty: false
       prune: true
       selfHeal: true
+    retry:
+      backoff:
+        duration: 30s
+        factor: 2
+        maxDuration: 5m
+      limit: 5
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -1042,3 +1318,9 @@ spec:
       allowEmpty: false
       prune: true
       selfHeal: true
+    retry:
+      backoff:
+        duration: 30s
+        factor: 2
+        maxDuration: 5m
+      limit: 5
