@@ -1,1 +1,1 @@
-Error: accumulating resources: accumulation err='accumulating resources from '../../../../base/apps/homebox/': read /home/runner/work/k8s-cluster/k8s-cluster/kustomize/base/apps/homebox: is a directory': recursed merging from path '/home/runner/work/k8s-cluster/k8s-cluster/kustomize/base/apps/homebox': may not add resource with an already registered id: NetworkPolicy.v1.networking.k8s.io/baseline-isolation.[noNs]
+Error: invalid Kustomization: yaml: line 5: did not find expected key
