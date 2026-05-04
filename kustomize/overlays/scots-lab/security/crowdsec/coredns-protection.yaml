@@ -1,0 +1,27 @@
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: crowdsec-coredns-safety-valve
+  namespace: kube-system
+  annotations:
+    description: >-
+      CRITICAL SAFETY VALVE: Guarantees CoreDNS always accepts inbound DNS traffic
+      regardless of CrowdSec bouncer state. This uses CiliumNetworkPolicy (not standard
+      NetworkPolicy) because Cilium's eBPF datapath processes CiliumClusterwideNetworkPolicy
+      DENY rules BEFORE standard NetworkPolicy ALLOW rules. Only a Cilium-native ALLOW
+      can override a Cilium-native DENY.
+      See Knowledge/crowdsec-deployment.md Incident 2 for the full post-mortem.
+spec:
+  endpointSelector:
+    matchLabels:
+      k8s-app: kube-dns
+  ingress:
+    # Allow all DNS traffic from any source on TCP and UDP port 53
+    - fromEntities:
+        - all
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
+            - port: "53"
+              protocol: TCP
