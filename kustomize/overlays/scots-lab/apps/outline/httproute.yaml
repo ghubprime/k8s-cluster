@@ -3,17 +3,25 @@ kind: HTTPRoute
 metadata:
   name: outline
   namespace: outline
+  annotations:
+    gethomepage.dev/enabled: 'true'
+    gethomepage.dev/name: Outline
+    gethomepage.dev/group: Applications
+    gethomepage.dev/description: Knowledge Base
+    gethomepage.dev/icon: outline.png
+    gethomepage.dev/href: https://kb.srbii.com
+    gethomepage.dev/weight: '23'
 spec:
   parentRefs:
-    - name: kgateway-http
-      namespace: kgateway-system
+  - name: kgateway-http
+    namespace: kgateway-system
   hostnames:
-    - "kb.srbii.com"
+  - kb.srbii.com
   rules:
-    - matches:
-        - path:
-            type: PathPrefix
-            value: /
-      backendRefs:
-        - name: outline
-          port: 3000
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /
+    backendRefs:
+    - name: outline
+      port: 3000

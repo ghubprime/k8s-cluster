@@ -4,6 +4,10 @@ metadata:
   name: homepage-config
   namespace: homepage
 data:
+  kubernetes.yaml: |
+    mode: cluster
+    gateway: true
+
   settings.yaml: |
     title: Scots Lab
     favicon: https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/png/kubernetes.png
@@ -50,10 +54,6 @@ data:
 
   services.yaml: |
     - Infrastructure:
-        - ArgoCD:
-            href: https://argocd-omni.proxy-us.srbii.com/
-            description: GitOps Engine
-            icon: argocd.png
         - Ceph Dashboard:
             href: https://cephdash-omni.proxy-us.srbii.com/
             description: Storage Cluster
@@ -70,32 +70,16 @@ data:
             href: https://uptimekuma-omni.proxy-us.srbii.com/
             description: Status Monitoring
             icon: uptime-kuma.png
-        - AdGuard Home:
-            href: https://adguard.srbii.com
-            description: DNS Resolver
-            icon: adguard-home.png
         - Omni:
             href: https://omni.srbii.com/
             description: Cluster Management
             icon: mdi-server
 
     - Applications:
-        - Nextcloud:
-            href: https://files.srbii.com
-            description: File Storage
-            icon: nextcloud.png
         - Vaultwarden:
             href: https://vault.srbii.com
             description: Password Manager
             icon: vaultwarden.png
-        - PhotoPrism:
-            href: https://photos.srbii.com
-            description: Photo Gallery
-            icon: photoprism.png
-        - Paperless-ngx:
-            href: https://docs.srbii.com
-            description: Document Management
-            icon: paperless-ngx.png
         - Keycloak:
             href: https://auth.srbii.com
             description: Identity Provider
@@ -104,83 +88,17 @@ data:
             href: https://guacamole-omni.proxy-us.srbii.com/
             description: Remote Desktop
             icon: guacamole.png
-        - Outline:
-            href: https://kb.srbii.com
-            description: Knowledge Base
-            icon: outline.png
-        - Linkwarden:
-            href: https://links.srbii.com
-            description: Bookmark Manager
-            icon: linkwarden.png
-        - Actual Budget:
-            href: https://budget.srbii.com
-            description: Personal Finance
-            icon: actual-budget.png
-        - RomM:
-            href: https://roms.srbii.com
-            description: ROM Manager
-            icon: mdi-controller-classic
         - Ntfy:
             href: https://ntfy-omni.proxy-us.srbii.com/
             description: Push Notifications
             icon: ntfy.png
-        - Homebox:
-            href: https://inventory.srbii.com
-            description: Inventory Management
-            icon: mdi-package-variant-closed
-        - Immich:
-            href: https://media.srbii.com
-            description: Photo & Video Backup
-            icon: immich.png
-
-    - Tools:
-        - Draw.io:
-            href: https://draw.srbii.com
-            description: Diagram Editor
-            icon: diagrams-net.png
-        - IT-Tools:
-            href: https://tools.srbii.com
-            description: Developer Utilities
-            icon: it-tools.png
-        - Stirling-PDF:
-            href: https://pdf.srbii.com
-            description: PDF Toolkit
-            icon: stirling-pdf.png
-        - VERT:
-            href: https://vert.srbii.com
-            description: File Converter
-            icon: mdi-file-swap
-        - Rackula:
-            href: https://rack.srbii.com
-            description: Rack Planner
-            icon: mdi-server
-        - OpenSpeedTest:
-            href: https://speed.srbii.com
-            description: Network Speed Test
-            icon: mdi-speedometer
-        - Netboot.xyz:
-            href: https://boot.srbii.com
-            description: Network Boot Manager
-            icon: mdi-lan-connect
 
     - Monitoring:
-        - Changedetection:
-            href: https://changes.srbii.com
-            description: Web Change Monitor
-            icon: changedetection-io.png
         - Umami:
             href: https://umami-omni.proxy-us.srbii.com/
             description: Web Analytics
             icon: umami.png
-        - Znuny:
-            href: https://tickets.srbii.com
-            description: Ticket System
-            icon: mdi-ticket-confirmation
-        - OneTimeSecret:
-            href: https://expires.srbii.com
-            description: Secure Secret Sharing
-            icon: mdi-lock-clock
-        - Healthchecks:
-            href: https://ping.srbii.com
-            description: Cron Monitoring
-            icon: healthchecks.png
+        - EmulatorJS:
+            href: https://play.srbii.com
+            description: Retro Gaming
+            icon: mdi-controller-classic

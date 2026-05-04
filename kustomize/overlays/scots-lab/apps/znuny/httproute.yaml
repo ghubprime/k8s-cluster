@@ -3,17 +3,25 @@ kind: HTTPRoute
 metadata:
   name: znuny
   namespace: znuny
+  annotations:
+    gethomepage.dev/enabled: 'true'
+    gethomepage.dev/name: Znuny
+    gethomepage.dev/group: Monitoring
+    gethomepage.dev/description: Ticket System
+    gethomepage.dev/icon: mdi-ticket-confirmation
+    gethomepage.dev/href: https://tickets.srbii.com
+    gethomepage.dev/weight: '51'
 spec:
   parentRefs:
-    - name: kgateway-http
-      namespace: kgateway-system
+  - name: kgateway-http
+    namespace: kgateway-system
   hostnames:
-    - "tickets.srbii.com"
+  - tickets.srbii.com
   rules:
-    - matches:
-        - path:
-            type: PathPrefix
-            value: /
-      backendRefs:
-        - name: znuny-app
-          port: 80
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /
+    backendRefs:
+    - name: znuny-app
+      port: 80

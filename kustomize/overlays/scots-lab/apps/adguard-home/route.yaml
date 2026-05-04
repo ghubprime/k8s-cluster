@@ -3,6 +3,14 @@ kind: HTTPRoute
 metadata:
   name: adguard-home
   namespace: adguard-home
+  annotations:
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/name: AdGuard Home
+    gethomepage.dev/group: Infrastructure
+    gethomepage.dev/description: DNS Resolver
+    gethomepage.dev/icon: adguard-home.png
+    gethomepage.dev/href: https://adguard.srbii.com
+    gethomepage.dev/weight: "11"
 spec:
   parentRefs:
     - name: kgateway-http
