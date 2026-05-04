@@ -568,8 +568,8 @@ metadata:
 ---
 apiVersion: v1
 data:
-  csLapiSecret: Z3MjaCYtJXxrZiRARi82Sj4/W0oqYTwoS05GOl4+VmRZZi1ULGM9NHgmTTQuJ3gvZTl2WGBCY3BFJURMRzE1dw==
-  registrationToken: TVN1eUlNR016amRBQWVRanBPYXMzZW1qTGJLQ3JTeDVYaHFpR0RlczlVbHlZbGN1
+  csLapiSecret: VipPQklZPDlYZj9rMyNzSkhxQT4xblcvTStOeDxcN2hqRkBfajNXcz51UjxANkJQU355LzpYbyI4LGRvVDJqLA==
+  registrationToken: WjlKNkkzV0lFUGlCQXhhbk9YT1B2cWpUdm04UWMxTWtROW9RQ01WSFZpa3V0bllm
 kind: Secret
 metadata:
   labels:
@@ -703,7 +703,7 @@ spec:
     metadata:
       annotations:
         checksum/lapi-configmap: c6da5ddbb4d70478a94b244bf42e02fc53c27d4ee4021dab500aa603513c2d11
-        checksum/lapi-secret: 6933270924e76355a6e254c422cf694764968c38cee8d2afe46eb3b74b62f9ad
+        checksum/lapi-secret: 56dad90f0d262c7d63f52663dd0ee65e4080d9531bd49cde79ccd690085403da
       labels:
         k8s-app: crowdsec
         type: lapi
@@ -1011,31 +1011,6 @@ spec:
       restartPolicy: OnFailure
       serviceAccountName: crowdsec-allowlist-provisioner
   ttlSecondsAfterFinished: 600
----
-apiVersion: cilium.io/v2
-kind: CiliumClusterwideNetworkPolicy
-metadata:
-  annotations:
-    description: 'CRITICAL SAFETY VALVE: Guarantees CoreDNS always accepts inbound
-      DNS traffic regardless of CrowdSec bouncer state. Uses CiliumClusterwideNetworkPolicy
-      (cluster-scoped, no namespace) to ensure the ALLOW takes effect at the same
-      eBPF precedence level as the bouncer''s DENY policies. See Knowledge/crowdsec-deployment.md
-      Incident 2 for the full post-mortem.'
-  name: crowdsec-coredns-safety-valve
-spec:
-  endpointSelector:
-    matchLabels:
-      io.kubernetes.pod.namespace: kube-system
-      k8s-app: kube-dns
-  ingress:
-  - fromEntities:
-    - all
-    toPorts:
-    - ports:
-      - port: "53"
-        protocol: UDP
-      - port: "53"
-        protocol: TCP
 ---
 apiVersion: v1
 kind: Pod
