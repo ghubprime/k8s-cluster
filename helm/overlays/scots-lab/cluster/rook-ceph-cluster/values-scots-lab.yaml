@@ -10,6 +10,12 @@ monitoring:
 
 cephClusterSpec:
   skipUpgradeChecks: true
+  # Enable PodDisruptionBudgets for MON, OSD, RGW, MDS daemons.
+  # Ensures coordinated disruptions during node reboots and rolling upgrades.
+  disruptionManagement:
+    managePodBudgets: true
+    osdMaintenanceTimeout: 30
+    pgHealthCheckTimeout: 0
   storage:
     useAllNodes: false
     useAllDevices: false
@@ -29,6 +35,12 @@ cephClusterSpec:
       - name: sdd
   network:
     provider: host
+    connections:
+      encryption:
+        enabled: false
+    selectors:
+      public: "192.168.8.0/24"
+      cluster: "10.10.0.0/24"
   dashboard:
     ssl: false
     port: 7001
