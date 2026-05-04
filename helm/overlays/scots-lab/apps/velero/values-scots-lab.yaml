@@ -58,10 +58,10 @@ schedules:
         - '*'
       snapshotVolumes: true
   # Tier 2: Heavy — Full filesystem-level volume backup (byte-for-byte PVC copy)
-  # Runs weekly — the "restore everything" safety net for full data recovery
-  weekly-deep-backup:
+  # Runs every 48 hours — the "restore everything" safety net for full data recovery
+  deep-cluster-backup:
     disabled: false
-    schedule: "0 1 * * 0"
+    schedule: "0 1 */2 * *"
     template:
       ttl: "2160h"
       includedNamespaces:
