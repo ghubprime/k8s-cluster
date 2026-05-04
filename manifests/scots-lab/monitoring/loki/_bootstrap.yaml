@@ -354,7 +354,7 @@ data:
       query_timeout: 300s
       reject_old_samples: true
       reject_old_samples_max_age: 168h
-      retention_period: 360h
+      retention_period: 1080h
       split_queries_by_interval: 15m
       volume_enabled: true
     memberlist:
@@ -573,9 +573,9 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/config: 2f2a88e789aaae1af148b03721009f3e7b58c3e507a9d787f8eea727d5597394
+        checksum/config: 0ef04231e621935e76eeca7d64bc5f1c95619faef70aafcea2af988e55eded59
         kubectl.kubernetes.io/default-container: loki
-        storage/size: 10Gi
+        storage/size: 20Gi
       labels:
         app.kubernetes.io/component: single-binary
         app.kubernetes.io/instance: loki
@@ -707,7 +707,7 @@ spec:
       - ReadWriteOnce
       resources:
         requests:
-          storage: 10Gi
+          storage: 20Gi
       storageClassName: ceph-block
 ---
 apiVersion: apps/v1
