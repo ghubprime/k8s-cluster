@@ -1,6 +1,10 @@
 apiVersion: v1
 kind: Namespace
 metadata:
+  labels:
+    pod-security.kubernetes.io/audit: baseline
+    pod-security.kubernetes.io/enforce: baseline
+    pod-security.kubernetes.io/warn: baseline
   name: nextcloud
 ---
 apiVersion: v1
@@ -117,7 +121,7 @@ metadata:
 apiVersion: v1
 data:
   nextcloud-password: Y2hhbmdlbWU=
-  nextcloud-token: R1ZnTDdSb0tNbg==
+  nextcloud-token: T2hWQjA0TmpyUQ==
   nextcloud-username: YWRtaW4=
 kind: Secret
 metadata:
@@ -148,7 +152,7 @@ type: Opaque
 apiVersion: v1
 data:
   password: Y2hhbmdlbWU=
-  postgres-password: NkYxaWpFSUROWA==
+  postgres-password: aWpWWnBNQnBjRw==
 kind: Secret
 metadata:
   labels:

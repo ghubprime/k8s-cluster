@@ -1,8 +1,11 @@
 apiVersion: v1
 kind: Namespace
+labels:
+  name: kgateway-system
+  pod-security.kubernetes.io/audit: baseline
+  pod-security.kubernetes.io/enforce: baseline
+  pod-security.kubernetes.io/warn: baseline
 metadata:
-  labels:
-    name: kgateway-system
   name: kgateway-system
 ---
 apiVersion: apiextensions.k8s.io/v1
