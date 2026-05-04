@@ -61,7 +61,6 @@ spec:
         - --cookie-secure=true
         - --cookie-name=_oauth2_pdf
         - --redirect-url=https://pdf.srbii.com/oauth2/callback
-        - --cookie-domain=.srbii.com
         - --whitelist-domain=.srbii.com
         - --skip-provider-button=true
         envFrom:
