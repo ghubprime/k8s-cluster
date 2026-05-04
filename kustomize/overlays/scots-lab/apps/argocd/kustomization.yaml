@@ -5,6 +5,7 @@ resources:
   - sealed-oidc-secret.yaml
   - argocd-pdb.yaml
   - emergency-unban.yaml
+  - httproute.yaml
 generators:
   - ../../../../../helm/overlays/scots-lab/apps/argocd/
 patches:
