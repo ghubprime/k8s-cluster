@@ -13,6 +13,12 @@ metadata:
   name: crowdsec-allowlist-provisioner
   namespace: crowdsec
 ---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: crowdsec-kubernetes-bouncer
+  namespace: crowdsec
+---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
@@ -59,6 +65,46 @@ rules:
   - patch
 ---
 apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: crowdsec-kubernetes-bouncer
+rules:
+- apiGroups:
+  - networking.k8s.io
+  resources:
+  - networkpolicies
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - cilium.io
+  resources:
+  - ciliumnetworkpolicies
+  - ciliumclusterwidenetworkpolicies
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - namespaces
+  - pods
+  verbs:
+  - get
+  - list
+  - watch
+---
+apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: crowdsec-allowlist-provisioner
@@ -83,6 +129,19 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: crowdsec-allowlist-provisioner
+  namespace: crowdsec
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: crowdsec-kubernetes-bouncer
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: crowdsec-kubernetes-bouncer
+subjects:
+- kind: ServiceAccount
+  name: crowdsec-kubernetes-bouncer
   namespace: crowdsec
 ---
 apiVersion: v1
@@ -509,8 +568,8 @@ metadata:
 ---
 apiVersion: v1
 data:
-  csLapiSecret: ZGozLDwxXDQ4Pk5SdE53Kl9pcFMpVDpWRUpsR28tTChFNVVqZjAzID1RRmwtNGdgTFlvZjN4IGt8cXJhTyVJVQ==
-  registrationToken: R1l1R2RnbVpoMHFjNGVBQ2p3NEoyRVF4N1A1TmxtRlUyRzBmMjFuQ0djazVwZnBC
+  csLapiSecret: XEBoVGxxPnFxL2stLk0lZj4lejpPPkZQKjopUntYSEEwLCtDaDUxXlY6PHBfPVEvVFolSUgsUmEoKnk4TlI3cw==
+  registrationToken: RHdLV2UxRHBOUGNrSlczS3RxeGZ6cG4xUDV0QnlhMWlka2dXckpKMnRWRjFFOGRG
 kind: Secret
 metadata:
   labels:
@@ -593,6 +652,40 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  name: crowdsec-kubernetes-bouncer
+  namespace: crowdsec
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: crowdsec-kubernetes-bouncer
+  template:
+    metadata:
+      labels:
+        app: crowdsec-kubernetes-bouncer
+    spec:
+      containers:
+      - env:
+        - name: CROWDSEC_BOUNCER_API_KEY
+          value: kubernetes-bouncer-static-key
+        - name: CROWDSEC_URL
+          value: http://crowdsec-service.crowdsec.svc.cluster.local:8080
+        - name: CILIUM_POLICY_NAME
+          value: crowdsec-cilium-bouncer
+        image: crowdsecurity/crowdsec-bouncer-cilium:latest
+        name: bouncer
+        resources:
+          limits:
+            cpu: 100m
+            memory: 128Mi
+          requests:
+            cpu: 10m
+            memory: 32Mi
+      serviceAccountName: crowdsec-kubernetes-bouncer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
   labels:
     k8s-app: crowdsec
     type: lapi
@@ -610,7 +703,7 @@ spec:
     metadata:
       annotations:
         checksum/lapi-configmap: c6da5ddbb4d70478a94b244bf42e02fc53c27d4ee4021dab500aa603513c2d11
-        checksum/lapi-secret: 4f7b3a740a315def6e585280fc791f34084543207cc5e85e8052c37857869866
+        checksum/lapi-secret: 2630071778d1c03e00bd76825df3d26186e7fc59b9f8bfacf54b81a1b6852313
       labels:
         k8s-app: crowdsec
         type: lapi
@@ -909,8 +1002,8 @@ spec:
           echo "Wait for Bouncer rollout..."
           kubectl rollout status -n crowdsec deployment crowdsec-kubernetes-bouncer --timeout=60s || true
 
-          echo "Executing global mopping sequence..."
-          kubectl delete ccwnp --all || true
+          echo "Executing targeted bouncer policy cleanup..."
+          kubectl delete ccwnp crowdsec-cilium-bouncer --ignore-not-found=true || true
 
           echo "Provisioning sequence complete!"
         image: bitnami/kubectl:latest
@@ -918,6 +1011,32 @@ spec:
       restartPolicy: OnFailure
       serviceAccountName: crowdsec-allowlist-provisioner
   ttlSecondsAfterFinished: 600
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  annotations:
+    description: 'CRITICAL SAFETY VALVE: Guarantees CoreDNS always accepts inbound
+      DNS traffic regardless of CrowdSec bouncer state. This uses CiliumNetworkPolicy
+      (not standard NetworkPolicy) because Cilium''s eBPF datapath processes CiliumClusterwideNetworkPolicy
+      DENY rules BEFORE standard NetworkPolicy ALLOW rules. Only a Cilium-native ALLOW
+      can override a Cilium-native DENY. See Knowledge/crowdsec-deployment.md Incident
+      2 for the full post-mortem.'
+  name: crowdsec-coredns-safety-valve
+  namespace: kube-system
+spec:
+  endpointSelector:
+    matchLabels:
+      k8s-app: kube-dns
+  ingress:
+  - fromEntities:
+    - all
+    toPorts:
+    - ports:
+      - port: "53"
+        protocol: UDP
+      - port: "53"
+        protocol: TCP
 ---
 apiVersion: v1
 kind: Pod
