@@ -21,7 +21,7 @@ oidc:
   PHOTOPRISM_OIDC_PROVIDER: "Keycloak"
   PHOTOPRISM_OIDC_ICON: ""
   PHOTOPRISM_OIDC_REDIRECT: false
-  PHOTOPRISM_OIDC_USERNAME: "email"
+  PHOTOPRISM_OIDC_USERNAME: "preferred_username"
 
 # Core PhotoPrism config
 config:
