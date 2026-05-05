@@ -17,7 +17,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: adguard-home
     app.kubernetes.io/service: adguard-home-dns
-    helm.sh/chart: app-template-3.2.1
+    helm.sh/chart: app-template-3.7.3
   name: adguard-home-dns
   namespace: adguard-home
 spec:
@@ -46,7 +46,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: adguard-home
     app.kubernetes.io/service: adguard-home-main
-    helm.sh/chart: app-template-3.2.1
+    helm.sh/chart: app-template-3.7.3
   name: adguard-home-main
   namespace: adguard-home
 spec:
@@ -97,7 +97,7 @@ metadata:
     app.kubernetes.io/instance: adguard-home
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: adguard-home
-    helm.sh/chart: app-template-3.2.1
+    helm.sh/chart: app-template-3.7.3
   name: adguard-home
   namespace: adguard-home
 spec:

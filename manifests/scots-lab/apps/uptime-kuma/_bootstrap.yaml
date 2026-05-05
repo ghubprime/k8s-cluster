@@ -18,8 +18,8 @@ metadata:
     app.kubernetes.io/instance: uptime-kuma
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: uptime-kuma
-    app.kubernetes.io/version: 2.1.1
-    helm.sh/chart: uptime-kuma-4.0.0
+    app.kubernetes.io/version: 2.3.0
+    helm.sh/chart: uptime-kuma-4.1.0
   name: uptime-kuma
   namespace: uptime-kuma
 spec:
@@ -40,8 +40,8 @@ metadata:
     app.kubernetes.io/instance: uptime-kuma
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: uptime-kuma
-    app.kubernetes.io/version: 2.1.1
-    helm.sh/chart: uptime-kuma-4.0.0
+    app.kubernetes.io/version: 2.3.0
+    helm.sh/chart: uptime-kuma-4.1.0
   name: uptime-kuma-pvc
   namespace: uptime-kuma
 spec:
@@ -59,8 +59,8 @@ metadata:
     app.kubernetes.io/instance: uptime-kuma
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: uptime-kuma
-    app.kubernetes.io/version: 2.1.1
-    helm.sh/chart: uptime-kuma-4.0.0
+    app.kubernetes.io/version: 2.3.0
+    helm.sh/chart: uptime-kuma-4.1.0
   name: uptime-kuma
   namespace: uptime-kuma
 spec:
@@ -151,8 +151,8 @@ metadata:
     app.kubernetes.io/instance: uptime-kuma
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: uptime-kuma
-    app.kubernetes.io/version: 2.1.1
-    helm.sh/chart: uptime-kuma-4.0.0
+    app.kubernetes.io/version: 2.3.0
+    helm.sh/chart: uptime-kuma-4.1.0
   name: uptime-kuma-test-connection
   namespace: uptime-kuma
 spec:

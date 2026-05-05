@@ -18,8 +18,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: alloy
     app.kubernetes.io/part-of: alloy
-    app.kubernetes.io/version: v1.14.0
-    helm.sh/chart: alloy-1.6.2
+    app.kubernetes.io/version: v1.16.0
+    helm.sh/chart: alloy-1.8.0
   name: alloy
   namespace: loki
 ---
@@ -57,8 +57,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: alloy
     app.kubernetes.io/part-of: alloy
-    app.kubernetes.io/version: v1.14.0
-    helm.sh/chart: alloy-1.6.2
+    app.kubernetes.io/version: v1.16.0
+    helm.sh/chart: alloy-1.8.0
   name: alloy
 rules:
 - apiGroups:
@@ -204,8 +204,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: alloy
     app.kubernetes.io/part-of: alloy
-    app.kubernetes.io/version: v1.14.0
-    helm.sh/chart: alloy-1.6.2
+    app.kubernetes.io/version: v1.16.0
+    helm.sh/chart: alloy-1.8.0
   name: alloy
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -312,8 +312,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: alloy
     app.kubernetes.io/part-of: alloy
-    app.kubernetes.io/version: v1.14.0
-    helm.sh/chart: alloy-1.6.2
+    app.kubernetes.io/version: v1.16.0
+    helm.sh/chart: alloy-1.8.0
   name: alloy
   namespace: loki
 ---
@@ -437,8 +437,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: alloy
     app.kubernetes.io/part-of: alloy
-    app.kubernetes.io/version: v1.14.0
-    helm.sh/chart: alloy-1.6.2
+    app.kubernetes.io/version: v1.16.0
+    helm.sh/chart: alloy-1.8.0
   name: alloy
   namespace: loki
 spec:
@@ -721,8 +721,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: alloy
     app.kubernetes.io/part-of: alloy
-    app.kubernetes.io/version: v1.14.0
-    helm.sh/chart: alloy-1.6.2
+    app.kubernetes.io/version: v1.16.0
+    helm.sh/chart: alloy-1.8.0
   name: alloy
   namespace: loki
 spec:
@@ -754,7 +754,11 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: spec.nodeName
-        image: docker.io/grafana/alloy:v1.14.0
+        - name: K8S_NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        image: docker.io/grafana/alloy:v1.16.0
         imagePullPolicy: IfNotPresent
         name: alloy
         ports:
@@ -774,6 +778,7 @@ spec:
         - --watched-dir=/etc/alloy
         - --reload-url=http://localhost:12345/-/reload
         image: quay.io/prometheus-operator/prometheus-config-reloader:v0.81.0
+        imagePullPolicy: IfNotPresent
         name: config-reloader
         resources:
           requests:
@@ -866,8 +871,8 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: alloy
     app.kubernetes.io/part-of: alloy
-    app.kubernetes.io/version: v1.14.0
-    helm.sh/chart: alloy-1.6.2
+    app.kubernetes.io/version: v1.16.0
+    helm.sh/chart: alloy-1.8.0
   name: alloy
   namespace: loki
 spec:
