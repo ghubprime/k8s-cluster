@@ -17,7 +17,7 @@ helmCharts:
   valuesFile: values-scots-lab.yaml
 - name: alloy
   repo: https://grafana.github.io/helm-charts
-  version: 1.6.2
+  version: 1.8.0
   releaseName: alloy
   namespace: loki
   includeCRDs: false

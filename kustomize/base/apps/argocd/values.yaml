@@ -1027,7 +1027,7 @@ dex:
     # -- Dex image repository
     repository: ghcr.io/dexidp/dex
     # -- Dex image tag
-    tag: v2.42.0
+    tag: v2.45.1
     # -- Dex imagePullPolicy
     # @default -- `""` (defaults to global.image.imagePullPolicy)
     imagePullPolicy: ""
@@ -1307,7 +1307,7 @@ redis:
       # -- Repository to use for the redis-exporter
       repository: public.ecr.aws/bitnami/redis-exporter
       # -- Tag to use for the redis-exporter
-      tag: 1.69.0
+      tag: 1.83.0
       # -- Image pull policy for the redis-exporter
       # @default -- `""` (defaults to global.image.imagePullPolicy)
       imagePullPolicy: ""
