@@ -55,6 +55,7 @@ rules:
   - apiextensions.k8s.io
   resources:
   - customresourcedefinitions
+  - customresourcedefinitions/status
   verbs:
   - get
   - list
@@ -204,7 +205,7 @@ spec:
       - env:
         - name: HOMEPAGE_ALLOWED_HOSTS
           value: home.srbii.com
-        image: ghcr.io/gethomepage/homepage:v0.10.9
+        image: ghcr.io/gethomepage/homepage:v1.12.3
         name: homepage
         ports:
         - containerPort: 3000
