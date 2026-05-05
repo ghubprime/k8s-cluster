@@ -9,6 +9,19 @@ metadata:
 ---
 apiVersion: v1
 data:
+  cloudflare-headers.conf: |
+    # Increase header field size limits for Cloudflare Tunnel JWT/Access headers
+    # Default is 8190 bytes which is exceeded by Cloudflare Access tokens
+    # See agents.md Rule #26: oauth2-proxy Header Bloat Limits
+    LimitRequestFieldSize 32768
+    LimitRequestLine 32768
+kind: ConfigMap
+metadata:
+  name: nextcloud-apache-header-fix
+  namespace: nextcloud
+---
+apiVersion: v1
+data:
   .htaccess: |-
     # line below if for Apache 2.4
     <ifModule mod_authz_core.c>
@@ -151,7 +164,7 @@ type: Opaque
 apiVersion: v1
 data:
   password: Y2hhbmdlbWU=
-  postgres-password: TTNYWWh4am5IZg==
+  postgres-password: eG43T3VER3dUeA==
 kind: Secret
 metadata:
   labels:
@@ -402,6 +415,9 @@ spec:
         - mountPath: /var/www/html/config/smtp.config.php
           name: nextcloud-config
           subPath: smtp.config.php
+        - mountPath: /etc/apache2/conf-enabled/cloudflare-headers.conf
+          name: apache-header-fix
+          subPath: cloudflare-headers.conf
       initContainers:
       - command:
         - sh
@@ -427,6 +443,9 @@ spec:
       - configMap:
           name: nextcloud-config
         name: nextcloud-config
+      - configMap:
+          name: nextcloud-apache-header-fix
+        name: apache-header-fix
 ---
 apiVersion: apps/v1
 kind: StatefulSet
