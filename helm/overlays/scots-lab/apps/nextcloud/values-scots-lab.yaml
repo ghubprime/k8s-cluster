@@ -36,6 +36,16 @@ nextcloud:
           key: OIDC_ISSUER_URL
 
   
+  # Increase Apache header size limits for Cloudflare Tunnel JWT headers (Rule #26)
+  extraVolumes:
+    - name: apache-header-fix
+      configMap:
+        name: nextcloud-apache-header-fix
+  extraVolumeMounts:
+    - name: apache-header-fix
+      mountPath: /etc/apache2/conf-enabled/cloudflare-headers.conf
+      subPath: cloudflare-headers.conf
+
   # Set Trusted Domains
   configs:
     proxy.config.php: |-
