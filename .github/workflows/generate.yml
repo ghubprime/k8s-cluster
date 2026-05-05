@@ -14,12 +14,12 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0 # IMPORTANT: Because your script uses 'git diff', GitHub needs the full git history
 
       - name: Install Helm
-        uses: azure/setup-helm@v4
+        uses: azure/setup-helm@v5
         with:
           version: 'v3.12.0'
 
@@ -36,7 +36,7 @@ jobs:
           ./generate-manifests.sh --force
 
       - name: Commit and Push generated manifests
-        uses: stefanzweifel/git-auto-commit-action@v5
+        uses: stefanzweifel/git-auto-commit-action@v7
         with:
           # The [skip ci] prevents this automated commit from triggering an infinite loop of actions
           commit_message: "chore: auto-generate K8s manifests [skip ci]" 
