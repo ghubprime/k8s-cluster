@@ -122,7 +122,7 @@ spec:
       - env:
         - name: TZ
           value: America/Los_Angeles
-        image: adguard/adguardhome:v0.107.46
+        image: adguard/adguardhome:v0.107.74
         imagePullPolicy: IfNotPresent
         name: main
         resources:

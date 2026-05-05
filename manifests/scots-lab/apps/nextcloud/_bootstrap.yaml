@@ -114,14 +114,13 @@ metadata:
     app.kubernetes.io/instance: nextcloud
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: nextcloud
-    helm.sh/chart: nextcloud-4.6.4
+    helm.sh/chart: nextcloud-4.6.11
   name: nextcloud-config
   namespace: nextcloud
 ---
 apiVersion: v1
 data:
   nextcloud-password: Y2hhbmdlbWU=
-  nextcloud-token: Tk9XTm1mVXI5bg==
   nextcloud-username: YWRtaW4=
 kind: Secret
 metadata:
@@ -129,7 +128,7 @@ metadata:
     app.kubernetes.io/instance: nextcloud
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: nextcloud
-    helm.sh/chart: nextcloud-4.6.4
+    helm.sh/chart: nextcloud-4.6.11
   name: nextcloud
   namespace: nextcloud
 type: Opaque
@@ -144,7 +143,7 @@ metadata:
     app.kubernetes.io/instance: nextcloud
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: nextcloud
-    helm.sh/chart: nextcloud-4.6.4
+    helm.sh/chart: nextcloud-4.6.11
   name: nextcloud-db
   namespace: nextcloud
 type: Opaque
@@ -152,7 +151,7 @@ type: Opaque
 apiVersion: v1
 data:
   password: Y2hhbmdlbWU=
-  postgres-password: Nm1iV1JQR1lEQw==
+  postgres-password: bThod1BXdUZybQ==
 kind: Secret
 metadata:
   labels:
@@ -173,7 +172,7 @@ metadata:
     app.kubernetes.io/instance: nextcloud
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: nextcloud
-    helm.sh/chart: nextcloud-4.6.4
+    helm.sh/chart: nextcloud-4.6.11
   name: nextcloud
   namespace: nextcloud
 spec:
@@ -243,12 +242,14 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
+  annotations:
+    helm.sh/resource-policy: keep
   labels:
     app.kubernetes.io/component: app
     app.kubernetes.io/instance: nextcloud
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: nextcloud
-    helm.sh/chart: nextcloud-4.6.4
+    helm.sh/chart: nextcloud-4.6.11
   name: nextcloud-nextcloud
   namespace: nextcloud
 spec:
@@ -267,7 +268,7 @@ metadata:
     app.kubernetes.io/instance: nextcloud
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: nextcloud
-    helm.sh/chart: nextcloud-4.6.4
+    helm.sh/chart: nextcloud-4.6.11
   name: nextcloud
   namespace: nextcloud
 spec:
