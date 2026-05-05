@@ -151,7 +151,7 @@ type: Opaque
 apiVersion: v1
 data:
   password: Y2hhbmdlbWU=
-  postgres-password: bThod1BXdUZybQ==
+  postgres-password: TTNYWWh4am5IZg==
 kind: Secret
 metadata:
   labels:
@@ -647,6 +647,9 @@ spec:
     - namespaceSelector:
         matchLabels:
           kubernetes.io/metadata.name: kube-prometheus-system
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: cloudflare
   podSelector: {}
   policyTypes:
   - Ingress
