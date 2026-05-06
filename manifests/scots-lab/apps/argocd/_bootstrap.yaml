@@ -26704,6 +26704,8 @@ spec:
     oidc.keycloak.clientSecret: AgAcgQfaCUW06J7hLGVWH0KC/Qmm+M9FXitm0VCjfrKciRMcG5yE2lZrBYurbgGgVDVIWus0thSJgsEW2NMR1F3oT5aFTx47GXukZqD06wpji5fs9pXLqCMPVik3BVOwybRf4lt21F35z5LSODGRSZhvYDaiPz7nKYWEw6b2OzINVla0HSI1uvjiS8KoWF+MAFp6aITIOabCGgc3O97n7ErdDhzieNSeSr5AjsSf383fQzlukQUS2IQFpbCCr/7rTDQcTidOpC/on+6G/F/fQsRprCvjMzO7BngJtwi1ZWDJlxzqXf9FYKTEqTrFfcRJ6BhfxO9E6t1xlFWGH2k0sDCSgZJ0Ld3QxMeWs80d/jOd4n2o3gtFu7BfaTjNINnqdAgvSI+DPIMt1AuuSJE4oLcvIzKOw924ZMGphGT12dX+YT5oMvCGbxdHVg6gak2czZi3yiHfcy+vN2BNauK0KQNL0DUfVRq6JbLid6vBiaACtCkRUj0BBp7cDC/c2+nXG27v4Jfn97H1Lw+95SfeyV4YfFhUz0LyhCal6K/3CmzEoSNCrXOuKt4vUS4QrGL0uZb0KIMjpUGycxIum4Dc0iLnD+6qfzyBUa9Gj+Dq2Bw+kAOyv7dRmGPg51E4x6A/9suIPTrtzjZavpj2L+4mbqK7T3aFIjPhg34nxyvPugaM2dJ1P944fKl3vh2FpfmPHZgD+LOX3fwe+QKKOC059Z/t7b3iWQq+3klMoLfMNxz6zQ==
   template:
     metadata:
+      labels:
+        app.kubernetes.io/part-of: argocd
       name: argocd-oidc-secret
       namespace: argocd
 ---
