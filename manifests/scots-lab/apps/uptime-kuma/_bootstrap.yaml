@@ -70,7 +70,7 @@ spec:
       app.kubernetes.io/instance: uptime-kuma
       app.kubernetes.io/name: uptime-kuma
   strategy:
-    type: RollingUpdate
+    type: Recreate
   template:
     metadata:
       labels:
