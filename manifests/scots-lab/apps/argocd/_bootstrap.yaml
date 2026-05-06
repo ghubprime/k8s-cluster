@@ -24621,12 +24621,12 @@ data:
   application.instanceLabelKey: argocd.argoproj.io/instance
   application.sync.impersonation.enabled: "false"
   exec.enabled: "false"
-  oidc.config: |-
+  oidc.config: |
     name: Keycloak
     issuer: https://auth.srbii.com/realms/homelab
     clientID: argocd-client
     clientSecret: $argocd-oidc-secret:oidc.keycloak.clientSecret
-    requestedScopes: ["openid", "profile", "email"]
+    requestedScopes: ["openid", "profile", "email", "groups"]
   resource.customizations.ignoreResourceUpdates.ConfigMap: |
     jqPathExpressions:
       # Ignore the cluster-autoscaler status
@@ -24786,10 +24786,16 @@ metadata:
 ---
 apiVersion: v1
 data:
-  policy.csv: ""
-  policy.default: ""
+  policy.csv: |-
+    g, Homelab_Admins, role:admin
+    g, /Homelab_Admins, role:admin
+    g, homelab-admins, role:admin
+    g, /homelab-admins, role:admin
+    g, admin, role:admin
+    g, /admin, role:admin
+  policy.default: role:readonly
   policy.matchMode: glob
-  scopes: '[groups]'
+  scopes: '[groups, email]'
 kind: ConfigMap
 metadata:
   labels:
@@ -25354,7 +25360,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/cm: 8d601826d52386f45ac01f994cb08e8665583a8e45a0a01aaae104367d031960
+        checksum/cm: bd56afe1e30bb629872091db500ce7ccbcb2d3d7b834e761f25b9a3bfc1f9d13
         checksum/cmd-params: 620fabf6ede5d6f2d861889bf074d0a872aa2855d4fb6702330bfffe0e20c9b9
       labels:
         app.kubernetes.io/component: repo-server
@@ -25766,7 +25772,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/cm: 8d601826d52386f45ac01f994cb08e8665583a8e45a0a01aaae104367d031960
+        checksum/cm: bd56afe1e30bb629872091db500ce7ccbcb2d3d7b834e761f25b9a3bfc1f9d13
         checksum/cmd-params: 620fabf6ede5d6f2d861889bf074d0a872aa2855d4fb6702330bfffe0e20c9b9
       labels:
         app.kubernetes.io/component: server
@@ -26229,7 +26235,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/cm: 8d601826d52386f45ac01f994cb08e8665583a8e45a0a01aaae104367d031960
+        checksum/cm: bd56afe1e30bb629872091db500ce7ccbcb2d3d7b834e761f25b9a3bfc1f9d13
         checksum/cmd-params: 620fabf6ede5d6f2d861889bf074d0a872aa2855d4fb6702330bfffe0e20c9b9
       labels:
         app.kubernetes.io/component: application-controller
