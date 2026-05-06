@@ -15,4 +15,14 @@ configs:
       issuer: https://auth.srbii.com/realms/homelab
       clientID: argocd-client
       clientSecret: $argocd-oidc-secret:oidc.keycloak.clientSecret
-      requestedScopes: ["openid", "profile", "email"]
+      requestedScopes: ["openid", "profile", "email", "groups"]
+  rbac:
+    policy.default: role:readonly
+    scopes: '[groups, email]'
+    policy.csv: |
+      g, Homelab_Admins, role:admin
+      g, /Homelab_Admins, role:admin
+      g, homelab-admins, role:admin
+      g, /homelab-admins, role:admin
+      g, admin, role:admin
+      g, /admin, role:admin
