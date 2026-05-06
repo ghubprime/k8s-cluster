@@ -73637,6 +73637,33 @@ spec:
       name: grafana-oidc-secret
       namespace: kube-prometheus-system
 ---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  annotations:
+    gethomepage.dev/description: Metrics Dashboard
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/group: Infrastructure
+    gethomepage.dev/href: https://grafana.srbii.com
+    gethomepage.dev/icon: grafana.png
+    gethomepage.dev/name: Grafana
+  name: grafana
+  namespace: kube-prometheus-system
+spec:
+  hostnames:
+  - grafana.srbii.com
+  parentRefs:
+  - name: kgateway-http
+    namespace: kgateway-system
+  rules:
+  - backendRefs:
+    - name: kube-prometheus-stack-grafana
+      port: 80
+    matches:
+    - path:
+        type: PathPrefix
+        value: /
+---
 apiVersion: monitoring.coreos.com/v1
 kind: Alertmanager
 metadata:

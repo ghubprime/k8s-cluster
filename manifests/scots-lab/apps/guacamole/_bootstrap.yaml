@@ -327,6 +327,33 @@ spec:
       namespace: guacamole
     type: Opaque
 ---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  annotations:
+    gethomepage.dev/description: Remote Desktop
+    gethomepage.dev/enabled: "true"
+    gethomepage.dev/group: Services
+    gethomepage.dev/href: https://guacamole.srbii.com
+    gethomepage.dev/icon: guacamole.png
+    gethomepage.dev/name: Guacamole
+  name: guacamole
+  namespace: guacamole
+spec:
+  hostnames:
+  - guacamole.srbii.com
+  parentRefs:
+  - name: kgateway-http
+    namespace: kgateway-system
+  rules:
+  - backendRefs:
+    - name: guacamole
+      port: 8080
+    matches:
+    - path:
+        type: PathPrefix
+        value: /
+---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
