@@ -15,4 +15,4 @@ configs:
       issuer: https://auth.srbii.com/realms/homelab
       clientID: argocd-client
       clientSecret: $argocd-oidc-secret:oidc.keycloak.clientSecret
-      requestedScopes: ["openid", "profile", "email", "groups"]
+      requestedScopes: ["openid", "profile", "email"]

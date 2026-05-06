@@ -10,3 +10,4 @@ resources:
   - guacamole.yaml
   - sealed-guacd-secret.yaml
   - sealed-oidc-secret.yaml
+  - httproute.yaml
