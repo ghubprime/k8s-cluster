@@ -457,9 +457,9 @@ spec:
       requests:
         cpu: 500m
         memory: 50Mi
-  skipUpgradeChecks: true
+  skipUpgradeChecks: false
   storage:
-    deviceFilter: ^sd[bcd]$
+    deviceFilter: ^sd[cd]$
     nodes:
     - devices:
       - name: sdc

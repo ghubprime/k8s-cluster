@@ -23,8 +23,8 @@ spec:
       backoff:
         duration: 30s
         factor: 2
-        maxDuration: 5m
-      limit: 5
+        maxDuration: 10m
+      limit: 10
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -51,8 +51,8 @@ spec:
       backoff:
         duration: 30s
         factor: 2
-        maxDuration: 5m
-      limit: 5
+        maxDuration: 10m
+      limit: 10
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -82,8 +82,8 @@ spec:
       backoff:
         duration: 30s
         factor: 2
-        maxDuration: 5m
-      limit: 5
+        maxDuration: 10m
+      limit: 10
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -110,8 +110,8 @@ spec:
       backoff:
         duration: 30s
         factor: 2
-        maxDuration: 5m
-      limit: 5
+        maxDuration: 10m
+      limit: 10
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -138,8 +138,8 @@ spec:
       backoff:
         duration: 30s
         factor: 2
-        maxDuration: 5m
-      limit: 5
+        maxDuration: 10m
+      limit: 10
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -166,8 +166,8 @@ spec:
       backoff:
         duration: 30s
         factor: 2
-        maxDuration: 5m
-      limit: 5
+        maxDuration: 10m
+      limit: 10
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -194,8 +194,8 @@ spec:
       backoff:
         duration: 30s
         factor: 2
-        maxDuration: 5m
-      limit: 5
+        maxDuration: 10m
+      limit: 10
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -222,8 +222,8 @@ spec:
       backoff:
         duration: 30s
         factor: 2
-        maxDuration: 5m
-      limit: 5
+        maxDuration: 10m
+      limit: 10
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -250,8 +250,8 @@ spec:
       backoff:
         duration: 30s
         factor: 2
-        maxDuration: 5m
-      limit: 5
+        maxDuration: 10m
+      limit: 10
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -278,8 +278,8 @@ spec:
       backoff:
         duration: 30s
         factor: 2
-        maxDuration: 5m
-      limit: 5
+        maxDuration: 10m
+      limit: 10
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -306,8 +306,8 @@ spec:
       backoff:
         duration: 30s
         factor: 2
-        maxDuration: 5m
-      limit: 5
+        maxDuration: 10m
+      limit: 10
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -334,8 +334,8 @@ spec:
       backoff:
         duration: 30s
         factor: 2
-        maxDuration: 5m
-      limit: 5
+        maxDuration: 10m
+      limit: 10
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -362,8 +362,8 @@ spec:
       backoff:
         duration: 30s
         factor: 2
-        maxDuration: 5m
-      limit: 5
+        maxDuration: 10m
+      limit: 10
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -390,8 +390,8 @@ spec:
       backoff:
         duration: 30s
         factor: 2
-        maxDuration: 5m
-      limit: 5
+        maxDuration: 10m
+      limit: 10
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -418,8 +418,8 @@ spec:
       backoff:
         duration: 30s
         factor: 2
-        maxDuration: 5m
-      limit: 5
+        maxDuration: 10m
+      limit: 10
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -446,8 +446,8 @@ spec:
       backoff:
         duration: 30s
         factor: 2
-        maxDuration: 5m
-      limit: 5
+        maxDuration: 10m
+      limit: 10
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -474,8 +474,8 @@ spec:
       backoff:
         duration: 30s
         factor: 2
-        maxDuration: 5m
-      limit: 5
+        maxDuration: 10m
+      limit: 10
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -502,8 +502,8 @@ spec:
       backoff:
         duration: 30s
         factor: 2
-        maxDuration: 5m
-      limit: 5
+        maxDuration: 10m
+      limit: 10
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -530,8 +530,8 @@ spec:
       backoff:
         duration: 30s
         factor: 2
-        maxDuration: 5m
-      limit: 5
+        maxDuration: 10m
+      limit: 10
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -558,8 +558,8 @@ spec:
       backoff:
         duration: 30s
         factor: 2
-        maxDuration: 5m
-      limit: 5
+        maxDuration: 10m
+      limit: 10
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -586,8 +586,8 @@ spec:
       backoff:
         duration: 30s
         factor: 2
-        maxDuration: 5m
-      limit: 5
+        maxDuration: 10m
+      limit: 10
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -614,8 +614,8 @@ spec:
       backoff:
         duration: 30s
         factor: 2
-        maxDuration: 5m
-      limit: 5
+        maxDuration: 10m
+      limit: 10
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -642,8 +642,8 @@ spec:
       backoff:
         duration: 30s
         factor: 2
-        maxDuration: 5m
-      limit: 5
+        maxDuration: 10m
+      limit: 10
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -670,8 +670,8 @@ spec:
       backoff:
         duration: 30s
         factor: 2
-        maxDuration: 5m
-      limit: 5
+        maxDuration: 10m
+      limit: 10
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -698,8 +698,8 @@ spec:
       backoff:
         duration: 30s
         factor: 2
-        maxDuration: 5m
-      limit: 5
+        maxDuration: 10m
+      limit: 10
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -726,8 +726,8 @@ spec:
       backoff:
         duration: 30s
         factor: 2
-        maxDuration: 5m
-      limit: 5
+        maxDuration: 10m
+      limit: 10
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -754,8 +754,8 @@ spec:
       backoff:
         duration: 30s
         factor: 2
-        maxDuration: 5m
-      limit: 5
+        maxDuration: 10m
+      limit: 10
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -782,8 +782,8 @@ spec:
       backoff:
         duration: 30s
         factor: 2
-        maxDuration: 5m
-      limit: 5
+        maxDuration: 10m
+      limit: 10
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -813,8 +813,8 @@ spec:
       backoff:
         duration: 30s
         factor: 2
-        maxDuration: 5m
-      limit: 5
+        maxDuration: 10m
+      limit: 10
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -841,8 +841,8 @@ spec:
       backoff:
         duration: 30s
         factor: 2
-        maxDuration: 5m
-      limit: 5
+        maxDuration: 10m
+      limit: 10
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -869,8 +869,8 @@ spec:
       backoff:
         duration: 30s
         factor: 2
-        maxDuration: 5m
-      limit: 5
+        maxDuration: 10m
+      limit: 10
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -897,8 +897,8 @@ spec:
       backoff:
         duration: 30s
         factor: 2
-        maxDuration: 5m
-      limit: 5
+        maxDuration: 10m
+      limit: 10
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -925,8 +925,8 @@ spec:
       backoff:
         duration: 30s
         factor: 2
-        maxDuration: 5m
-      limit: 5
+        maxDuration: 10m
+      limit: 10
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -953,8 +953,8 @@ spec:
       backoff:
         duration: 30s
         factor: 2
-        maxDuration: 5m
-      limit: 5
+        maxDuration: 10m
+      limit: 10
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -981,8 +981,8 @@ spec:
       backoff:
         duration: 30s
         factor: 2
-        maxDuration: 5m
-      limit: 5
+        maxDuration: 10m
+      limit: 10
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -1009,8 +1009,8 @@ spec:
       backoff:
         duration: 30s
         factor: 2
-        maxDuration: 5m
-      limit: 5
+        maxDuration: 10m
+      limit: 10
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -1042,8 +1042,8 @@ spec:
       backoff:
         duration: 30s
         factor: 2
-        maxDuration: 5m
-      limit: 5
+        maxDuration: 10m
+      limit: 10
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -1070,8 +1070,8 @@ spec:
       backoff:
         duration: 30s
         factor: 2
-        maxDuration: 5m
-      limit: 5
+        maxDuration: 10m
+      limit: 10
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -1098,8 +1098,8 @@ spec:
       backoff:
         duration: 30s
         factor: 2
-        maxDuration: 5m
-      limit: 5
+        maxDuration: 10m
+      limit: 10
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -1126,8 +1126,8 @@ spec:
       backoff:
         duration: 30s
         factor: 2
-        maxDuration: 5m
-      limit: 5
+        maxDuration: 10m
+      limit: 10
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -1154,8 +1154,8 @@ spec:
       backoff:
         duration: 30s
         factor: 2
-        maxDuration: 5m
-      limit: 5
+        maxDuration: 10m
+      limit: 10
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -1182,8 +1182,8 @@ spec:
       backoff:
         duration: 30s
         factor: 2
-        maxDuration: 5m
-      limit: 5
+        maxDuration: 10m
+      limit: 10
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -1210,8 +1210,8 @@ spec:
       backoff:
         duration: 30s
         factor: 2
-        maxDuration: 5m
-      limit: 5
+        maxDuration: 10m
+      limit: 10
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -1238,8 +1238,8 @@ spec:
       backoff:
         duration: 30s
         factor: 2
-        maxDuration: 5m
-      limit: 5
+        maxDuration: 10m
+      limit: 10
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -1266,8 +1266,8 @@ spec:
       backoff:
         duration: 30s
         factor: 2
-        maxDuration: 5m
-      limit: 5
+        maxDuration: 10m
+      limit: 10
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -1294,8 +1294,8 @@ spec:
       backoff:
         duration: 30s
         factor: 2
-        maxDuration: 5m
-      limit: 5
+        maxDuration: 10m
+      limit: 10
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -1322,5 +1322,5 @@ spec:
       backoff:
         duration: 30s
         factor: 2
-        maxDuration: 5m
-      limit: 5
+        maxDuration: 10m
+      limit: 10
