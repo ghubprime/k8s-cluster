@@ -12,6 +12,9 @@ spec:
   - fromEndpoints:
     - matchLabels:
         io.kubernetes.pod.namespace: kube-prometheus-system
+  - fromEndpoints:
+    - matchLabels:
+        io.kubernetes.pod.namespace: uptime-kuma
         
   egress:
   # Inter-namespace allows

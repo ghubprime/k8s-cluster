@@ -17,4 +17,7 @@ spec:
           kubernetes.io/metadata.name: kube-prometheus-system
     - namespaceSelector:
         matchLabels:
+          kubernetes.io/metadata.name: uptime-kuma
+    - namespaceSelector:
+        matchLabels:
           kubernetes.io/metadata.name: kube-system
