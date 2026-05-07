@@ -164,7 +164,7 @@ type: Opaque
 apiVersion: v1
 data:
   password: Y2hhbmdlbWU=
-  postgres-password: Y2FDdVRoZ2VtRg==
+  postgres-password: UVlFMklYVzFYUQ==
 kind: Secret
 metadata:
   labels:
@@ -666,6 +666,9 @@ spec:
     - namespaceSelector:
         matchLabels:
           kubernetes.io/metadata.name: kube-prometheus-system
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: uptime-kuma
     - namespaceSelector:
         matchLabels:
           kubernetes.io/metadata.name: cloudflare
