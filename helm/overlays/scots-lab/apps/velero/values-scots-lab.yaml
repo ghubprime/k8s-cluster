@@ -30,8 +30,8 @@ credentials:
 
 kubectl:
   image:
-    repository: docker.io/bitnami/kubectl
-    tag: 1.30.1
+    repository: registry.k8s.io/kubectl
+    tag: v1.35.2
 
 upgradeCRDs: false
 

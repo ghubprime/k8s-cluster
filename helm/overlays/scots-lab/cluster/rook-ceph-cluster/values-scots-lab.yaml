@@ -9,7 +9,8 @@ monitoring:
   # metricsDisabled is false by default when enabled is true
 
 cephClusterSpec:
-  skipUpgradeChecks: true
+  # Re-enabled after nuclear reset stabilization. Only set to true during emergency recovery.
+  skipUpgradeChecks: false
   # Enable PodDisruptionBudgets for MON, OSD, RGW, MDS daemons.
   # Ensures coordinated disruptions during node reboots and rolling upgrades.
   disruptionManagement:
@@ -19,7 +20,8 @@ cephClusterSpec:
   storage:
     useAllNodes: false
     useAllDevices: false
-    deviceFilter: ^sd[bcd]$
+    # Only match data HDDs (sdc, sdd). Excludes sdb (M.2 SATA SSD used for WAL+DB metadata cache).
+    deviceFilter: ^sd[cd]$
     nodes:
     - name: talos-vzo-5on
       devices:
