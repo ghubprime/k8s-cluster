@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Namespace
-labels:
-  name: loki
-  pod-security.kubernetes.io/audit: baseline
-  pod-security.kubernetes.io/enforce: baseline
-  pod-security.kubernetes.io/warn: baseline
 metadata:
+  labels:
+    name: loki
+    pod-security.kubernetes.io/audit: baseline
+    pod-security.kubernetes.io/enforce: baseline
+    pod-security.kubernetes.io/warn: baseline
   name: loki
 ---
 apiVersion: v1
