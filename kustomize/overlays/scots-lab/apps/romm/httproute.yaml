@@ -17,6 +17,7 @@ spec:
     namespace: kgateway-system
   hostnames:
   - roms.srbii.com
+  - play.srbii.com
   rules:
   - matches:
     - path:
