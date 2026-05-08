@@ -196,6 +196,7 @@ metadata:
 spec:
   hostnames:
   - roms.srbii.com
+  - play.srbii.com
   parentRefs:
   - name: kgateway-http
     namespace: kgateway-system

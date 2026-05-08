@@ -138,9 +138,9 @@ data:
             href: https://umami-omni.proxy-us.srbii.com/
             description: Web Analytics
             icon: umami.png
-        - EmulatorJS:
+        - Retro Gaming:
             href: https://play.srbii.com
-            description: Retro Gaming
+            description: ROM Manager & Emulator
             icon: mdi-controller-classic
   settings.yaml: |
     title: Scots Lab
