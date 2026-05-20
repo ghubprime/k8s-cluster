@@ -2,9 +2,9 @@ apiVersion: v1
 kind: Namespace
 metadata:
   labels:
-    pod-security.kubernetes.io/audit: restricted
-    pod-security.kubernetes.io/enforce: restricted
-    pod-security.kubernetes.io/warn: restricted
+    pod-security.kubernetes.io/audit: baseline
+    pod-security.kubernetes.io/enforce: baseline
+    pod-security.kubernetes.io/warn: baseline
   name: stirling-pdf
 ---
 apiVersion: v1
@@ -55,11 +55,6 @@ spec:
           requests:
             cpu: 50m
             memory: 256Mi
-        securityContext:
-          allowPrivilegeEscalation: false
-          capabilities:
-            drop:
-            - ALL
       - args:
         - --provider=oidc
         - --oidc-issuer-url=https://auth.srbii.com/realms/homelab
@@ -88,16 +83,6 @@ spec:
           requests:
             cpu: 10m
             memory: 32Mi
-        securityContext:
-          allowPrivilegeEscalation: false
-          capabilities:
-            drop:
-            - ALL
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 1000
-        seccompProfile:
-          type: RuntimeDefault
 ---
 apiVersion: bitnami.com/v1alpha1
 kind: SealedSecret

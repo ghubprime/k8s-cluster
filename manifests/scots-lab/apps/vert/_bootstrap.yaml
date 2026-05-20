@@ -58,6 +58,11 @@ spec:
           capabilities:
             drop:
             - ALL
+        volumeMounts:
+        - mountPath: /var/cache/nginx
+          name: nginx-cache
+        - mountPath: /var/run
+          name: nginx-run
       - args:
         - --provider=oidc
         - --oidc-issuer-url=https://auth.srbii.com/realms/homelab
@@ -96,6 +101,11 @@ spec:
         runAsUser: 101
         seccompProfile:
           type: RuntimeDefault
+      volumes:
+      - emptyDir: {}
+        name: nginx-cache
+      - emptyDir: {}
+        name: nginx-run
 ---
 apiVersion: bitnami.com/v1alpha1
 kind: SealedSecret

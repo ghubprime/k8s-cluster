@@ -80,6 +80,10 @@ spec:
         - mountPath: /etc/nginx/conf.d/default.conf
           name: nginx-config
           subPath: default.conf
+        - mountPath: /var/cache/nginx
+          name: nginx-cache
+        - mountPath: /var/run
+          name: nginx-run
       - args:
         - --provider=oidc
         - --oidc-issuer-url=https://auth.srbii.com/realms/homelab
@@ -122,6 +126,10 @@ spec:
       - configMap:
           name: it-tools-nginx-config-gfd58766m2
         name: nginx-config
+      - emptyDir: {}
+        name: nginx-cache
+      - emptyDir: {}
+        name: nginx-run
 ---
 apiVersion: bitnami.com/v1alpha1
 kind: SealedSecret
