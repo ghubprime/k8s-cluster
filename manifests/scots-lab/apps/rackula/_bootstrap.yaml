@@ -108,6 +108,7 @@ spec:
             - ALL
       securityContext:
         runAsNonRoot: true
+        runAsUser: 101
         seccompProfile:
           type: RuntimeDefault
       volumes:
