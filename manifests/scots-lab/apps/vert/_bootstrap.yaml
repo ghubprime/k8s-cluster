@@ -2,9 +2,9 @@ apiVersion: v1
 kind: Namespace
 metadata:
   labels:
-    pod-security.kubernetes.io/audit: baseline
-    pod-security.kubernetes.io/enforce: baseline
-    pod-security.kubernetes.io/warn: baseline
+    pod-security.kubernetes.io/audit: restricted
+    pod-security.kubernetes.io/enforce: restricted
+    pod-security.kubernetes.io/warn: restricted
   name: vert
 ---
 apiVersion: v1
@@ -38,10 +38,13 @@ spec:
         app: vert
     spec:
       containers:
-      - image: ghcr.io/vert-sh/vert:latest
+      - env:
+        - name: PORT
+          value: "8080"
+        image: ghcr.io/vert-sh/vert:latest
         name: vert
         ports:
-        - containerPort: 80
+        - containerPort: 8080
           name: http
         resources:
           limits:
@@ -50,10 +53,15 @@ spec:
           requests:
             cpu: 10m
             memory: 64Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
       - args:
         - --provider=oidc
         - --oidc-issuer-url=https://auth.srbii.com/realms/homelab
-        - --upstream=http://127.0.0.1:80
+        - --upstream=http://127.0.0.1:8080
         - --http-address=0.0.0.0:4180
         - --email-domain=*
         - --pass-user-headers=false
@@ -78,6 +86,16 @@ spec:
           requests:
             cpu: 10m
             memory: 32Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        seccompProfile:
+          type: RuntimeDefault
 ---
 apiVersion: bitnami.com/v1alpha1
 kind: SealedSecret

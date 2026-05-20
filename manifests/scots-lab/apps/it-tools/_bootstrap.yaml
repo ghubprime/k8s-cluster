@@ -2,10 +2,28 @@ apiVersion: v1
 kind: Namespace
 metadata:
   labels:
-    pod-security.kubernetes.io/audit: baseline
-    pod-security.kubernetes.io/enforce: baseline
-    pod-security.kubernetes.io/warn: baseline
+    pod-security.kubernetes.io/audit: restricted
+    pod-security.kubernetes.io/enforce: restricted
+    pod-security.kubernetes.io/warn: restricted
   name: it-tools
+---
+apiVersion: v1
+data:
+  default.conf: |
+    server {
+        listen 8080;
+        listen [::]:8080;
+        server_name localhost;
+        root /usr/share/nginx/html;
+        index index.html;
+        location / {
+            try_files $uri $uri/ /index.html;
+        }
+    }
+kind: ConfigMap
+metadata:
+  name: it-tools-nginx-config-gfd58766m2
+  namespace: it-tools
 ---
 apiVersion: v1
 kind: Service
@@ -38,10 +56,13 @@ spec:
         app: it-tools
     spec:
       containers:
-      - image: corentinth/it-tools:2024.5.13-a0bc346
+      - env:
+        - name: PORT
+          value: "8080"
+        image: corentinth/it-tools:2024.5.13-a0bc346
         name: it-tools
         ports:
-        - containerPort: 80
+        - containerPort: 8080
           name: http
         resources:
           limits:
@@ -50,10 +71,19 @@ spec:
           requests:
             cpu: 10m
             memory: 32Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+        volumeMounts:
+        - mountPath: /etc/nginx/conf.d/default.conf
+          name: nginx-config
+          subPath: default.conf
       - args:
         - --provider=oidc
         - --oidc-issuer-url=https://auth.srbii.com/realms/homelab
-        - --upstream=http://127.0.0.1:80
+        - --upstream=http://127.0.0.1:8080
         - --http-address=0.0.0.0:4180
         - --email-domain=*
         - --pass-user-headers=false
@@ -78,6 +108,20 @@ spec:
           requests:
             cpu: 10m
             memory: 32Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      volumes:
+      - configMap:
+          name: it-tools-nginx-config-gfd58766m2
+        name: nginx-config
 ---
 apiVersion: bitnami.com/v1alpha1
 kind: SealedSecret
