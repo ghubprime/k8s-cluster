@@ -20,21 +20,21 @@ cephClusterSpec:
   storage:
     useAllNodes: false
     useAllDevices: false
-    # Only match data HDDs (sdc, sdd). Excludes sdb (M.2 SATA SSD used for WAL+DB metadata cache).
-    deviceFilter: ^sd[cd]$
+    # Only match data HDDs (sdb, sdc). After eMMC boot migration, sda is the M.2 SATA SSD (unused).
+    deviceFilter: ^sd[bc]$
     nodes:
-    - name: talos-vzo-5on
+    - name: talos-23m-4vp
       devices:
+      - name: sdb
       - name: sdc
-      - name: sdd
-    - name: talos-f8k-btg
+    - name: talos-2j9-th8
       devices:
+      - name: sdb
       - name: sdc
-      - name: sdd
-    - name: talos-tdl-fge
+    - name: talos-pyf-pz9
       devices:
+      - name: sdb
       - name: sdc
-      - name: sdd
   network:
     provider: host
     connections:
