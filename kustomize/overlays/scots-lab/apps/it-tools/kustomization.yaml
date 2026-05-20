@@ -9,3 +9,8 @@ resources:
   - service.yaml
   - httproute.yaml
   - sealed-oauth2-proxy-secret.yaml
+
+configMapGenerator:
+  - name: it-tools-nginx-config
+    files:
+      - default.conf=nginx.conf

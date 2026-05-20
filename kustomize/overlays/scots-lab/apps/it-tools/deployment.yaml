@@ -16,44 +16,69 @@ spec:
         app: it-tools
     spec:
       containers:
-        - name: it-tools
-          image: corentinth/it-tools:2024.5.13-a0bc346
-          ports:
-            - containerPort: 80
-              name: http
-          resources:
-            requests:
-              cpu: 10m
-              memory: 32Mi
-            limits:
-              cpu: 200m
-              memory: 128Mi
-
-        - name: oauth2-proxy
-          image: quay.io/oauth2-proxy/oauth2-proxy:v7.6.0
-          args:
-            - --provider=oidc
-            - --oidc-issuer-url=https://auth.srbii.com/realms/homelab
-            - --upstream=http://127.0.0.1:80
-            - --http-address=0.0.0.0:4180
-            - --email-domain=*
-            - --pass-user-headers=false
-            - --cookie-secure=true
-            - --cookie-name=_oauth2_ittools
-            - --redirect-url=https://tools.srbii.com/oauth2/callback
-            - --whitelist-domain=.srbii.com
-            - --skip-provider-button=true
-            - --session-cookie-minimal=true
-          envFrom:
-            - secretRef:
-                name: oauth2-proxy-secret
-          ports:
-            - containerPort: 4180
-              name: proxy
-          resources:
-            requests:
-              cpu: 10m
-              memory: 32Mi
-            limits:
-              cpu: 100m
-              memory: 128Mi
+      - name: it-tools
+        image: corentinth/it-tools:2024.5.13-a0bc346
+        ports:
+        - containerPort: 8080
+          name: http
+        resources:
+          requests:
+            cpu: 10m
+            memory: 32Mi
+          limits:
+            cpu: 200m
+            memory: 128Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+        env:
+        - name: PORT
+          value: '8080'
+        volumeMounts:
+        - name: nginx-config
+          mountPath: /etc/nginx/conf.d/default.conf
+          subPath: default.conf
+      - name: oauth2-proxy
+        image: quay.io/oauth2-proxy/oauth2-proxy:v7.6.0
+        args:
+        - --provider=oidc
+        - --oidc-issuer-url=https://auth.srbii.com/realms/homelab
+        - --upstream=http://127.0.0.1:8080
+        - --http-address=0.0.0.0:4180
+        - --email-domain=*
+        - --pass-user-headers=false
+        - --cookie-secure=true
+        - --cookie-name=_oauth2_ittools
+        - --redirect-url=https://tools.srbii.com/oauth2/callback
+        - --whitelist-domain=.srbii.com
+        - --skip-provider-button=true
+        - --session-cookie-minimal=true
+        envFrom:
+        - secretRef:
+            name: oauth2-proxy-secret
+        ports:
+        - containerPort: 4180
+          name: proxy
+        resources:
+          requests:
+            cpu: 10m
+            memory: 32Mi
+          limits:
+            cpu: 100m
+            memory: 128Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      volumes:
+      - name: nginx-config
+        configMap:
+          name: it-tools-nginx-config

@@ -18,51 +18,64 @@ spec:
         app: rackula
     spec:
       containers:
-        - name: rackula
-          image: ghcr.io/rackulalives/rackula:latest
-          ports:
-            - containerPort: 8080
-              name: http
-          volumeMounts:
-            - name: data
-              mountPath: /app/data
-          resources:
-            requests:
-              cpu: 10m
-              memory: 64Mi
-            limits:
-              cpu: 250m
-              memory: 256Mi
-
-        - name: oauth2-proxy
-          image: quay.io/oauth2-proxy/oauth2-proxy:v7.6.0
-          args:
-            - --provider=oidc
-            - --oidc-issuer-url=https://auth.srbii.com/realms/homelab
-            - --upstream=http://127.0.0.1:8080
-            - --http-address=0.0.0.0:4180
-            - --email-domain=*
-            - --pass-user-headers=false
-            - --cookie-secure=true
-            - --cookie-name=_oauth2_rackula
-            - --redirect-url=https://rack.srbii.com/oauth2/callback
-            - --whitelist-domain=.srbii.com
-            - --skip-provider-button=true
-            - --session-cookie-minimal=true
-          envFrom:
-            - secretRef:
-                name: oauth2-proxy-secret
-          ports:
-            - containerPort: 4180
-              name: proxy
-          resources:
-            requests:
-              cpu: 10m
-              memory: 32Mi
-            limits:
-              cpu: 100m
-              memory: 128Mi
-      volumes:
+      - name: rackula
+        image: ghcr.io/rackulalives/rackula:latest
+        ports:
+        - containerPort: 8080
+          name: http
+        volumeMounts:
         - name: data
-          persistentVolumeClaim:
-            claimName: rackula-data
+          mountPath: /app/data
+        resources:
+          requests:
+            cpu: 10m
+            memory: 64Mi
+          limits:
+            cpu: 250m
+            memory: 256Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+      - name: oauth2-proxy
+        image: quay.io/oauth2-proxy/oauth2-proxy:v7.6.0
+        args:
+        - --provider=oidc
+        - --oidc-issuer-url=https://auth.srbii.com/realms/homelab
+        - --upstream=http://127.0.0.1:8080
+        - --http-address=0.0.0.0:4180
+        - --email-domain=*
+        - --pass-user-headers=false
+        - --cookie-secure=true
+        - --cookie-name=_oauth2_rackula
+        - --redirect-url=https://rack.srbii.com/oauth2/callback
+        - --whitelist-domain=.srbii.com
+        - --skip-provider-button=true
+        - --session-cookie-minimal=true
+        envFrom:
+        - secretRef:
+            name: oauth2-proxy-secret
+        ports:
+        - containerPort: 4180
+          name: proxy
+        resources:
+          requests:
+            cpu: 10m
+            memory: 32Mi
+          limits:
+            cpu: 100m
+            memory: 128Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: rackula-data
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
