@@ -5,7 +5,7 @@ kubernetes:
 talos:
   version: v1.12.6
 features:
-  diskEncryption: true
+  diskEncryption: false
   enableWorkloadProxy: true
   useEmbeddedDiscoveryService: true
 patches:
@@ -36,6 +36,10 @@ patches:
   - name: machinepatch
     inline:
       machine:
+        network:
+          nameservers:
+            - 1.1.1.1
+            - 8.8.8.8
         kubelet:
           extraConfig:
             featureGates:
@@ -47,7 +51,7 @@ patches:
         features:
           hostDNS:
             enabled: true
-            forwardKubeDNSToHost: false              
+            forwardKubeDNSToHost: false
         time:
           servers:
             - 0.us.pool.ntp.org
@@ -59,7 +63,7 @@ patches:
     file: bootstrap/k8s-cluster-extramanifests-multus.yaml
 
   - name: extramanifests-gateway-api-crds
-    file: bootstrap/k8s-cluster-extramanifests-gateway-api-crds.yaml    
+    file: bootstrap/k8s-cluster-extramanifests-gateway-api-crds.yaml
   - name: extramanifests-argocd
     file: bootstrap/k8s-cluster-extramanifests-argocd.yaml
 
@@ -67,18 +71,17 @@ patches:
     file: bootstrap/k8s-cluster-extramanifests-argocd-apps.yaml
 ---
 kind: ControlPlane
-machineClass:
-  name: scots-lab
-  size: 3
+machines:
+  - 1e000000-4506-0595-0101-001e06459506
+  - 1e000000-4506-b094-0101-001e064594b1
+  - 1e000000-4506-fb95-0101-001e064595fc
 patches:
-  - name: machinepatch
+  - name: controlplane-patch
     inline:
       machine:
         kernel:
           modules:
-            - name: nbd            
+            - name: nbd
 ---
 kind: Workers
-machineClass:
-  name: scots-lab
-  size: 0
+machines: []
