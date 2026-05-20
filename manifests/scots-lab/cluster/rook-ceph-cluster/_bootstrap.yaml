@@ -459,20 +459,20 @@ spec:
         memory: 50Mi
   skipUpgradeChecks: false
   storage:
-    deviceFilter: ^sd[cd]$
+    deviceFilter: ^sd[bc]$
     nodes:
     - devices:
+      - name: sdb
       - name: sdc
-      - name: sdd
-      name: talos-vzo-5on
+      name: talos-23m-4vp
     - devices:
+      - name: sdb
       - name: sdc
-      - name: sdd
-      name: talos-f8k-btg
+      name: talos-2j9-th8
     - devices:
+      - name: sdb
       - name: sdc
-      - name: sdd
-      name: talos-tdl-fge
+      name: talos-pyf-pz9
     useAllDevices: false
     useAllNodes: false
   upgradeOSDRequiresHealthyPGs: false
