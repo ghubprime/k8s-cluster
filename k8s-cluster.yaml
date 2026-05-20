@@ -59,6 +59,9 @@ patches:
         sysctls:
           user.max_user_namespaces: "11255"
 
+  - name: extramanifests-cilium
+    file: bootstrap/k8s-cluster-extramanifests-cilium.yaml
+
   - name: extramanifests-multus
     file: bootstrap/k8s-cluster-extramanifests-multus.yaml
 
