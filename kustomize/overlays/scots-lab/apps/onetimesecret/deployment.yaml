@@ -75,11 +75,27 @@ spec:
           capabilities:
             drop:
             - ALL
+      initContainers:
+      - name: fix-redis-permissions
+        image: redis:7-bookworm
+        command: ['sh', '-c', 'chown -R 999:999 /data']
+        volumeMounts:
+        - name: redis-data
+          mountPath: /data
+        securityContext:
+          runAsUser: 0
+        resources:
+          requests:
+            cpu: 10m
+            memory: 32Mi
+          limits:
+            cpu: 100m
+            memory: 64Mi
       volumes:
       - name: redis-data
         persistentVolumeClaim:
           claimName: onetimesecret-redis-data
       securityContext:
-        runAsNonRoot: true
         seccompProfile:
           type: RuntimeDefault
+
