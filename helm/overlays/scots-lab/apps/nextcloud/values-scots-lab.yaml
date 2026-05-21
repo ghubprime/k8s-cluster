@@ -54,6 +54,16 @@ nextcloud:
         'trusted_proxies' => array('10.0.0.0/8', '192.168.0.0/16', '172.16.0.0/12'),
         'overwriteprotocol' => 'https',
       );
+    trusted_domains.config.php: |-
+      <?php
+      $CONFIG = array (
+        'trusted_domains' => array(
+          0 => 'files.srbii.com',
+          1 => 'localhost',
+          2 => '10.*',
+          3 => '192.168.*',
+        ),
+      );
 
 persistence:
   enabled: true
