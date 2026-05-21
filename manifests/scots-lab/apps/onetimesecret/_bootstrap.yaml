@@ -110,8 +110,26 @@ spec:
         volumeMounts:
         - mountPath: /data
           name: redis-data
+      initContainers:
+      - command:
+        - sh
+        - -c
+        - chown -R 999:999 /data
+        image: redis:7-bookworm
+        name: fix-redis-permissions
+        resources:
+          limits:
+            cpu: 100m
+            memory: 64Mi
+          requests:
+            cpu: 10m
+            memory: 32Mi
+        securityContext:
+          runAsUser: 0
+        volumeMounts:
+        - mountPath: /data
+          name: redis-data
       securityContext:
-        runAsNonRoot: true
         seccompProfile:
           type: RuntimeDefault
       volumes:
