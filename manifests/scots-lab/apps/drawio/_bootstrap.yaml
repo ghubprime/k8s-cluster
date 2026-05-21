@@ -55,6 +55,7 @@ spec:
           capabilities:
             drop:
             - ALL
+          runAsUser: 1000
       - args:
         - --provider=oidc
         - --oidc-issuer-url=https://auth.srbii.com/realms/homelab
