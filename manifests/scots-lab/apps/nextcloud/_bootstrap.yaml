@@ -121,6 +121,16 @@ data:
         'mail_domain' => getenv('MAIL_DOMAIN'),
       );
     }
+  trusted_domains.config.php: |-
+    <?php
+    $CONFIG = array (
+      'trusted_domains' => array(
+        0 => 'files.srbii.com',
+        1 => 'localhost',
+        2 => '10.*',
+        3 => '192.168.*',
+      ),
+    );
 kind: ConfigMap
 metadata:
   labels:
@@ -164,7 +174,7 @@ type: Opaque
 apiVersion: v1
 data:
   password: Y2hhbmdlbWU=
-  postgres-password: NnpKbGF4ZEd1Uw==
+  postgres-password: bzJrMm1uQUZQSQ==
 kind: Secret
 metadata:
   labels:
@@ -297,7 +307,7 @@ spec:
     metadata:
       annotations:
         hooks-hash: 9525c2748a6c7cd0e28ec740623d0b3fa5a75c83b51ccfd136bc89c76737b204
-        nextcloud-config-hash: c44be46041d4c5e5cad653cee32e5f5aea8981677327757e6fe6d4c40506f42f
+        nextcloud-config-hash: 368ef30ea6c1d4f529d034b4ed3dd17f086a1f040c0c51abdfc4fb94171374c1
         php-config-hash: 44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a
       labels:
         app.kubernetes.io/component: app
@@ -394,6 +404,9 @@ spec:
         - mountPath: /var/www/html/config/proxy.config.php
           name: nextcloud-config
           subPath: proxy.config.php
+        - mountPath: /var/www/html/config/trusted_domains.config.php
+          name: nextcloud-config
+          subPath: trusted_domains.config.php
         - mountPath: /var/www/html/config/.htaccess
           name: nextcloud-config
           subPath: .htaccess
