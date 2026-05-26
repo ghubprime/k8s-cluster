@@ -76,3 +76,14 @@ redis:
       size: 5Gi
   replica:
     replicaCount: 0
+
+# Right-size the paperless-ngx worker to prevent memory starvation.
+# CPU limit is intentionally omitted to allow rapid burst processing during OCR ingestion,
+# but memory is strictly capped to prevent long-term memory leaks.
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    memory: 1Gi
+
