@@ -46,6 +46,23 @@ resources:
     cpu: 1
     memory: 2Gi
 
+# Enable Node Agent DaemonSet for filesystem-level PVC backups (deep-cluster-backup)
+# Without this, defaultVolumesToFsBackup: true silently fails with
+# "daemonset pod not found in running state in node" for every pod.
+# Discovered 2026-05-25 during audit — was never enabled (chart default: false).
+deployNodeAgent: true
+
+nodeAgent:
+  podVolumePath: /var/lib/kubelet/pods
+  privileged: true
+  resources:
+    requests:
+      cpu: 50m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 1Gi
+
 schedules:
   # Tier 1: Lightweight — K8s resources + CSI snapshots only (no filesystem copy)
   # Runs every 6 hours — fast, low-cost, captures all K8s object state + point-in-time PVC snapshots
