@@ -50,6 +50,7 @@ spec:
             - --pass-user-headers=true
             - --cookie-secure=true
             - --cookie-name=_oauth2_znuny
+            - --cookie-domain=tickets.srbii.com
           envFrom:
             - secretRef:
                 name: oauth2-proxy-secret

@@ -49,6 +49,7 @@ spec:
         - --pass-user-headers=false
         - --cookie-secure=true
         - --cookie-name=_oauth2_rackula
+        - --cookie-domain=rack.srbii.com
         - --redirect-url=https://rack.srbii.com/oauth2/callback
         - --whitelist-domain=.srbii.com
         - --skip-provider-button=true

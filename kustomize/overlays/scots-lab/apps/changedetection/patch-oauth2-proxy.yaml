@@ -24,6 +24,7 @@ spec:
             - --pass-user-headers=false
             - --cookie-secure=true
             - --cookie-name=_oauth2_changes
+            - --cookie-domain=changes.srbii.com
             - --redirect-url=https://changes.srbii.com/oauth2/callback
             - --whitelist-domain=.srbii.com
             - --skip-provider-button=true

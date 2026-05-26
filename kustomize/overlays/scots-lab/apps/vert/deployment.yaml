@@ -52,6 +52,7 @@ spec:
         - --pass-user-headers=false
         - --cookie-secure=true
         - --cookie-name=_oauth2_vert
+        - --cookie-domain=vert.srbii.com
         - --redirect-url=https://vert.srbii.com/oauth2/callback
         - --whitelist-domain=.srbii.com
         - --skip-provider-button=true
