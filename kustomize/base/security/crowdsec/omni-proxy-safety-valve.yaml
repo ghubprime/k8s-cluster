@@ -1,0 +1,15 @@
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: crowdsec-omni-proxy-safety-valve
+spec:
+  description: "Safety valve: always allow Omni proxy, SideroLink, and node subnet traffic. Prevents CrowdSec bouncer from ever severing the control plane connection (Incident 1, 2026-04-19)."
+  endpointSelector: {}
+  ingress:
+    - fromCIDR:
+        # Sidero Omni GCP Proxy VM
+        - 34.82.1.163/32
+        # SideroLink IPv6 overlay network
+        - fdae:41e4::/64
+        # Physical node subnet (GL.iNet gateway)
+        - 192.168.8.0/24

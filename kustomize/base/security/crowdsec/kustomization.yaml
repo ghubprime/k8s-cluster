@@ -4,3 +4,5 @@ namespace: crowdsec
 resources:
   - namespace.yaml
   - kubernetes-bouncer.yaml
+  - coredns-safety-valve.yaml
+  - omni-proxy-safety-valve.yaml

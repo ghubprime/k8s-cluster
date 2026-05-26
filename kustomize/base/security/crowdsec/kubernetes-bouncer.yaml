@@ -58,6 +58,14 @@ spec:
               value: "http://crowdsec-service.crowdsec.svc.cluster.local:8080"
             - name: CILIUM_POLICY_NAME
               value: "crowdsec-cilium-bouncer"
+            # Delete the CCWNP when zero bans exist instead of creating
+            # one with an empty fromCIDRSet (which Cilium interprets as
+            # wildcard DROP — caused the DNS blackhole in Incident #2)
+            - name: DELETE_POLICY_ON_EMPTY
+              value: "true"
+            # Poll LAPI every 30s for decision updates
+            - name: UPDATE_FREQUENCY
+              value: "30s"
           resources:
             requests:
               cpu: "10m"

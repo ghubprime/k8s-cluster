@@ -1,0 +1,19 @@
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: crowdsec-coredns-safety-valve
+spec:
+  description: "Safety valve: always allow DNS traffic to CoreDNS regardless of CrowdSec bouncer state. Prevents the empty-CIDR Cilium bug (Incident 2, 2026-04-19) from killing cluster DNS."
+  endpointSelector:
+    matchLabels:
+      k8s-app: kube-dns
+  ingress:
+    - fromEntities:
+        - cluster
+        - host
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
+            - port: "53"
+              protocol: TCP
