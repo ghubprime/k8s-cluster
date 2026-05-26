@@ -72,7 +72,8 @@ spec:
       containers:
       - args:
         - serve
-        image: binwiederhier/ntfy:latest
+        image: binwiederhier/ntfy:v2.23.0
+        imagePullPolicy: IfNotPresent
         name: ntfy
         ports:
         - containerPort: 80
@@ -90,6 +91,7 @@ spec:
         - mountPath: /etc/ntfy/server.yml
           name: ntfy-config
           subPath: server.yml
+      priorityClassName: homelab-data
       volumes:
       - name: ntfy-data
         persistentVolumeClaim:

@@ -85,6 +85,7 @@ spec:
         volumeMounts:
         - mountPath: /data
           name: data
+      priorityClassName: homelab-data
       volumes:
       - name: data
         persistentVolumeClaim:

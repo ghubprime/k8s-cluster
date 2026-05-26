@@ -39,6 +39,7 @@ spec:
     spec:
       containers:
       - image: jgraph/drawio:latest
+        imagePullPolicy: IfNotPresent
         name: drawio
         ports:
         - containerPort: 8080

@@ -226,6 +226,7 @@ spec:
         volumeMounts:
         - mountPath: /data
           name: minio-data
+      priorityClassName: homelab-data
       volumes:
       - name: postgres-data
         persistentVolumeClaim:

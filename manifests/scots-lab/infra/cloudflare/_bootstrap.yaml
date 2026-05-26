@@ -43,7 +43,15 @@ spec:
           requests:
             cpu: 10m
             memory: 64Mi
+      priorityClassName: homelab-critical
       restartPolicy: Always
+      topologySpreadConstraints:
+      - labelSelector:
+          matchLabels:
+            app: cloudflare-tunnel
+        maxSkew: 1
+        topologyKey: kubernetes.io/hostname
+        whenUnsatisfiable: DoNotSchedule
 ---
 apiVersion: bitnami.com/v1alpha1
 kind: SealedSecret

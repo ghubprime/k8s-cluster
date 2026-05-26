@@ -112,6 +112,7 @@ spec:
         volumeMounts:
         - mountPath: /data
           name: redis-data
+      priorityClassName: homelab-data
       securityContext:
         fsGroup: 999
         runAsNonRoot: true

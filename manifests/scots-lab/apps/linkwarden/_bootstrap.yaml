@@ -137,6 +137,7 @@ spec:
         volumeMounts:
         - mountPath: /var/lib/postgresql/data
           name: postgres-data
+      priorityClassName: homelab-data
       volumes:
       - name: data
         persistentVolumeClaim:

@@ -67,6 +67,7 @@ spec:
         - name: REMOTE_USER_HEADER
           value: HTTP_X_FORWARDED_USER
         image: lscr.io/linuxserver/healthchecks:latest
+        imagePullPolicy: IfNotPresent
         name: healthchecks
         resources:
           limits:
@@ -100,6 +101,7 @@ spec:
         ports:
         - containerPort: 4180
           name: proxy
+      priorityClassName: homelab-data
       volumes:
       - name: data
         persistentVolumeClaim:

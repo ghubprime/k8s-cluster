@@ -139,6 +139,7 @@ spec:
         - mountPath: /var/lib/mysql
           name: mariadb-data
       enableServiceLinks: false
+      priorityClassName: homelab-data
       volumes:
       - name: library
         persistentVolumeClaim:

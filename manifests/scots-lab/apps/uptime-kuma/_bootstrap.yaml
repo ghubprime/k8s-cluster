@@ -117,6 +117,7 @@ spec:
         volumeMounts:
         - mountPath: /app/data
           name: storage
+      priorityClassName: homelab-data
       securityContext: {}
       serviceAccountName: default
       volumes:

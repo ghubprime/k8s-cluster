@@ -141,6 +141,7 @@ spec:
       hostIPC: false
       hostNetwork: false
       hostPID: false
+      priorityClassName: homelab-critical
       serviceAccountName: default
       volumes:
       - name: config

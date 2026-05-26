@@ -1,0 +1,29 @@
+apiVersion: scheduling.k8s.io/v1
+description: 'Critical infrastructure: DNS, ingress tunnel, backup, secrets controller.
+  These services must survive all eviction scenarios.'
+globalDefault: false
+kind: PriorityClass
+metadata:
+  name: homelab-critical
+preemptionPolicy: PreemptLowerPriority
+value: 1000000
+---
+apiVersion: scheduling.k8s.io/v1
+description: Data-critical applications with persistent storage (PVCs). Eviction-safe
+  ahead of stateless tools but yields to infrastructure.
+globalDefault: false
+kind: PriorityClass
+metadata:
+  name: homelab-data
+preemptionPolicy: PreemptLowerPriority
+value: 100000
+---
+apiVersion: scheduling.k8s.io/v1
+description: Stateless utility tools (DrawIO, IT-Tools, OpenSpeedTest, etc.). First
+  to be evicted during resource pressure — safe, they restart clean.
+globalDefault: true
+kind: PriorityClass
+metadata:
+  name: homelab-utility
+preemptionPolicy: PreemptLowerPriority
+value: 10000
