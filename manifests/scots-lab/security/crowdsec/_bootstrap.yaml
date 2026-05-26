@@ -568,8 +568,8 @@ metadata:
 ---
 apiVersion: v1
 data:
-  csLapiSecret: aWcucVBwVlBcdigqV2FJLnkpNU1BZiclZW8waFZwS1RIOEgzODorYzJWcGdTQS54VXE1YkYqOSB8cF4jdTljLA==
-  registrationToken: Sk5YSmNaeFhlaXRVRWlBQUZFUFBPRUcxNFk0N3ZEWnFQaXlVbTg3ODZtT2pJemtX
+  csLapiSecret: Ripufih3USsoaSEpc2d8MD05YDhfVyJMUSZuKSFmKllzNHd4NExiR2FDUzZ3Uk15aT5+JiA2WX1VMTo4W2BXXA==
+  registrationToken: YVZTelhGQ2lYNXF5Q3JUZ2pjdjFvQnJUMzhuN3dSdmU0QUtHRWpmNXlZcDdVcUJz
 kind: Secret
 metadata:
   labels:
@@ -672,6 +672,10 @@ spec:
           value: http://crowdsec-service.crowdsec.svc.cluster.local:8080
         - name: CILIUM_POLICY_NAME
           value: crowdsec-cilium-bouncer
+        - name: DELETE_POLICY_ON_EMPTY
+          value: "true"
+        - name: UPDATE_FREQUENCY
+          value: 30s
         image: crowdsecurity/crowdsec-bouncer-cilium:latest
         name: bouncer
         resources:
@@ -703,7 +707,7 @@ spec:
     metadata:
       annotations:
         checksum/lapi-configmap: c6da5ddbb4d70478a94b244bf42e02fc53c27d4ee4021dab500aa603513c2d11
-        checksum/lapi-secret: dd5d6042e7b3efc373ca8bea8c21189838411980193b0a192d6822d89a2636e9
+        checksum/lapi-secret: ec5fa6935822eb6c69408c89df05dc9de3f7bb7162b04a3402dee949b13b886b
       labels:
         k8s-app: crowdsec
         type: lapi
@@ -1011,6 +1015,45 @@ spec:
       restartPolicy: OnFailure
       serviceAccountName: crowdsec-allowlist-provisioner
   ttlSecondsAfterFinished: 600
+---
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: crowdsec-coredns-safety-valve
+  namespace: crowdsec
+spec:
+  description: 'Safety valve: always allow DNS traffic to CoreDNS regardless of CrowdSec
+    bouncer state. Prevents the empty-CIDR Cilium bug (Incident 2, 2026-04-19) from
+    killing cluster DNS.'
+  endpointSelector:
+    matchLabels:
+      k8s-app: kube-dns
+  ingress:
+  - fromEntities:
+    - cluster
+    - host
+    toPorts:
+    - ports:
+      - port: "53"
+        protocol: UDP
+      - port: "53"
+        protocol: TCP
+---
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: crowdsec-omni-proxy-safety-valve
+  namespace: crowdsec
+spec:
+  description: 'Safety valve: always allow Omni proxy, SideroLink, and node subnet
+    traffic. Prevents CrowdSec bouncer from ever severing the control plane connection
+    (Incident 1, 2026-04-19).'
+  endpointSelector: {}
+  ingress:
+  - fromCIDR:
+    - 34.82.1.163/32
+    - fdae:41e4::/64
+    - 192.168.8.0/24
 ---
 apiVersion: v1
 kind: Pod
