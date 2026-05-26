@@ -18,6 +18,7 @@ spec:
         app: romm
     spec:
       enableServiceLinks: false
+      priorityClassName: homelab-data
       containers:
         - name: romm
           image: rommapp/romm:4.8.1

@@ -17,9 +17,12 @@ spec:
       labels:
         app: actual-budget
     spec:
+      priorityClassName: homelab-data
       containers:
         - name: actual-budget
-          image: actualbudget/actual-server:latest
+          # Pinned from :latest for Renovate tracking and rollback safety
+          image: actualbudget/actual-server:26.5.0
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 5006
               name: http

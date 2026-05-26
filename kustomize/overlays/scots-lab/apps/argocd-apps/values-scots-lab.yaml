@@ -80,6 +80,14 @@ argocdApplications:
     appCategory: infra
     syncWave: "0"
     description: CSI volume snapshot controller for PVC backups
+  priority-classes:
+    disableAutomated: false
+    disable: false
+    name: priority-classes
+    namespace: kube-system
+    appCategory: infra
+    syncWave: "-1"
+    description: Cluster-wide PriorityClasses for workload eviction tiering
   health-check:
     disableAutomated: false
     disable: false

@@ -1,0 +1,36 @@
+# Cluster-wide PriorityClasses for homelab workload tiering.
+# Ensures critical infrastructure (DNS, ingress, backup) survives
+# resource pressure and eviction before stateless utility tools.
+---
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: homelab-critical
+value: 1000000
+globalDefault: false
+preemptionPolicy: PreemptLowerPriority
+description: >-
+  Critical infrastructure: DNS, ingress tunnel, backup, secrets controller.
+  These services must survive all eviction scenarios.
+---
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: homelab-data
+value: 100000
+globalDefault: false
+preemptionPolicy: PreemptLowerPriority
+description: >-
+  Data-critical applications with persistent storage (PVCs).
+  Eviction-safe ahead of stateless tools but yields to infrastructure.
+---
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: homelab-utility
+value: 10000
+globalDefault: true
+preemptionPolicy: PreemptLowerPriority
+description: >-
+  Stateless utility tools (DrawIO, IT-Tools, OpenSpeedTest, etc.).
+  First to be evicted during resource pressure — safe, they restart clean.

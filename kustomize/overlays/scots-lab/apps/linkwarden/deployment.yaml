@@ -17,6 +17,7 @@ spec:
       labels:
         app: linkwarden
     spec:
+      priorityClassName: homelab-data
       containers:
         - name: linkwarden
           image: ghcr.io/linkwarden/linkwarden:v2.9.3

@@ -17,6 +17,7 @@ spec:
       labels:
         app: umami
     spec:
+      priorityClassName: homelab-data
       containers:
         - name: umami
           image: ghcr.io/umami-software/umami:postgresql-latest

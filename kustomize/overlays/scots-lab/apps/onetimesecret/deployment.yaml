@@ -17,6 +17,7 @@ spec:
       labels:
         app: onetimesecret
     spec:
+      priorityClassName: homelab-data
       containers:
       - name: onetimesecret
         image: onetimesecret/onetimesecret:v0.24.7

@@ -17,9 +17,12 @@ spec:
       labels:
         app: ntfy
     spec:
+      priorityClassName: homelab-data
       containers:
         - name: ntfy
-          image: binwiederhier/ntfy:latest
+          # Pinned from :latest for Renovate tracking and rollback safety
+          image: binwiederhier/ntfy:v2.23.0
+          imagePullPolicy: IfNotPresent
           args: ["serve"]
           ports:
             - containerPort: 80

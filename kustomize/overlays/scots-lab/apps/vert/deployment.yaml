@@ -17,7 +17,9 @@ spec:
     spec:
       containers:
       - name: vert
+        # Vert uses SHA-based tags only; :latest + IfNotPresent prevents unnecessary pulls
         image: ghcr.io/vert-sh/vert:latest
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 80
           name: http

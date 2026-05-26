@@ -38,3 +38,6 @@ resources:
 # Recreate strategy required — RWO PVC cannot multi-attach across nodes during RollingUpdate
 strategy:
   type: Recreate
+
+# Data-tier eviction priority — PVC-backed SQLite must survive over stateless tools
+priorityClassName: homelab-data

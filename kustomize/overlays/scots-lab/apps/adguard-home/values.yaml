@@ -4,6 +4,9 @@ controllers:
   main:
     annotations:
       reloader.stakater.com/auto: "true"
+    pod:
+      # DNS server — network-wide outage if evicted
+      priorityClassName: homelab-critical
     containers:
       main:
         image:

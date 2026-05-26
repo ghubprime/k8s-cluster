@@ -13,6 +13,16 @@ spec:
       labels:
         app: cloudflare-tunnel
     spec:
+      # Highest eviction priority — tunnel loss kills all external access
+      priorityClassName: homelab-critical
+      # Spread replicas across nodes so a single node reboot doesn't sever ingress
+      topologySpreadConstraints:
+      - maxSkew: 1
+        topologyKey: kubernetes.io/hostname
+        whenUnsatisfiable: DoNotSchedule
+        labelSelector:
+          matchLabels:
+            app: cloudflare-tunnel
       containers:
       - name: cloudflared
         image: cloudflare/cloudflared:2025.4.0
@@ -35,3 +45,4 @@ spec:
             cpu: 500m
             memory: 256Mi
       restartPolicy: Always
+

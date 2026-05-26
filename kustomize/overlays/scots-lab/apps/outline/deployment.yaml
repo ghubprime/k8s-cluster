@@ -17,6 +17,7 @@ spec:
       labels:
         app: outline
     spec:
+      priorityClassName: homelab-data
       containers:
         - name: outline
           image: outlinewiki/outline:1.7.1
