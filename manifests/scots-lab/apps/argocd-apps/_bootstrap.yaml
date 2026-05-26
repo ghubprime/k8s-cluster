@@ -2,6 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   annotations:
+    argocd.argoproj.io/description: Personal finance and budgeting tool
     argocd.argoproj.io/sync-wave: "3"
   name: actual-budget-scots-lab
   namespace: argocd
@@ -30,6 +31,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   annotations:
+    argocd.argoproj.io/description: Network-wide DNS ad/tracker blocker
     argocd.argoproj.io/sync-wave: "2"
   name: adguard-home-scots-lab
   namespace: argocd
@@ -89,6 +91,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   annotations:
+    argocd.argoproj.io/description: GitOps continuous delivery engine
     argocd.argoproj.io/sync-wave: "1"
   name: argocd-scots-lab
   namespace: argocd
@@ -117,6 +120,8 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   annotations:
+    argocd.argoproj.io/description: Automated TLS certificate management via Let's
+      Encrypt
     argocd.argoproj.io/sync-wave: "1"
   name: cert-manager-scots-lab
   namespace: argocd
@@ -145,6 +150,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   annotations:
+    argocd.argoproj.io/description: Website change detection and monitoring
     argocd.argoproj.io/sync-wave: "3"
   name: changedetection-scots-lab
   namespace: argocd
@@ -173,6 +179,8 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   annotations:
+    argocd.argoproj.io/description: eBPF-based CNI, L2 LoadBalancer, and network policy
+      engine
     argocd.argoproj.io/sync-wave: "0"
   name: cilium-scots-lab
   namespace: argocd
@@ -201,6 +209,8 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   annotations:
+    argocd.argoproj.io/description: Cloudflare Tunnel for external ingress without
+      port-forwarding
     argocd.argoproj.io/sync-wave: "1"
   name: cloudflare-scots-lab
   namespace: argocd
@@ -229,6 +239,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   annotations:
+    argocd.argoproj.io/description: IP reputation security engine with Cilium bouncer
     argocd.argoproj.io/sync-wave: "1"
   name: crowdsec-scots-lab
   namespace: argocd
@@ -257,6 +268,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   annotations:
+    argocd.argoproj.io/description: CSI volume snapshot controller for PVC backups
     argocd.argoproj.io/sync-wave: "0"
   name: csi-snapshotter-scots-lab
   namespace: argocd
@@ -285,6 +297,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   annotations:
+    argocd.argoproj.io/description: Self-hosted diagram and whiteboard editor
     argocd.argoproj.io/sync-wave: "3"
   name: drawio-scots-lab
   namespace: argocd
@@ -313,6 +326,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   annotations:
+    argocd.argoproj.io/description: Kubernetes Gateway API CRD definitions
     argocd.argoproj.io/sync-wave: "-1"
   name: gateway-api-crds-scots-lab
   namespace: argocd
@@ -341,6 +355,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   annotations:
+    argocd.argoproj.io/description: Clientless remote desktop gateway (RDP/SSH/VNC)
     argocd.argoproj.io/sync-wave: "3"
   name: guacamole-scots-lab
   namespace: argocd
@@ -369,6 +384,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   annotations:
+    argocd.argoproj.io/description: Cluster health CronJob for automated status checks
     argocd.argoproj.io/sync-wave: "3"
   name: health-check-scots-lab
   namespace: argocd
@@ -397,6 +413,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   annotations:
+    argocd.argoproj.io/description: Cron job and heartbeat monitoring service
     argocd.argoproj.io/sync-wave: "3"
   name: healthchecks-scots-lab
   namespace: argocd
@@ -425,6 +442,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   annotations:
+    argocd.argoproj.io/description: Home inventory and asset management
     argocd.argoproj.io/sync-wave: "3"
   name: homebox-scots-lab
   namespace: argocd
@@ -453,6 +471,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   annotations:
+    argocd.argoproj.io/description: Homelab service dashboard and application launcher
     argocd.argoproj.io/sync-wave: "3"
   name: homepage-scots-lab
   namespace: argocd
@@ -481,6 +500,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   annotations:
+    argocd.argoproj.io/description: High-performance photo/video backup with ML classification
     argocd.argoproj.io/sync-wave: "3"
   name: immich-scots-lab
   namespace: argocd
@@ -509,6 +529,8 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   annotations:
+    argocd.argoproj.io/description: Collection of handy IT utility tools (hash, encode,
+      etc.)
     argocd.argoproj.io/sync-wave: "3"
   name: it-tools-scots-lab
   namespace: argocd
@@ -537,6 +559,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   annotations:
+    argocd.argoproj.io/description: kGateway custom resource definitions
     argocd.argoproj.io/sync-wave: "-1"
   name: kgateway-crds-scots-lab
   namespace: argocd
@@ -565,6 +588,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   annotations:
+    argocd.argoproj.io/description: Kubernetes-native ingress gateway (kGateway v2)
     argocd.argoproj.io/sync-wave: "2"
   name: kgateway-scots-lab
   namespace: argocd
@@ -593,6 +617,8 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   annotations:
+    argocd.argoproj.io/description: Prometheus, Grafana, and Alertmanager monitoring
+      stack
     argocd.argoproj.io/sync-wave: "3"
   name: kube-prometheus-stack-scots-lab
   namespace: argocd
@@ -621,6 +647,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   annotations:
+    argocd.argoproj.io/description: Collaborative bookmark and link manager
     argocd.argoproj.io/sync-wave: "3"
   name: linkwarden-scots-lab
   namespace: argocd
@@ -649,6 +676,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   annotations:
+    argocd.argoproj.io/description: Log aggregation with Alloy collectors and Grafana
     argocd.argoproj.io/sync-wave: "3"
   name: loki-scots-lab
   namespace: argocd
@@ -677,6 +705,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   annotations:
+    argocd.argoproj.io/description: Multi-network CNI plugin for secondary interfaces
     argocd.argoproj.io/sync-wave: "0"
   name: multus-scots-lab
   namespace: argocd
@@ -705,6 +734,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   annotations:
+    argocd.argoproj.io/description: PXE network boot server for OS deployment
     argocd.argoproj.io/sync-wave: "3"
   name: netbootxyz-scots-lab
   namespace: argocd
@@ -733,6 +763,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   annotations:
+    argocd.argoproj.io/description: Self-hosted cloud storage and collaboration platform
     argocd.argoproj.io/sync-wave: "3"
   name: nextcloud-scots-lab
   namespace: argocd
@@ -761,6 +792,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   annotations:
+    argocd.argoproj.io/description: Push notification service (HTTP-based pub/sub)
     argocd.argoproj.io/sync-wave: "3"
   name: ntfy-scots-lab
   namespace: argocd
@@ -789,6 +821,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   annotations:
+    argocd.argoproj.io/description: Sidero Omni cluster management platform
     argocd.argoproj.io/sync-wave: "1"
   name: omni-scots-lab
   namespace: argocd
@@ -820,6 +853,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   annotations:
+    argocd.argoproj.io/description: Self-destructing secret sharing links
     argocd.argoproj.io/sync-wave: "3"
   name: onetimesecret-scots-lab
   namespace: argocd
@@ -848,6 +882,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   annotations:
+    argocd.argoproj.io/description: Self-hosted network speed test
     argocd.argoproj.io/sync-wave: "3"
   name: openspeedtest-scots-lab
   namespace: argocd
@@ -876,6 +911,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   annotations:
+    argocd.argoproj.io/description: Team knowledge base and wiki
     argocd.argoproj.io/sync-wave: "3"
   name: outline-scots-lab
   namespace: argocd
@@ -904,6 +940,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   annotations:
+    argocd.argoproj.io/description: Document management system with OCR processing
     argocd.argoproj.io/sync-wave: "3"
   name: paperless-scots-lab
   namespace: argocd
@@ -932,6 +969,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   annotations:
+    argocd.argoproj.io/description: AI-powered photo management and browsing
     argocd.argoproj.io/sync-wave: "3"
   name: photoprism-scots-lab
   namespace: argocd
@@ -960,6 +998,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   annotations:
+    argocd.argoproj.io/description: Network rack documentation and visualization
     argocd.argoproj.io/sync-wave: "3"
   name: rackula-scots-lab
   namespace: argocd
@@ -988,6 +1027,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   annotations:
+    argocd.argoproj.io/description: ROM library manager and retro game collection
     argocd.argoproj.io/sync-wave: "3"
   name: romm-scots-lab
   namespace: argocd
@@ -1016,6 +1056,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   annotations:
+    argocd.argoproj.io/description: Ceph cluster topology — OSDs, MONs, MDS, RGW
     argocd.argoproj.io/sync-wave: "2"
   name: rook-ceph-cluster-scots-lab
   namespace: argocd
@@ -1049,6 +1090,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   annotations:
+    argocd.argoproj.io/description: Rook operator for Ceph distributed storage
     argocd.argoproj.io/sync-wave: "1"
   name: rook-ceph-scots-lab
   namespace: argocd
@@ -1077,6 +1119,8 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   annotations:
+    argocd.argoproj.io/description: Bitnami SealedSecrets controller for GitOps-safe
+      secrets
     argocd.argoproj.io/sync-wave: "1"
   name: sealed-secrets-scots-lab
   namespace: argocd
@@ -1105,6 +1149,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   annotations:
+    argocd.argoproj.io/description: PDF manipulation toolkit (merge, split, OCR)
     argocd.argoproj.io/sync-wave: "3"
   name: stirling-pdf-scots-lab
   namespace: argocd
@@ -1133,6 +1178,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   annotations:
+    argocd.argoproj.io/description: Talos Linux OS configuration and machine patches
     argocd.argoproj.io/sync-wave: "1"
   name: talos-scots-lab
   namespace: argocd
@@ -1161,6 +1207,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   annotations:
+    argocd.argoproj.io/description: Privacy-focused web analytics
     argocd.argoproj.io/sync-wave: "3"
   name: umami-scots-lab
   namespace: argocd
@@ -1189,6 +1236,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   annotations:
+    argocd.argoproj.io/description: Service uptime monitoring dashboard
     argocd.argoproj.io/sync-wave: "3"
   name: uptime-kuma-scots-lab
   namespace: argocd
@@ -1217,6 +1265,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   annotations:
+    argocd.argoproj.io/description: Cluster backup and restore to Cloudflare R2 storage
     argocd.argoproj.io/sync-wave: "1"
   name: velero-scots-lab
   namespace: argocd
@@ -1245,6 +1294,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   annotations:
+    argocd.argoproj.io/description: Document format converter (PDF/DOCX/images)
     argocd.argoproj.io/sync-wave: "3"
   name: vert-scots-lab
   namespace: argocd
@@ -1273,6 +1323,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   annotations:
+    argocd.argoproj.io/description: IPAM for Multus secondary network attachments
     argocd.argoproj.io/sync-wave: "0"
   name: whereabouts-scots-lab
   namespace: argocd
@@ -1301,6 +1352,8 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   annotations:
+    argocd.argoproj.io/description: ITSM ticketing system (OTRS fork) for helpdesk
+      ops
     argocd.argoproj.io/sync-wave: "3"
   name: znuny-scots-lab
   namespace: argocd
