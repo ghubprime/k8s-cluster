@@ -51100,6 +51100,181 @@ spec:
       - emptyDir: {}
         name: default-config-dir
 ---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  labels:
+    app: ceph-dashboard-autofix
+  name: ceph-dashboard-autofix
+  namespace: rook-ceph
+spec:
+  concurrencyPolicy: Forbid
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      activeDeadlineSeconds: 120
+      backoffLimit: 1
+      template:
+        metadata:
+          labels:
+            app: ceph-dashboard-autofix
+        spec:
+          containers:
+          - command:
+            - /bin/bash
+            - -c
+            - |
+              set -e
+              echo "[$(date -u)] Ceph Dashboard Autofix - checking status..."
+
+              # Check if dashboard is in mgr services
+              SERVICES=$(ceph mgr services 2>/dev/null || echo "{}")
+              DASHBOARD_URL=$(echo "$SERVICES" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('dashboard',''))" 2>/dev/null || echo "")
+
+              if [ -n "$DASHBOARD_URL" ]; then
+                echo "[$(date -u)] Dashboard is active at: $DASHBOARD_URL"
+                echo "[$(date -u)] No fix needed. Exiting."
+                exit 0
+              fi
+
+              echo "[$(date -u)] WARNING: Dashboard not found in mgr services. Applying fix..."
+
+              # Get mgr dump to find active and standby mgr daemons
+              MGR_DUMP=$(ceph mgr dump -f json 2>/dev/null)
+
+              # Extract all mgr daemon names and their host IPs
+              # The active_name field gives us the primary daemon
+              ACTIVE_NAME=$(echo "$MGR_DUMP" | python3 -c "import sys,json; print(json.load(sys.stdin)['active_name'])" 2>/dev/null)
+
+              echo "[$(date -u)] Active MGR daemon: $ACTIVE_NAME"
+
+              # Get all mgr pod IPs by querying node IPs where mgr pods run
+              # Since we're on hostNetwork, mgr pods use node IPs
+              for MGR_POD in $(ceph orch ps --daemon-type mgr -f json 2>/dev/null | python3 -c "
+              import sys, json
+              data = json.load(sys.stdin)
+              for d in data:
+                  name = d.get('daemon_name', d.get('daemon_id', ''))
+                  # Extract the daemon short name (e.g., 'a' from 'mgr.a')
+                  short = name.split('.')[-1] if '.' in name else name
+                  ip = d.get('ip', d.get('addr', ''))
+                  # Clean IP - remove port if present
+                  ip = ip.split(':')[0] if ':' in ip else ip
+                  # Skip IPv6 or empty
+                  if ip and not ip.startswith('[') and ip != '::':
+                      print(f'{short}={ip}')
+              " 2>/dev/null); do
+                DAEMON_ID=$(echo "$MGR_POD" | cut -d= -f1)
+                DAEMON_IP=$(echo "$MGR_POD" | cut -d= -f2)
+
+                if [ -n "$DAEMON_ID" ] && [ -n "$DAEMON_IP" ]; then
+                  echo "[$(date -u)] Setting mgr.$DAEMON_ID dashboard server_addr to $DAEMON_IP"
+                  ceph config set "mgr.$DAEMON_ID" mgr/dashboard/server_addr "$DAEMON_IP" 2>/dev/null || true
+                fi
+              done
+
+              # If orch ps didn't work, fall back to node IP lookup via mgr metadata
+              if [ -z "$MGR_POD" ]; then
+                echo "[$(date -u)] Fallback: using mgr metadata for IP lookup"
+                for DAEMON_ID in $(echo "$MGR_DUMP" | python3 -c "
+                import sys, json
+                data = json.load(sys.stdin)
+                names = [data['active_name']]
+                for s in data.get('standbys', []):
+                    names.append(s['name'])
+                for n in names:
+                    print(n)
+                " 2>/dev/null); do
+                  # Get the mgr's host addr from metadata
+                  DAEMON_IP=$(ceph mgr metadata "$DAEMON_ID" -f json 2>/dev/null | python3 -c "
+                  import sys, json
+                  data = json.load(sys.stdin)
+                  addr = data.get('addr', '')
+                  # Remove port suffix
+                  print(addr.split(':')[0] if ':' in addr else addr)
+                  " 2>/dev/null || echo "")
+
+                  if [ -n "$DAEMON_IP" ] && [ "$DAEMON_IP" != "" ]; then
+                    echo "[$(date -u)] Setting mgr.$DAEMON_ID dashboard server_addr to $DAEMON_IP"
+                    ceph config set "mgr.$DAEMON_ID" mgr/dashboard/server_addr "$DAEMON_IP" 2>/dev/null || true
+                  fi
+                done
+              fi
+
+              # Restart dashboard module
+              echo "[$(date -u)] Restarting dashboard module..."
+              ceph mgr module disable dashboard 2>/dev/null || true
+              sleep 3
+              ceph mgr module enable dashboard 2>/dev/null || true
+
+              # Wait and verify
+              sleep 10
+              SERVICES=$(ceph mgr services 2>/dev/null || echo "{}")
+              DASHBOARD_URL=$(echo "$SERVICES" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('dashboard',''))" 2>/dev/null || echo "")
+
+              if [ -n "$DASHBOARD_URL" ]; then
+                echo "[$(date -u)] SUCCESS: Dashboard restored at: $DASHBOARD_URL"
+              else
+                echo "[$(date -u)] WARNING: Dashboard may still be starting. Check again on next run."
+              fi
+            env:
+            - name: ROOK_CEPH_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  key: ceph-username
+                  name: rook-ceph-mon
+            image: quay.io/ceph/ceph:v20.2.0
+            name: dashboard-fix
+            resources:
+              limits:
+                cpu: 200m
+                memory: 256Mi
+              requests:
+                cpu: 50m
+                memory: 64Mi
+            securityContext:
+              capabilities:
+                drop:
+                - ALL
+              runAsGroup: 2016
+              runAsNonRoot: true
+              runAsUser: 2016
+            volumeMounts:
+            - mountPath: /etc/ceph
+              name: ceph-config
+            - mountPath: /etc/rook
+              name: mon-endpoint-volume
+            - mountPath: /var/lib/rook-ceph-mon
+              name: ceph-admin-secret
+            - mountPath: /etc/rook-config-override
+              name: rook-config-override
+              readOnly: true
+          dnsPolicy: ClusterFirstWithHostNet
+          hostNetwork: true
+          restartPolicy: Never
+          serviceAccountName: rook-ceph-default
+          volumes:
+          - name: ceph-admin-secret
+            secret:
+              items:
+              - key: ceph-secret
+                path: secret.keyring
+              secretName: rook-ceph-mon
+          - configMap:
+              items:
+              - key: data
+                path: mon-endpoints
+              name: rook-ceph-mon-endpoints
+            name: mon-endpoint-volume
+          - configMap:
+              name: rook-config-override
+              optional: true
+            name: rook-config-override
+          - emptyDir: {}
+            name: ceph-config
+  schedule: '*/5 * * * *'
+  successfulJobsHistoryLimit: 1
+---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
