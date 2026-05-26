@@ -1,0 +1,24 @@
+# Metrics Server values for scots-lab (Talos Linux v1.12.6 bare-metal)
+# Provides the Kubernetes Metrics API for kubectl top and HPA autoscaling
+
+args:
+  # Talos uses self-signed kubelet serving certificates
+  - --kubelet-insecure-tls
+  # Cilium replaces kube-proxy — prefer direct node IP communication
+  - --kubelet-preferred-address-types=InternalIP
+
+# Resource limits for homelab (3-node cluster)
+resources:
+  requests:
+    cpu: 50m
+    memory: 64Mi
+  limits:
+    cpu: 200m
+    memory: 256Mi
+
+# Single replica sufficient for homelab
+replicas: 1
+
+# APIService registration
+apiService:
+  insecureSkipTLSVerify: true

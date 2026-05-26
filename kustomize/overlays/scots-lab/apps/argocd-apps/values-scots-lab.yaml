@@ -88,6 +88,14 @@ argocdApplications:
     appCategory: infra
     syncWave: "3"
     description: Cluster health CronJob for automated status checks
+  metrics-server:
+    disableAutomated: false
+    disable: false
+    name: metrics-server
+    namespace: kube-system
+    appCategory: infra
+    syncWave: "1"
+    description: Kubernetes Metrics API for kubectl top and HPA autoscaling
   gateway-api-crds:
     disableAutomated: false
     disable: false
