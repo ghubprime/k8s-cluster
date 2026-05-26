@@ -71,6 +71,8 @@ cephClusterSpec:
         cpu: 100m
         memory: 1Gi
       limits:
+        # Establish QoS ceiling to prevent OSD rebalancing from saturating node CPU
+        cpu: 1000m
         memory: 4Gi
     mgr-sidecar:
       requests:
