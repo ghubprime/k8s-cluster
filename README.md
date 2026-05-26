@@ -15,7 +15,7 @@ The primary repository defining the `k8s-scots-lab` bare-metal Kubernetes cluste
 │       ├─ Multus CNI                             │
 │       ├─ Gateway API CRDs                       │
 │       ├─ ArgoCD                                 │
-│       └─ ArgoCD App-of-Apps (47 applications)  │
+│       └─ ArgoCD App-of-Apps (48 applications)  │
 └─────────────────────────────────────────────────┘
          │
          ▼  omnictl cluster template sync
@@ -28,11 +28,12 @@ The primary repository defining the `k8s-scots-lab` bare-metal Kubernetes cluste
          │
          ▼  ArgoCD syncs from manifests/
 ┌─────────────────────────────────────────────────┐
-│  Live Cluster (47 ArgoCD Applications)          │
+│  Live Cluster (48 ArgoCD Applications)          │
 │  Wave -1: CRDs (Gateway API, kGateway)          │
 │  Wave  0: Infra (Cilium, Multus, Whereabouts)   │
 │  Wave  1: Core (ArgoCD, cert-manager, Ceph,     │
-│           Velero, SealedSecrets, CrowdSec)       │
+│           Metrics Server, Velero, SealedSecrets) │
+│           CrowdSec, Cloudflare)                  │
 │  Wave  2: Services (Ceph Cluster, kGateway)     │
 │  Wave  3: Apps & Monitoring (kube-prometheus...) │
 └─────────────────────────────────────────────────┘
@@ -53,7 +54,7 @@ k8s-cluster/
 │   └── overlays/scots-lab/  # Environment-specific overlays and patches
 │       ├── apps/            # ArgoCD, cert-manager, velero, sealed-secrets
 │       ├── cluster/         # rook-ceph-cluster, kgateway, gateway-api
-│       ├── infra/           # Cilium, Multus, Whereabouts
+│       ├── infra/           # Cilium, Multus, Whereabouts, Metrics Server
 │       ├── monitoring/      # kube-prometheus-stack
 │       └── security/        # CrowdSec
 │
