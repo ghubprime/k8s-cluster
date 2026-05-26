@@ -2,3 +2,9 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: sealed-secrets
+  labels:
+    # PSA enforcement — baseline for SealedSecrets controller (UID 1001)
+    pod-security.kubernetes.io/enforce: baseline
+    pod-security.kubernetes.io/audit: baseline
+    pod-security.kubernetes.io/warn: baseline
+
