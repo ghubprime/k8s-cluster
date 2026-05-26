@@ -91,6 +91,7 @@ spec:
         - --skip-auth-route=^/ping/.*
         - --pass-user-headers=false
         - --session-cookie-minimal=true
+        - --cookie-domain=ping.srbii.com
         envFrom:
         - secretRef:
             name: healthchecks-oauth2-proxy-secret

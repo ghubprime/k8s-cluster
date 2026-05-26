@@ -135,6 +135,7 @@ spec:
         - --pass-user-headers=false
         - --cookie-secure=true
         - --cookie-name=_oauth2_boot
+        - --cookie-domain=boot.srbii.com
         - --redirect-url=https://boot.srbii.com/oauth2/callback
         - --whitelist-domain=.srbii.com
         - --skip-provider-button=true
