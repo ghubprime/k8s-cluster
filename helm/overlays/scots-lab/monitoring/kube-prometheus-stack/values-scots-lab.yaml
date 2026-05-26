@@ -140,3 +140,65 @@ prometheus-node-exporter:
 
 namespaceOverride: kube-prometheus-system
 
+additionalPrometheusRulesMap:
+  velero-backup-health:
+    groups:
+    - name: velero.rules
+      rules:
+      - alert: VeleroBackupPartiallyFailed
+        expr: velero_backup_partial_failure_total{schedule!=""} > velero_backup_partial_failure_total{schedule!=""} offset 1h
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Velero backup partially failed ({{ $labels.schedule }})"
+          description: "Schedule {{ $labels.schedule }} reported partial failures in the last hour."
+      - alert: VeleroBackupFailed
+        expr: velero_backup_failure_total{schedule!=""} > velero_backup_failure_total{schedule!=""} offset 1h
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Velero backup FAILED ({{ $labels.schedule }})"
+          description: "Schedule {{ $labels.schedule }} reported failures in the last hour. Investigate immediately — all PVC data is at risk."
+      - alert: VeleroBackupMissing
+        expr: time() - velero_backup_last_successful_timestamp{schedule!=""} > 28800
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Velero backup missing for 8+ hours ({{ $labels.schedule }})"
+          description: "No successful backup for schedule {{ $labels.schedule }} in over 8 hours. The backup pipeline may be stalled or OOMKilled."
+  ceph-capacity-alerts:
+    groups:
+    - name: ceph-capacity.rules
+      rules:
+      - alert: CephPoolNearFull
+        expr: (ceph_pool_stored / ceph_pool_max_avail) * 100 > 70
+        for: 15m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Ceph pool {{ $labels.name }} is {{ $value | humanize }}% full"
+          description: "Pool {{ $labels.name }} has exceeded 70% utilization. Plan capacity expansion."
+      - alert: CephPoolCriticallyFull
+        expr: (ceph_pool_stored / ceph_pool_max_avail) * 100 > 85
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Ceph pool {{ $labels.name }} is {{ $value | humanize }}% full — CRITICAL"
+          description: "Pool {{ $labels.name }} has exceeded 85% utilization. Immediate action required to prevent write failures."
+  cert-expiry-alerts:
+    groups:
+    - name: cert-manager.rules
+      rules:
+      - alert: CertificateExpiringSoon
+        expr: certmanager_certificate_expiration_timestamp_seconds - time() < 1209600
+        for: 1h
+        labels:
+          severity: warning
+        annotations:
+          summary: "Certificate {{ $labels.name }} expires in < 14 days"
+          description: "Certificate {{ $labels.name }} in namespace {{ $labels.namespace }} expires in {{ $value | humanizeDuration }}."
+
