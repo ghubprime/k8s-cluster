@@ -413,4 +413,12 @@ argocdApplications:
     appCategory: apps
     syncWave: "3"
     description: High-performance photo/video backup with ML classification
+  gdrive-backup:
+    disableAutomated: false
+    disable: false
+    name: gdrive-backup
+    namespace: gdrive-backup
+    appCategory: apps
+    syncWave: "3"
+    description: Google Drive backup replication via rclone (R2 mirror + PVC snapshots)
 
