@@ -705,6 +705,36 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   annotations:
+    argocd.argoproj.io/description: Kubernetes Metrics API for kubectl top and HPA
+      autoscaling
+    argocd.argoproj.io/sync-wave: "1"
+  name: metrics-server-scots-lab
+  namespace: argocd
+spec:
+  destination:
+    namespace: kube-system
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: manifests/scots-lab/infra/metrics-server
+    repoURL: https://github.com/ghubprime/k8s-cluster.git
+    targetRevision: HEAD
+  syncPolicy:
+    automated:
+      allowEmpty: false
+      prune: true
+      selfHeal: true
+    retry:
+      backoff:
+        duration: 30s
+        factor: 2
+        maxDuration: 10m
+      limit: 10
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  annotations:
     argocd.argoproj.io/description: Multi-network CNI plugin for secondary interfaces
     argocd.argoproj.io/sync-wave: "0"
   name: multus-scots-lab
