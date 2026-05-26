@@ -19,6 +19,7 @@ argocdApplications:
     namespace: argocd
     appCategory: apps
     syncWave: "1"
+    description: GitOps continuous delivery engine
   talos:
     disableAutomated: false
     disable: false
@@ -26,6 +27,7 @@ argocdApplications:
     namespace: talos-system
     appCategory: cluster
     syncWave: "1"
+    description: Talos Linux OS configuration and machine patches
   omni:
     repoURL: https://github.com/ghubprime/omni-infra.git
     path: "."
@@ -38,6 +40,7 @@ argocdApplications:
       include: "{manifests/*}"
     appCategory: cluster
     syncWave: "1"
+    description: Sidero Omni cluster management platform
   hostNetwork:
     disableAutomated: false
     disable: true
@@ -52,6 +55,7 @@ argocdApplications:
     namespace: kube-system
     appCategory: infra
     syncWave: "0"
+    description: Multi-network CNI plugin for secondary interfaces
   whereabouts:
     disableAutomated: false
     disable: false
@@ -59,6 +63,7 @@ argocdApplications:
     namespace: kube-system
     appCategory: infra
     syncWave: "0"
+    description: IPAM for Multus secondary network attachments
   cilium:
     disableAutomated: false
     disable: false
@@ -66,6 +71,7 @@ argocdApplications:
     namespace: kube-system
     appCategory: infra
     syncWave: "0"
+    description: eBPF-based CNI, L2 LoadBalancer, and network policy engine
   csi-snapshotter:
     disableAutomated: false
     disable: false
@@ -73,6 +79,7 @@ argocdApplications:
     namespace: kube-system
     appCategory: infra
     syncWave: "0"
+    description: CSI volume snapshot controller for PVC backups
   health-check:
     disableAutomated: false
     disable: false
@@ -80,12 +87,14 @@ argocdApplications:
     namespace: kube-system
     appCategory: infra
     syncWave: "3"
+    description: Cluster health CronJob for automated status checks
   gateway-api-crds:
     disableAutomated: false
     disable: false
     name: gateway-api-crds
     appCategory: cluster
     syncWave: "-1"
+    description: Kubernetes Gateway API CRD definitions
   kube-prometheus-stack:
     disableAutomated: false
     disable: false
@@ -93,6 +102,7 @@ argocdApplications:
     namespace: kube-prometheus-system
     appCategory: monitoring
     syncWave: "3"
+    description: Prometheus, Grafana, and Alertmanager monitoring stack
   rook-ceph:
     disableAutomated: false
     disable: false
@@ -100,6 +110,7 @@ argocdApplications:
     namespace: rook-ceph
     appCategory: apps
     syncWave: "1"
+    description: Rook operator for Ceph distributed storage
   rook-ceph-cluster:
     disableAutomated: false
     disable: false
@@ -107,6 +118,7 @@ argocdApplications:
     namespace: rook-ceph
     appCategory: cluster
     syncWave: "2"
+    description: Ceph cluster topology — OSDs, MONs, MDS, RGW
     ignoreDifferences:
       - group: ceph.rook.io
         kind: CephCluster
@@ -130,18 +142,21 @@ argocdApplications:
     namespace: cert-manager
     appCategory: apps
     syncWave: "1"
+    description: Automated TLS certificate management via Let's Encrypt
   kgateway-crds:
     disableAutomated: false
     disable: false
     name: kgateway-crds
     appCategory: cluster
     syncWave: "-1"
+    description: kGateway custom resource definitions
   kgateway:
     disableAutomated: false
     disable: false
     name: kgateway
     appCategory: cluster
     syncWave: "2"
+    description: Kubernetes-native ingress gateway (kGateway v2)
   sealedSecrets:
     disableAutomated: false
     disable: false
@@ -149,6 +164,7 @@ argocdApplications:
     namespace: kube-system
     appCategory: apps
     syncWave: "1"
+    description: Bitnami SealedSecrets controller for GitOps-safe secrets
   velero:
     disableAutomated: false
     disable: false
@@ -156,6 +172,7 @@ argocdApplications:
     namespace: velero
     appCategory: apps
     syncWave: "1"
+    description: Cluster backup and restore to Cloudflare R2 storage
   crowdsec:
     disableAutomated: false
     disable: false
@@ -163,6 +180,7 @@ argocdApplications:
     namespace: crowdsec
     appCategory: security
     syncWave: "1"
+    description: IP reputation security engine with Cilium bouncer
   loki:
     disableAutomated: false
     disable: false
@@ -170,6 +188,7 @@ argocdApplications:
     namespace: loki
     appCategory: monitoring
     syncWave: "3"
+    description: Log aggregation with Alloy collectors and Grafana
   uptime-kuma:
     disableAutomated: false
     disable: false
@@ -177,6 +196,7 @@ argocdApplications:
     namespace: uptime-kuma
     appCategory: apps
     syncWave: "3"
+    description: Service uptime monitoring dashboard
   nextcloud:
     disableAutomated: false
     disable: false
@@ -184,6 +204,7 @@ argocdApplications:
     namespace: nextcloud
     appCategory: apps
     syncWave: "3"
+    description: Self-hosted cloud storage and collaboration platform
   cloudflare:
     disableAutomated: false
     disable: false
@@ -191,6 +212,7 @@ argocdApplications:
     namespace: cloudflare
     appCategory: infra
     syncWave: "1"
+    description: Cloudflare Tunnel for external ingress without port-forwarding
   paperless:
     disableAutomated: false
     disable: false
@@ -198,6 +220,7 @@ argocdApplications:
     namespace: paperless
     appCategory: apps
     syncWave: "3"
+    description: Document management system with OCR processing
   photoprism:
     disableAutomated: false
     disable: false
@@ -205,6 +228,7 @@ argocdApplications:
     namespace: photoprism
     appCategory: apps
     syncWave: "3"
+    description: AI-powered photo management and browsing
   znuny:
     disableAutomated: false
     disable: false
@@ -212,6 +236,7 @@ argocdApplications:
     namespace: znuny
     appCategory: apps
     syncWave: "3"
+    description: ITSM ticketing system (OTRS fork) for helpdesk ops
   adguard-home:
     disableAutomated: false
     disable: false
@@ -219,6 +244,7 @@ argocdApplications:
     namespace: adguard-home
     appCategory: apps
     syncWave: "2"
+    description: Network-wide DNS ad/tracker blocker
   netbootxyz:
     disableAutomated: false
     disable: false
@@ -226,6 +252,7 @@ argocdApplications:
     namespace: netbootxyz
     appCategory: apps
     syncWave: "3"
+    description: PXE network boot server for OS deployment
   guacamole:
     disableAutomated: false
     disable: false
@@ -233,6 +260,7 @@ argocdApplications:
     namespace: guacamole
     appCategory: apps
     syncWave: "3"
+    description: Clientless remote desktop gateway (RDP/SSH/VNC)
   changedetection:
     disableAutomated: false
     disable: false
@@ -240,6 +268,7 @@ argocdApplications:
     namespace: changedetection
     appCategory: apps
     syncWave: "3"
+    description: Website change detection and monitoring
   vert:
     disableAutomated: false
     disable: false
@@ -247,6 +276,7 @@ argocdApplications:
     namespace: vert
     appCategory: apps
     syncWave: "3"
+    description: Document format converter (PDF/DOCX/images)
   drawio:
     disableAutomated: false
     disable: false
@@ -254,6 +284,7 @@ argocdApplications:
     namespace: drawio
     appCategory: apps
     syncWave: "3"
+    description: Self-hosted diagram and whiteboard editor
   rackula:
     disableAutomated: false
     disable: false
@@ -261,6 +292,7 @@ argocdApplications:
     namespace: rackula
     appCategory: apps
     syncWave: "3"
+    description: Network rack documentation and visualization
   it-tools:
     disableAutomated: false
     disable: false
@@ -268,6 +300,7 @@ argocdApplications:
     namespace: it-tools
     appCategory: apps
     syncWave: "3"
+    description: Collection of handy IT utility tools (hash, encode, etc.)
   homepage:
     disableAutomated: false
     disable: false
@@ -275,6 +308,7 @@ argocdApplications:
     namespace: homepage
     appCategory: apps
     syncWave: "3"
+    description: Homelab service dashboard and application launcher
   openspeedtest:
     disableAutomated: false
     disable: false
@@ -282,6 +316,7 @@ argocdApplications:
     namespace: openspeedtest
     appCategory: apps
     syncWave: "3"
+    description: Self-hosted network speed test
   onetimesecret:
     disableAutomated: false
     disable: false
@@ -289,6 +324,7 @@ argocdApplications:
     namespace: onetimesecret
     appCategory: apps
     syncWave: "3"
+    description: Self-destructing secret sharing links
   umami:
     disableAutomated: false
     disable: false
@@ -296,6 +332,7 @@ argocdApplications:
     namespace: umami
     appCategory: apps
     syncWave: "3"
+    description: Privacy-focused web analytics
   outline:
     disableAutomated: false
     disable: false
@@ -303,6 +340,7 @@ argocdApplications:
     namespace: outline
     appCategory: apps
     syncWave: "3"
+    description: Team knowledge base and wiki
   actual-budget:
     disableAutomated: false
     disable: false
@@ -310,6 +348,7 @@ argocdApplications:
     namespace: actual-budget
     appCategory: apps
     syncWave: "3"
+    description: Personal finance and budgeting tool
   ntfy:
     disableAutomated: false
     disable: false
@@ -317,6 +356,7 @@ argocdApplications:
     namespace: ntfy
     appCategory: apps
     syncWave: "3"
+    description: Push notification service (HTTP-based pub/sub)
   linkwarden:
     disableAutomated: false
     disable: false
@@ -324,6 +364,7 @@ argocdApplications:
     namespace: linkwarden
     appCategory: apps
     syncWave: "3"
+    description: Collaborative bookmark and link manager
   stirling-pdf:
     disableAutomated: false
     disable: false
@@ -331,6 +372,7 @@ argocdApplications:
     namespace: stirling-pdf
     appCategory: apps
     syncWave: "3"
+    description: PDF manipulation toolkit (merge, split, OCR)
   romm:
     disableAutomated: false
     disable: false
@@ -338,6 +380,7 @@ argocdApplications:
     namespace: romm
     appCategory: apps
     syncWave: "3"
+    description: ROM library manager and retro game collection
   homebox:
     disableAutomated: false
     disable: false
@@ -345,6 +388,7 @@ argocdApplications:
     namespace: homebox
     appCategory: apps
     syncWave: "3"
+    description: Home inventory and asset management
   healthchecks:
     disableAutomated: false
     disable: false
@@ -352,6 +396,7 @@ argocdApplications:
     namespace: healthchecks
     appCategory: apps
     syncWave: "3"
+    description: Cron job and heartbeat monitoring service
   immich:
     disableAutomated: false
     disable: false
@@ -359,4 +404,5 @@ argocdApplications:
     namespace: immich
     appCategory: apps
     syncWave: "3"
+    description: High-performance photo/video backup with ML classification
 

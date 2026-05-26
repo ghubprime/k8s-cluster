@@ -6,9 +6,14 @@ kind: Application
 metadata:
   name: {{ .name }}-{{ $.Values.global.env }}
   namespace: argocd
-{{- if .syncWave }}
+{{- if or .syncWave .description }}
   annotations:
+{{- if .syncWave }}
     argocd.argoproj.io/sync-wave: "{{ .syncWave }}"
+{{- end }}
+{{- if .description }}
+    argocd.argoproj.io/description: "{{ .description }}"
+{{- end }}
 {{- end }}
 spec:
   project: {{ $.Values.global.spec.project }}
