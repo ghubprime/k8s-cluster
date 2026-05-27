@@ -73771,6 +73771,12 @@ spec:
   probeNamespaceSelector: {}
   probeSelector: {}
   replicas: 1
+  resources:
+    limits:
+      memory: 2Gi
+    requests:
+      cpu: 200m
+      memory: 1Gi
   retention: 15d
   retentionSize: 20GB
   routePrefix: /
