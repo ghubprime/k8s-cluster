@@ -3,8 +3,14 @@ kind: Kustomization
 resources:
   - ../../../../base/apps/rook-ceph/
   - ceph-dashboard-autofix-cronjob.yaml
-generators:
-  - ../../../../../helm/overlays/scots-lab/apps/rook-ceph/
+helmCharts:
+  - name: rook-ceph
+    repo: https://charts.rook.io/release
+    version: 1.19.2
+    releaseName: rook-ceph
+    namespace: rook-ceph
+    includeCRDs: true
+    valuesFile: ../../../../../helm/overlays/scots-lab/apps/rook-ceph/values-scots-lab.yaml
 patches:
 - target:
     kind: CustomResourceDefinition
