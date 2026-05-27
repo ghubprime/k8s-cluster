@@ -6,7 +6,14 @@ resources:
   - argocd-pdb.yaml
   - emergency-unban.yaml
   - httproute.yaml
-generators:
-  - ../../../../../helm/overlays/scots-lab/apps/argocd/
+namespace: argocd
+helmCharts:
+  - name: argo-cd
+    repo: https://argoproj.github.io/argo-helm
+    version: 9.0.5
+    releaseName: argo-cd
+    namespace: argocd
+    includeCRDs: true
+    valuesFile: values-scots-lab.yaml
 patches:
   - path: dashboard-patch.yaml

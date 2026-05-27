@@ -21,6 +21,12 @@ kubeEtcd:
 
 prometheus:
   prometheusSpec:
+    resources:
+      requests:
+        cpu: 200m
+        memory: 1Gi
+      limits:
+        memory: 2Gi
     # Discover all PodMonitors and ServiceMonitors without needing matching labels
     podMonitorSelectorNilUsesHelmValues: false
     serviceMonitorSelectorNilUsesHelmValues: false
