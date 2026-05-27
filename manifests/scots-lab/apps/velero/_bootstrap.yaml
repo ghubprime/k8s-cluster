@@ -1,3 +1,12 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    pod-security.kubernetes.io/audit: privileged
+    pod-security.kubernetes.io/enforce: privileged
+    pod-security.kubernetes.io/warn: privileged
+  name: velero
+---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
@@ -3442,6 +3451,20 @@ spec:
         name: host-pods
       - emptyDir: {}
         name: scratch
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  name: velero-cloudflare-credentials
+  namespace: velero
+spec:
+  encryptedData:
+    cloud: AgCHLznhiSCAZrxv1iqVTjx48d3zmpU0gojMxfc/eTclRtSs/+qiZVZ4uNaDEbBm7OCD1UBePQ0hThPUI2Hpc0AcxBi68PIyUHPKjsXbalF7JnpQ9erYAsV0mUINHcXRX42oBY8YXu5J9NHBzmoTrn9A46e9HQe74A99XojRvZWHC9LaLz/zKxibe/KcTR6zJzT/NK/D0cBKPKL4bABG4pJjv9u/OCukWbXg1cjQ/VAfqrblKGXoUnXaIRZTUxkLNePq/9omd6fPOzfX9ER8IcS3RvMkkU0wZc5Z7cZAnOdURCh1BDf8JFm7EptCgtaxSvm1EVmUR8JAmZO2ZDpdZsict6RHmATMazeRpjOCB5B0T7s9XvM4fXF9J6+wXJy/odkfg7yyEi4WUGWQHr7VV3K8mrBvDbiRONs7hNC7yVGBdkqUHAkkGoLjnPqa9xQXU1zr3G1XBGMNmLCyMyja/ftbBzOBW0/h/PezSt1HU45PjCkbKqF7/PyEGy7TGCKkUNkN+nRtLIOsdbnBUNo/CgZ5T8AkTSnJjgGQ+Ss8VcqAu5BT/L82JawQvPTJMgesBWWuj2kSi/MlysdlDq9PqzlULw4hZfLyD2lUNaiQx22WMDHMqK6XaCADe70gv964Ygotop2xCFQ1xPe+JEhzRcq8rBEB8YiHgYScCwxZ0n+O8VSe+7hjNbd4NSMOlxcEMQjCLqoIBzYQWiS/lwUjZO45DX6fsF6cBSDwRkknnrsx2aU0KnF1uvY8YpT9WzthL/mbRNHbgW+Ww236q0OQP0drEwfhwfIQpoqYcj6vOmfmpAcWgmNLdjlZQkQHX9FxQXiTMmthKFf1m05dDy0HRywaEnvOL3aHVLfYgwEXe8ar92X9HPhjroDcPcp+qcW3+SG207c=
+  template:
+    metadata:
+      name: velero-cloudflare-credentials
+      namespace: velero
+    type: Opaque
 ---
 apiVersion: velero.io/v1
 kind: BackupStorageLocation
