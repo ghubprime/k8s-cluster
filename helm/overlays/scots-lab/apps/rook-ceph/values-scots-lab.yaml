@@ -4,8 +4,16 @@ monitoring:
 
 resources:
   requests:
-    cpu: 10m
+    # Increased from 10m to 250m to align with actual observed operator consumption (201m).
+    # This ensures the scheduler accurately reserves node capacity, preventing 
+    # the Ceph control loop from being CPU-starved during critical cluster reconciliation.
+    cpu: 250m
     memory: 128Mi
+  limits:
+    # Establish a safe QoS ceiling to prevent runaway operator loops from 
+    # saturating node CPU resources.
+    cpu: 500m
+    memory: 256Mi
 
 # Homelab CSI resource overrides — defaults allocate 300m per CSI node plugin
 # (250m driver + 50m registrar) × 6 plugins (3 nodes × 2 drivers) = 1800m total.
