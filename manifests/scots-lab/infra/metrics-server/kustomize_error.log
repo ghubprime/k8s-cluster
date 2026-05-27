@@ -1,0 +1,4 @@
+Error: Error: template: metrics-server/templates/deployment.yaml:51:20: executing "metrics-server/templates/deployment.yaml" at <.Values.hostNetwork.enabled>: can't evaluate field enabled in type interface {}
+
+Use --debug flag to render out invalid YAML
+: unable to run: 'helm template metrics-server /home/runner/work/k8s-cluster/k8s-cluster/kustomize/overlays/scots-lab/infra/metrics-server/charts/metrics-server-3.13.0/metrics-server --namespace kube-system -f /tmp/kustomize-helm-48834880/metrics-server-kustomize-values.yaml --include-crds' with env=[HELM_CONFIG_HOME=/tmp/kustomize-helm-48834880/helm HELM_CACHE_HOME=/tmp/kustomize-helm-48834880/helm/.cache HELM_DATA_HOME=/tmp/kustomize-helm-48834880/helm/.data] (is 'helm' installed?): exit status 1
