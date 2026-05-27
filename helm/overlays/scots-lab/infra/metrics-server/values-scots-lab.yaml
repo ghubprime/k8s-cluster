@@ -8,7 +8,8 @@ args:
   - --kubelet-preferred-address-types=InternalIP
 
 # Bypass Cilium network overlay to reach Talos node IPs directly
-hostNetwork: true
+hostNetwork:
+  enabled: true
 
 # Resource limits for homelab (3-node cluster)
 resources:
