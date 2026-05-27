@@ -51072,9 +51072,10 @@ spec:
         name: rook-ceph-operator
         resources:
           limits:
-            memory: 512Mi
+            cpu: 500m
+            memory: 256Mi
           requests:
-            cpu: 10m
+            cpu: 250m
             memory: 128Mi
         securityContext:
           capabilities:
