@@ -1,11 +1,7 @@
 cluster:
   name: k8s-scots-lab-cluster
   id: 0
-# Explicitly list devices because Cilium auto-detection skips bridge interfaces.
-# br-ext carries all Kubernetes + Ceph public traffic; enp1s0 is the Ceph replication NIC.
-devices:
-  - br-ext
-  - enp1s0
+
 ipam:
   mode: kubernetes
 kubeProxyReplacement: true
@@ -40,8 +36,22 @@ cni:
   exclusive: false
 l2announcements:
   enabled: true
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    cpu: 500m
+    memory: 1Gi
 operator:
   replicas: 2
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 200m
+      memory: 256Mi
 endpointRoutes:
   enabled: false
 pmtuDiscovery:
