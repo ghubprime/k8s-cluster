@@ -709,7 +709,6 @@ data:
   debug: "false"
   debug-verbose: ""
   default-lb-service-ipam: lbipam
-  devices: br-ext enp1s0
   direct-routing-skip-unreachable: "false"
   dnsproxy-enable-transparent-mode: "true"
   dnsproxy-socket-linger-timeout: "10"
@@ -1083,6 +1082,13 @@ spec:
           initialDelaySeconds: 0
           periodSeconds: 5
           timeoutSeconds: 3
+        resources:
+          limits:
+            cpu: 200m
+            memory: 256Mi
+          requests:
+            cpu: 50m
+            memory: 128Mi
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
@@ -1527,6 +1533,13 @@ spec:
           periodSeconds: 30
           successThreshold: 1
           timeoutSeconds: 5
+        resources:
+          limits:
+            cpu: 500m
+            memory: 1Gi
+          requests:
+            cpu: 100m
+            memory: 256Mi
         securityContext:
           capabilities:
             add:
