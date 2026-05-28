@@ -73773,6 +73773,7 @@ spec:
   replicas: 1
   resources:
     limits:
+      cpu: 500m
       memory: 2Gi
     requests:
       cpu: 200m
