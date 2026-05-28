@@ -26,6 +26,7 @@ prometheus:
         cpu: 200m
         memory: 1Gi
       limits:
+        cpu: 500m
         memory: 2Gi
     # Discover all PodMonitors and ServiceMonitors without needing matching labels
     podMonitorSelectorNilUsesHelmValues: false
