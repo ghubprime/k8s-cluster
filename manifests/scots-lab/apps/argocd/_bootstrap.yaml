@@ -24787,7 +24787,7 @@ metadata:
 ---
 apiVersion: v1
 data:
-  policy.csv: |-
+  policy.csv: |
     g, Homelab_Admins, role:admin
     g, /Homelab_Admins, role:admin
     g, homelab-admins, role:admin
@@ -26554,7 +26554,13 @@ spec:
           periodSeconds: 10
           successThreshold: 1
           timeoutSeconds: 1
-        resources: {}
+        resources:
+          limits:
+            cpu: 500m
+            memory: 1024Mi
+          requests:
+            cpu: 100m
+            memory: 256Mi
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
