@@ -18,6 +18,7 @@ spec:
   chart:
     spec:
       chart: alloy
+      version: 1.7.0
       sourceRef:
         kind: HelmRepository
         name: grafana
@@ -45,5 +46,6 @@ spec:
           loki.write "default" {
             endpoint {
               url = "http://loki-gateway.loki.svc/loki/api/v1/push"
+              tenant_id = "1"
             }
           }
