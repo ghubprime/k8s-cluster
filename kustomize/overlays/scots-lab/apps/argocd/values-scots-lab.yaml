@@ -26,3 +26,11 @@ configs:
       g, /homelab-admins, role:admin
       g, admin, role:admin
       g, /admin, role:admin
+controller:
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "256Mi"
+    limits:
+      cpu: "500m"
+      memory: "1024Mi"
