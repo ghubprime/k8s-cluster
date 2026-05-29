@@ -434,7 +434,7 @@ spec:
         memory: 1Gi
       requests:
         cpu: 100m
-        memory: 256Mi
+        memory: 768Mi
     mgr-sidecar:
       limits:
         memory: 100Mi
@@ -453,7 +453,7 @@ spec:
         memory: 2Gi
       requests:
         cpu: 100m
-        memory: 1Gi
+        memory: 512Mi
     prepareosd:
       requests:
         cpu: 500m

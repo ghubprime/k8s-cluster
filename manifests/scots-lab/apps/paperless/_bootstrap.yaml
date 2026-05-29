@@ -632,7 +632,7 @@ spec:
             memory: 1Gi
           requests:
             cpu: 100m
-            memory: 256Mi
+            memory: 768Mi
         startupProbe:
           failureThreshold: 30
           initialDelaySeconds: 0
