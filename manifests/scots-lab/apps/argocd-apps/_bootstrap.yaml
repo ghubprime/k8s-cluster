@@ -22,10 +22,10 @@ spec:
       selfHeal: true
     retry:
       backoff:
-        duration: 30s
+        duration: 5s
         factor: 2
-        maxDuration: 10m
-      limit: 10
+        maxDuration: 3m
+      limit: 5
     syncOptions:
     - ServerSideApply=true
 ---
@@ -53,10 +53,10 @@ spec:
       selfHeal: true
     retry:
       backoff:
-        duration: 30s
+        duration: 5s
         factor: 2
-        maxDuration: 10m
-      limit: 10
+        maxDuration: 3m
+      limit: 5
     syncOptions:
     - ServerSideApply=true
 ---
@@ -86,10 +86,10 @@ spec:
       selfHeal: true
     retry:
       backoff:
-        duration: 30s
+        duration: 5s
         factor: 2
-        maxDuration: 10m
-      limit: 10
+        maxDuration: 3m
+      limit: 5
     syncOptions:
     - ServerSideApply=true
 ---
@@ -117,10 +117,10 @@ spec:
       selfHeal: true
     retry:
       backoff:
-        duration: 30s
+        duration: 5s
         factor: 2
-        maxDuration: 10m
-      limit: 10
+        maxDuration: 3m
+      limit: 5
     syncOptions:
     - ServerSideApply=true
 ---
@@ -149,10 +149,10 @@ spec:
       selfHeal: true
     retry:
       backoff:
-        duration: 30s
+        duration: 5s
         factor: 2
-        maxDuration: 10m
-      limit: 10
+        maxDuration: 3m
+      limit: 5
     syncOptions:
     - ServerSideApply=true
 ---
@@ -180,10 +180,10 @@ spec:
       selfHeal: true
     retry:
       backoff:
-        duration: 30s
+        duration: 5s
         factor: 2
-        maxDuration: 10m
-      limit: 10
+        maxDuration: 3m
+      limit: 5
     syncOptions:
     - ServerSideApply=true
 ---
@@ -212,10 +212,10 @@ spec:
       selfHeal: true
     retry:
       backoff:
-        duration: 30s
+        duration: 5s
         factor: 2
-        maxDuration: 10m
-      limit: 10
+        maxDuration: 3m
+      limit: 5
     syncOptions:
     - ServerSideApply=true
 ---
@@ -244,10 +244,10 @@ spec:
       selfHeal: true
     retry:
       backoff:
-        duration: 30s
+        duration: 5s
         factor: 2
-        maxDuration: 10m
-      limit: 10
+        maxDuration: 3m
+      limit: 5
     syncOptions:
     - ServerSideApply=true
 ---
@@ -275,10 +275,10 @@ spec:
       selfHeal: true
     retry:
       backoff:
-        duration: 30s
+        duration: 5s
         factor: 2
-        maxDuration: 10m
-      limit: 10
+        maxDuration: 3m
+      limit: 5
     syncOptions:
     - ServerSideApply=true
 ---
@@ -306,10 +306,10 @@ spec:
       selfHeal: true
     retry:
       backoff:
-        duration: 30s
+        duration: 5s
         factor: 2
-        maxDuration: 10m
-      limit: 10
+        maxDuration: 3m
+      limit: 5
     syncOptions:
     - ServerSideApply=true
 ---
@@ -337,10 +337,10 @@ spec:
       selfHeal: true
     retry:
       backoff:
-        duration: 30s
+        duration: 5s
         factor: 2
-        maxDuration: 10m
-      limit: 10
+        maxDuration: 3m
+      limit: 5
     syncOptions:
     - ServerSideApply=true
 ---
@@ -368,10 +368,10 @@ spec:
       selfHeal: true
     retry:
       backoff:
-        duration: 30s
+        duration: 5s
         factor: 2
-        maxDuration: 10m
-      limit: 10
+        maxDuration: 3m
+      limit: 5
     syncOptions:
     - ServerSideApply=true
 ---
@@ -400,10 +400,10 @@ spec:
       selfHeal: true
     retry:
       backoff:
-        duration: 30s
+        duration: 5s
         factor: 2
-        maxDuration: 10m
-      limit: 10
+        maxDuration: 3m
+      limit: 5
     syncOptions:
     - ServerSideApply=true
 ---
@@ -431,10 +431,10 @@ spec:
       selfHeal: true
     retry:
       backoff:
-        duration: 30s
+        duration: 5s
         factor: 2
-        maxDuration: 10m
-      limit: 10
+        maxDuration: 3m
+      limit: 5
     syncOptions:
     - ServerSideApply=true
 ---
@@ -462,10 +462,10 @@ spec:
       selfHeal: true
     retry:
       backoff:
-        duration: 30s
+        duration: 5s
         factor: 2
-        maxDuration: 10m
-      limit: 10
+        maxDuration: 3m
+      limit: 5
     syncOptions:
     - ServerSideApply=true
 ---
@@ -493,10 +493,10 @@ spec:
       selfHeal: true
     retry:
       backoff:
-        duration: 30s
+        duration: 5s
         factor: 2
-        maxDuration: 10m
-      limit: 10
+        maxDuration: 3m
+      limit: 5
     syncOptions:
     - ServerSideApply=true
 ---
@@ -524,10 +524,10 @@ spec:
       selfHeal: true
     retry:
       backoff:
-        duration: 30s
+        duration: 5s
         factor: 2
-        maxDuration: 10m
-      limit: 10
+        maxDuration: 3m
+      limit: 5
     syncOptions:
     - ServerSideApply=true
 ---
@@ -555,10 +555,10 @@ spec:
       selfHeal: true
     retry:
       backoff:
-        duration: 30s
+        duration: 5s
         factor: 2
-        maxDuration: 10m
-      limit: 10
+        maxDuration: 3m
+      limit: 5
     syncOptions:
     - ServerSideApply=true
 ---
@@ -586,10 +586,10 @@ spec:
       selfHeal: true
     retry:
       backoff:
-        duration: 30s
+        duration: 5s
         factor: 2
-        maxDuration: 10m
-      limit: 10
+        maxDuration: 3m
+      limit: 5
     syncOptions:
     - ServerSideApply=true
 ---
@@ -618,10 +618,10 @@ spec:
       selfHeal: true
     retry:
       backoff:
-        duration: 30s
+        duration: 5s
         factor: 2
-        maxDuration: 10m
-      limit: 10
+        maxDuration: 3m
+      limit: 5
     syncOptions:
     - ServerSideApply=true
 ---
@@ -649,10 +649,10 @@ spec:
       selfHeal: true
     retry:
       backoff:
-        duration: 30s
+        duration: 5s
         factor: 2
-        maxDuration: 10m
-      limit: 10
+        maxDuration: 3m
+      limit: 5
     syncOptions:
     - ServerSideApply=true
 ---
@@ -680,10 +680,10 @@ spec:
       selfHeal: true
     retry:
       backoff:
-        duration: 30s
+        duration: 5s
         factor: 2
-        maxDuration: 10m
-      limit: 10
+        maxDuration: 3m
+      limit: 5
     syncOptions:
     - ServerSideApply=true
 ---
@@ -712,10 +712,10 @@ spec:
       selfHeal: true
     retry:
       backoff:
-        duration: 30s
+        duration: 5s
         factor: 2
-        maxDuration: 10m
-      limit: 10
+        maxDuration: 3m
+      limit: 5
     syncOptions:
     - ServerSideApply=true
 ---
@@ -743,10 +743,10 @@ spec:
       selfHeal: true
     retry:
       backoff:
-        duration: 30s
+        duration: 5s
         factor: 2
-        maxDuration: 10m
-      limit: 10
+        maxDuration: 3m
+      limit: 5
     syncOptions:
     - ServerSideApply=true
 ---
@@ -774,10 +774,10 @@ spec:
       selfHeal: true
     retry:
       backoff:
-        duration: 30s
+        duration: 5s
         factor: 2
-        maxDuration: 10m
-      limit: 10
+        maxDuration: 3m
+      limit: 5
     syncOptions:
     - ServerSideApply=true
 ---
@@ -806,10 +806,10 @@ spec:
       selfHeal: true
     retry:
       backoff:
-        duration: 30s
+        duration: 5s
         factor: 2
-        maxDuration: 10m
-      limit: 10
+        maxDuration: 3m
+      limit: 5
     syncOptions:
     - ServerSideApply=true
 ---
@@ -837,10 +837,10 @@ spec:
       selfHeal: true
     retry:
       backoff:
-        duration: 30s
+        duration: 5s
         factor: 2
-        maxDuration: 10m
-      limit: 10
+        maxDuration: 3m
+      limit: 5
     syncOptions:
     - ServerSideApply=true
 ---
@@ -868,10 +868,10 @@ spec:
       selfHeal: true
     retry:
       backoff:
-        duration: 30s
+        duration: 5s
         factor: 2
-        maxDuration: 10m
-      limit: 10
+        maxDuration: 3m
+      limit: 5
     syncOptions:
     - ServerSideApply=true
 ---
@@ -899,10 +899,10 @@ spec:
       selfHeal: true
     retry:
       backoff:
-        duration: 30s
+        duration: 5s
         factor: 2
-        maxDuration: 10m
-      limit: 10
+        maxDuration: 3m
+      limit: 5
     syncOptions:
     - ServerSideApply=true
 ---
@@ -930,10 +930,10 @@ spec:
       selfHeal: true
     retry:
       backoff:
-        duration: 30s
+        duration: 5s
         factor: 2
-        maxDuration: 10m
-      limit: 10
+        maxDuration: 3m
+      limit: 5
     syncOptions:
     - ServerSideApply=true
 ---
@@ -964,10 +964,10 @@ spec:
       selfHeal: true
     retry:
       backoff:
-        duration: 30s
+        duration: 5s
         factor: 2
-        maxDuration: 10m
-      limit: 10
+        maxDuration: 3m
+      limit: 5
     syncOptions:
     - ServerSideApply=true
 ---
@@ -995,10 +995,10 @@ spec:
       selfHeal: true
     retry:
       backoff:
-        duration: 30s
+        duration: 5s
         factor: 2
-        maxDuration: 10m
-      limit: 10
+        maxDuration: 3m
+      limit: 5
     syncOptions:
     - ServerSideApply=true
 ---
@@ -1026,10 +1026,10 @@ spec:
       selfHeal: true
     retry:
       backoff:
-        duration: 30s
+        duration: 5s
         factor: 2
-        maxDuration: 10m
-      limit: 10
+        maxDuration: 3m
+      limit: 5
     syncOptions:
     - ServerSideApply=true
 ---
@@ -1057,10 +1057,10 @@ spec:
       selfHeal: true
     retry:
       backoff:
-        duration: 30s
+        duration: 5s
         factor: 2
-        maxDuration: 10m
-      limit: 10
+        maxDuration: 3m
+      limit: 5
     syncOptions:
     - ServerSideApply=true
 ---
@@ -1088,10 +1088,10 @@ spec:
       selfHeal: true
     retry:
       backoff:
-        duration: 30s
+        duration: 5s
         factor: 2
-        maxDuration: 10m
-      limit: 10
+        maxDuration: 3m
+      limit: 5
     syncOptions:
     - ServerSideApply=true
 ---
@@ -1119,10 +1119,10 @@ spec:
       selfHeal: true
     retry:
       backoff:
-        duration: 30s
+        duration: 5s
         factor: 2
-        maxDuration: 10m
-      limit: 10
+        maxDuration: 3m
+      limit: 5
     syncOptions:
     - ServerSideApply=true
 ---
@@ -1151,10 +1151,10 @@ spec:
       selfHeal: true
     retry:
       backoff:
-        duration: 30s
+        duration: 5s
         factor: 2
-        maxDuration: 10m
-      limit: 10
+        maxDuration: 3m
+      limit: 5
     syncOptions:
     - ServerSideApply=true
 ---
@@ -1182,10 +1182,10 @@ spec:
       selfHeal: true
     retry:
       backoff:
-        duration: 30s
+        duration: 5s
         factor: 2
-        maxDuration: 10m
-      limit: 10
+        maxDuration: 3m
+      limit: 5
     syncOptions:
     - ServerSideApply=true
 ---
@@ -1213,10 +1213,10 @@ spec:
       selfHeal: true
     retry:
       backoff:
-        duration: 30s
+        duration: 5s
         factor: 2
-        maxDuration: 10m
-      limit: 10
+        maxDuration: 3m
+      limit: 5
     syncOptions:
     - ServerSideApply=true
 ---
@@ -1249,10 +1249,10 @@ spec:
       selfHeal: true
     retry:
       backoff:
-        duration: 30s
+        duration: 5s
         factor: 2
-        maxDuration: 10m
-      limit: 10
+        maxDuration: 3m
+      limit: 5
     syncOptions:
     - ServerSideApply=true
 ---
@@ -1280,10 +1280,10 @@ spec:
       selfHeal: true
     retry:
       backoff:
-        duration: 30s
+        duration: 5s
         factor: 2
-        maxDuration: 10m
-      limit: 10
+        maxDuration: 3m
+      limit: 5
     syncOptions:
     - ServerSideApply=true
 ---
@@ -1312,10 +1312,10 @@ spec:
       selfHeal: true
     retry:
       backoff:
-        duration: 30s
+        duration: 5s
         factor: 2
-        maxDuration: 10m
-      limit: 10
+        maxDuration: 3m
+      limit: 5
     syncOptions:
     - ServerSideApply=true
 ---
@@ -1343,10 +1343,10 @@ spec:
       selfHeal: true
     retry:
       backoff:
-        duration: 30s
+        duration: 5s
         factor: 2
-        maxDuration: 10m
-      limit: 10
+        maxDuration: 3m
+      limit: 5
     syncOptions:
     - ServerSideApply=true
 ---
@@ -1374,10 +1374,10 @@ spec:
       selfHeal: true
     retry:
       backoff:
-        duration: 30s
+        duration: 5s
         factor: 2
-        maxDuration: 10m
-      limit: 10
+        maxDuration: 3m
+      limit: 5
     syncOptions:
     - ServerSideApply=true
 ---
@@ -1405,10 +1405,10 @@ spec:
       selfHeal: true
     retry:
       backoff:
-        duration: 30s
+        duration: 5s
         factor: 2
-        maxDuration: 10m
-      limit: 10
+        maxDuration: 3m
+      limit: 5
     syncOptions:
     - ServerSideApply=true
 ---
@@ -1436,10 +1436,10 @@ spec:
       selfHeal: true
     retry:
       backoff:
-        duration: 30s
+        duration: 5s
         factor: 2
-        maxDuration: 10m
-      limit: 10
+        maxDuration: 3m
+      limit: 5
     syncOptions:
     - ServerSideApply=true
 ---
@@ -1467,10 +1467,10 @@ spec:
       selfHeal: true
     retry:
       backoff:
-        duration: 30s
+        duration: 5s
         factor: 2
-        maxDuration: 10m
-      limit: 10
+        maxDuration: 3m
+      limit: 5
     syncOptions:
     - ServerSideApply=true
 ---
@@ -1498,10 +1498,10 @@ spec:
       selfHeal: true
     retry:
       backoff:
-        duration: 30s
+        duration: 5s
         factor: 2
-        maxDuration: 10m
-      limit: 10
+        maxDuration: 3m
+      limit: 5
     syncOptions:
     - ServerSideApply=true
 ---
@@ -1529,10 +1529,10 @@ spec:
       selfHeal: true
     retry:
       backoff:
-        duration: 30s
+        duration: 5s
         factor: 2
-        maxDuration: 10m
-      limit: 10
+        maxDuration: 3m
+      limit: 5
     syncOptions:
     - ServerSideApply=true
 ---
@@ -1561,9 +1561,9 @@ spec:
       selfHeal: true
     retry:
       backoff:
-        duration: 30s
+        duration: 5s
         factor: 2
-        maxDuration: 10m
-      limit: 10
+        maxDuration: 3m
+      limit: 5
     syncOptions:
     - ServerSideApply=true
