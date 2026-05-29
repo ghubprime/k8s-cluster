@@ -31,6 +31,35 @@ spec:
                 - -c
                 - |
                   set -e
+                  
+                  # Initialize ceph.conf
+                  CEPH_CONFIG="/etc/ceph/ceph.conf"
+                  MON_CONFIG="/etc/rook/mon-endpoints"
+                  KEYRING_FILE="/etc/ceph/keyring"
+                  CONFIG_OVERRIDE="/etc/rook-config-override/config"
+                  
+                  endpoints=$(cat ${MON_CONFIG})
+                  mon_endpoints=$(echo "${endpoints}"| sed 's/[a-z0-9_-]\+=//g')
+                  
+                  cat <<EOF > ${CEPH_CONFIG}
+                  [global]
+                  mon_host = ${mon_endpoints}
+                  
+                  [client.admin]
+                  keyring = ${KEYRING_FILE}
+                  EOF
+                  
+                  if [ -f "${CONFIG_OVERRIDE}" ] && [ -s "${CONFIG_OVERRIDE}" ]; then
+                    echo "" >> ${CEPH_CONFIG}
+                    cat ${CONFIG_OVERRIDE} >> ${CEPH_CONFIG}
+                  fi
+                  
+                  ceph_secret=$(cat /var/lib/rook-ceph-mon/secret.keyring)
+                  cat <<EOF > ${KEYRING_FILE}
+                  [${ROOK_CEPH_USERNAME}]
+                  key = ${ceph_secret}
+                  EOF
+
                   echo "[$(date -u)] Ceph Dashboard Autofix - checking status..."
 
                   # Check if dashboard is in mgr services
