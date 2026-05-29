@@ -10,7 +10,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    argocd.argoproj.io/sync-options: Replace=true
+    argocd.argoproj.io/sync-options: ServerSideApply=true
     controller-gen.kubebuilder.io/version: v0.19.0
     helm.sh/resource-policy: keep
   name: cephblockpoolradosnamespaces.ceph.rook.io
@@ -394,7 +394,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    argocd.argoproj.io/sync-options: Replace=true
+    argocd.argoproj.io/sync-options: ServerSideApply=true
     controller-gen.kubebuilder.io/version: v0.19.0
     helm.sh/resource-policy: keep
   name: cephblockpools.ceph.rook.io
@@ -976,7 +976,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    argocd.argoproj.io/sync-options: Replace=true
+    argocd.argoproj.io/sync-options: ServerSideApply=true
     controller-gen.kubebuilder.io/version: v0.19.0
     helm.sh/resource-policy: keep
   name: cephbucketnotifications.ceph.rook.io
@@ -1178,7 +1178,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    argocd.argoproj.io/sync-options: Replace=true
+    argocd.argoproj.io/sync-options: ServerSideApply=true
     controller-gen.kubebuilder.io/version: v0.19.0
     helm.sh/resource-policy: keep
   name: cephbuckettopics.ceph.rook.io
@@ -1433,7 +1433,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    argocd.argoproj.io/sync-options: Replace=true
+    argocd.argoproj.io/sync-options: ServerSideApply=true
     controller-gen.kubebuilder.io/version: v0.19.0
     helm.sh/resource-policy: keep
   name: cephclients.ceph.rook.io
@@ -1587,7 +1587,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    argocd.argoproj.io/sync-options: Replace=true
+    argocd.argoproj.io/sync-options: ServerSideApply=true
     controller-gen.kubebuilder.io/version: v0.19.0
     helm.sh/resource-policy: keep
   name: cephclusters.ceph.rook.io
@@ -6587,7 +6587,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    argocd.argoproj.io/sync-options: Replace=true
+    argocd.argoproj.io/sync-options: ServerSideApply=true
     controller-gen.kubebuilder.io/version: v0.17.2
   labels:
     app.kubernetes.io/instance: rook-ceph
@@ -6728,7 +6728,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    argocd.argoproj.io/sync-options: Replace=true
+    argocd.argoproj.io/sync-options: ServerSideApply=true
     controller-gen.kubebuilder.io/version: v0.19.0
     helm.sh/resource-policy: keep
   name: cephcosidrivers.ceph.rook.io
@@ -7363,7 +7363,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    argocd.argoproj.io/sync-options: Replace=true
+    argocd.argoproj.io/sync-options: ServerSideApply=true
     controller-gen.kubebuilder.io/version: v0.19.0
     helm.sh/resource-policy: keep
   name: cephfilesystemmirrors.ceph.rook.io
@@ -8073,7 +8073,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    argocd.argoproj.io/sync-options: Replace=true
+    argocd.argoproj.io/sync-options: ServerSideApply=true
     controller-gen.kubebuilder.io/version: v0.19.0
     helm.sh/resource-policy: keep
   name: cephfilesystems.ceph.rook.io
@@ -9823,7 +9823,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    argocd.argoproj.io/sync-options: Replace=true
+    argocd.argoproj.io/sync-options: ServerSideApply=true
     controller-gen.kubebuilder.io/version: v0.19.0
     helm.sh/resource-policy: keep
   name: cephfilesystemsubvolumegroups.ceph.rook.io
@@ -9984,7 +9984,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    argocd.argoproj.io/sync-options: Replace=true
+    argocd.argoproj.io/sync-options: ServerSideApply=true
     controller-gen.kubebuilder.io/version: v0.19.0
     helm.sh/resource-policy: keep
   name: cephnfses.ceph.rook.io
@@ -12136,7 +12136,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    argocd.argoproj.io/sync-options: Replace=true
+    argocd.argoproj.io/sync-options: ServerSideApply=true
     controller-gen.kubebuilder.io/version: v0.19.0
     helm.sh/resource-policy: keep
   name: cephnvmeofgateways.ceph.rook.io
@@ -13068,7 +13068,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    argocd.argoproj.io/sync-options: Replace=true
+    argocd.argoproj.io/sync-options: ServerSideApply=true
     controller-gen.kubebuilder.io/version: v0.19.0
     helm.sh/resource-policy: keep
   name: cephobjectrealms.ceph.rook.io
@@ -13176,7 +13176,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    argocd.argoproj.io/sync-options: Replace=true
+    argocd.argoproj.io/sync-options: ServerSideApply=true
     controller-gen.kubebuilder.io/version: v0.19.0
     helm.sh/resource-policy: keep
   name: cephobjectstores.ceph.rook.io
@@ -15535,7 +15535,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    argocd.argoproj.io/sync-options: Replace=true
+    argocd.argoproj.io/sync-options: ServerSideApply=true
     controller-gen.kubebuilder.io/version: v0.19.0
     helm.sh/resource-policy: keep
   name: cephobjectstoreusers.ceph.rook.io
@@ -15913,7 +15913,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    argocd.argoproj.io/sync-options: Replace=true
+    argocd.argoproj.io/sync-options: ServerSideApply=true
     controller-gen.kubebuilder.io/version: v0.19.0
     helm.sh/resource-policy: keep
   name: cephobjectzonegroups.ceph.rook.io
@@ -16015,7 +16015,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    argocd.argoproj.io/sync-options: Replace=true
+    argocd.argoproj.io/sync-options: ServerSideApply=true
     controller-gen.kubebuilder.io/version: v0.19.0
     helm.sh/resource-policy: keep
   name: cephobjectzones.ceph.rook.io
@@ -16656,7 +16656,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    argocd.argoproj.io/sync-options: Replace=true
+    argocd.argoproj.io/sync-options: ServerSideApply=true
     controller-gen.kubebuilder.io/version: v0.19.0
     helm.sh/resource-policy: keep
   name: cephrbdmirrors.ceph.rook.io
@@ -17389,7 +17389,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    argocd.argoproj.io/sync-options: Replace=true
+    argocd.argoproj.io/sync-options: ServerSideApply=true
     controller-gen.kubebuilder.io/version: v0.17.2
   labels:
     app.kubernetes.io/instance: rook-ceph
@@ -17540,7 +17540,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    argocd.argoproj.io/sync-options: Replace=true
+    argocd.argoproj.io/sync-options: ServerSideApply=true
     controller-gen.kubebuilder.io/version: v0.17.2
   labels:
     app.kubernetes.io/instance: rook-ceph
@@ -17799,7 +17799,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    argocd.argoproj.io/sync-options: Replace=true
+    argocd.argoproj.io/sync-options: ServerSideApply=true
     controller-gen.kubebuilder.io/version: v0.17.2
   labels:
     app.kubernetes.io/instance: rook-ceph
@@ -32157,7 +32157,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    argocd.argoproj.io/sync-options: Replace=true
+    argocd.argoproj.io/sync-options: ServerSideApply=true
     helm.sh/resource-policy: keep
   name: objectbucketclaims.objectbucket.io
 spec:
@@ -32204,7 +32204,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    argocd.argoproj.io/sync-options: Replace=true
+    argocd.argoproj.io/sync-options: ServerSideApply=true
     helm.sh/resource-policy: keep
   name: objectbuckets.objectbucket.io
 spec:
@@ -32276,7 +32276,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    argocd.argoproj.io/sync-options: Replace=true
+    argocd.argoproj.io/sync-options: ServerSideApply=true
     controller-gen.kubebuilder.io/version: v0.17.2
   labels:
     app.kubernetes.io/instance: rook-ceph

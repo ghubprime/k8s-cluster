@@ -12,7 +12,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    argocd.argoproj.io/sync-options: Replace=true
+    argocd.argoproj.io/sync-options: ServerSideApply=true
     controller-gen.kubebuilder.io/version: v0.19.1-0.20251023132335-bf7d6b742e6a
   labels:
     app: kgateway
@@ -1286,7 +1286,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    argocd.argoproj.io/sync-options: Replace=true
+    argocd.argoproj.io/sync-options: ServerSideApply=true
     controller-gen.kubebuilder.io/version: v0.19.1-0.20251023132335-bf7d6b742e6a
   labels:
     app: kgateway
@@ -1597,7 +1597,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    argocd.argoproj.io/sync-options: Replace=true
+    argocd.argoproj.io/sync-options: ServerSideApply=true
     controller-gen.kubebuilder.io/version: v0.19.1-0.20251023132335-bf7d6b742e6a
   labels:
     app: kgateway
@@ -1673,7 +1673,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    argocd.argoproj.io/sync-options: Replace=true
+    argocd.argoproj.io/sync-options: ServerSideApply=true
     controller-gen.kubebuilder.io/version: v0.19.1-0.20251023132335-bf7d6b742e6a
   labels:
     app: kgateway
@@ -3297,7 +3297,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    argocd.argoproj.io/sync-options: Replace=true
+    argocd.argoproj.io/sync-options: ServerSideApply=true
     controller-gen.kubebuilder.io/version: v0.19.1-0.20251023132335-bf7d6b742e6a
   labels:
     app: kgateway
@@ -10719,7 +10719,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    argocd.argoproj.io/sync-options: Replace=true
+    argocd.argoproj.io/sync-options: ServerSideApply=true
     controller-gen.kubebuilder.io/version: v0.19.1-0.20251023132335-bf7d6b742e6a
   labels:
     app: kgateway
@@ -12896,7 +12896,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    argocd.argoproj.io/sync-options: Replace=true
+    argocd.argoproj.io/sync-options: ServerSideApply=true
     controller-gen.kubebuilder.io/version: v0.19.1-0.20251023132335-bf7d6b742e6a
   labels:
     app: kgateway
@@ -16925,7 +16925,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    argocd.argoproj.io/sync-options: Replace=true
+    argocd.argoproj.io/sync-options: ServerSideApply=true
     controller-gen.kubebuilder.io/version: v0.19.1-0.20251023132335-bf7d6b742e6a
   labels:
     app: kgateway
