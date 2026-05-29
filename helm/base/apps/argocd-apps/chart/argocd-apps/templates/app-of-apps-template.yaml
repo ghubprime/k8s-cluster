@@ -45,6 +45,7 @@ spec:
     {{- end }}
     syncOptions:
       - ServerSideApply=true
+      - ApplyOutOfSyncOnly=true
     retry:
       # Reduce overly aggressive retry limit to fail fast and prevent hanging deployments
       limit: 5
