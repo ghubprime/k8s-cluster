@@ -21,6 +21,7 @@ spec:
       initContainers:
         - name: wait-for-db
           image: busybox:1.36
+          imagePullPolicy: IfNotPresent
           command:
             - sh
             - -c
@@ -67,6 +68,7 @@ spec:
 
         - name: znuny
           image: docker.io/andreynsafonov/znuny:7.2.3
+          imagePullPolicy: IfNotPresent
           command: ["/bin/bash", "-c"]
           args:
             - |
@@ -127,8 +129,8 @@ spec:
             runAsNonRoot: false
           resources:
             requests:
-              cpu: 100m
-              memory: 768Mi
+              cpu: 200m
+              memory: 512Mi
             limits:
               cpu: 1000m
               memory: 1Gi
