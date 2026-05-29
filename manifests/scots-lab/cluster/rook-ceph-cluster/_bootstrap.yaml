@@ -449,8 +449,8 @@ spec:
         memory: 512Mi
     osd:
       limits:
-        cpu: 1000m
-        memory: 4Gi
+        cpu: 400m
+        memory: 2Gi
       requests:
         cpu: 100m
         memory: 1Gi
