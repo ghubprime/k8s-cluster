@@ -145,6 +145,7 @@ spec:
         - name: ZNUNY_ORGANIZATION
           value: Scots Lab
         image: docker.io/andreynsafonov/znuny:7.2.3
+        imagePullPolicy: IfNotPresent
         livenessProbe:
           exec:
             command:
@@ -173,8 +174,8 @@ spec:
             cpu: 1000m
             memory: 1Gi
           requests:
-            cpu: 100m
-            memory: 768Mi
+            cpu: 200m
+            memory: 512Mi
         securityContext:
           runAsNonRoot: false
           runAsUser: 0
@@ -196,6 +197,7 @@ spec:
           done
           echo "MariaDB is ready!"
         image: busybox:1.36
+        imagePullPolicy: IfNotPresent
         name: wait-for-db
         resources:
           limits:
