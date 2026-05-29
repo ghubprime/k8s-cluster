@@ -46,11 +46,13 @@ spec:
     syncOptions:
       - ServerSideApply=true
     retry:
-      limit: 10
+      # Reduce overly aggressive retry limit to fail fast and prevent hanging deployments
+      limit: 5
       backoff:
-        duration: 30s
+        # Standardize backoff to allow faster initial recovery without api-server thrashing
+        duration: 5s
         factor: 2
-        maxDuration: 10m
+        maxDuration: 3m
 {{- if not (empty .ignoreDifferences) }}
   ignoreDifferences:
 {{- .ignoreDifferences | toYaml | nindent 4}}
