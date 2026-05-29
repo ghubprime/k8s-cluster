@@ -143,6 +143,7 @@ spec:
         - name: OIDC_SCOPES
           value: openid profile email
         image: outlinewiki/outline:1.7.1
+        imagePullPolicy: IfNotPresent
         name: outline
         ports:
         - containerPort: 3000
@@ -153,7 +154,7 @@ spec:
             memory: 1Gi
           requests:
             cpu: 50m
-            memory: 256Mi
+            memory: 600Mi
       - env:
         - name: POSTGRES_DB
           value: outline
@@ -167,6 +168,7 @@ spec:
         - name: PGDATA
           value: /var/lib/postgresql/data/pgdata
         image: postgres:16-bookworm
+        imagePullPolicy: IfNotPresent
         name: postgres
         ports:
         - containerPort: 5432
@@ -186,6 +188,7 @@ spec:
         - --appendonly
         - "yes"
         image: redis:7-bookworm
+        imagePullPolicy: IfNotPresent
         name: redis
         ports:
         - containerPort: 6379
@@ -212,6 +215,7 @@ spec:
               key: MINIO_ROOT_PASSWORD
               name: outline-secret
         image: minio/minio:RELEASE.2025-09-07T16-13-09Z
+        imagePullPolicy: IfNotPresent
         name: minio
         ports:
         - containerPort: 9000
