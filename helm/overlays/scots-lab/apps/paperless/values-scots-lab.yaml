@@ -83,7 +83,7 @@ redis:
 resources:
   requests:
     cpu: 100m
-    memory: 256Mi
+    memory: 768Mi
   limits:
     memory: 1Gi
 

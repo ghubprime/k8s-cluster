@@ -29,4 +29,17 @@ patches:
         name: ceph-filesystem
         labels:
           velero.io/csi-volumesnapshot-class: "true"
+  - target:
+      group: ceph.rook.io
+      kind: CephCluster
+      name: rook-ceph
+    patch: |-
+      # Right-size MGR memory requests to match live usage (665Mi)
+      - op: replace
+        path: /spec/resources/mgr/requests/memory
+        value: 768Mi
+      # Reduce over-provisioned OSD requests to free up scheduling headroom
+      - op: replace
+        path: /spec/resources/osd/requests/memory
+        value: 512Mi
 # Trigger CI rebuild
