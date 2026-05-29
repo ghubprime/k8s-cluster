@@ -173,8 +173,8 @@ spec:
             cpu: 1000m
             memory: 1Gi
           requests:
-            cpu: 250m
-            memory: 512Mi
+            cpu: 100m
+            memory: 768Mi
         securityContext:
           runAsNonRoot: false
           runAsUser: 0
