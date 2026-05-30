@@ -125,6 +125,7 @@ spec:
               key: DB_PASSWD
               name: romm-secret
         image: mariadb:11-jammy
+        imagePullPolicy: IfNotPresent
         name: mariadb
         ports:
         - containerPort: 3306

@@ -450,7 +450,7 @@ spec:
     osd:
       limits:
         cpu: 400m
-        memory: 2Gi
+        memory: 1Gi
       requests:
         cpu: 100m
         memory: 512Mi
