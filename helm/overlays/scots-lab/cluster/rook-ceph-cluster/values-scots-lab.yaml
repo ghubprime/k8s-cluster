@@ -76,7 +76,7 @@ cephClusterSpec:
       limits:
         # Tighten QoS ceiling to prevent OSD rebalancing from saturating node CPU and evicting pods
         cpu: 400m
-        memory: 2Gi
+        memory: 1Gi
     mgr-sidecar:
       requests:
         cpu: 25m

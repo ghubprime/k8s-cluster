@@ -53,6 +53,7 @@ spec:
 
         - name: mariadb
           image: mariadb:11-jammy
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 3306
               name: mariadb
