@@ -35,6 +35,7 @@ spec:
               key: TUNNEL_TOKEN
               name: cloudflare-token-secret
         image: cloudflare/cloudflared:2025.4.0
+        imagePullPolicy: IfNotPresent
         name: cloudflared
         resources:
           limits:

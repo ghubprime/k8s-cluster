@@ -568,8 +568,8 @@ metadata:
 ---
 apiVersion: v1
 data:
-  csLapiSecret: WHpqRFNtKUl6WW1SRWxtRip4dz84cy4lUDArOTVIaDlLbH5cVmRNUEkudE4ldkJLOEs0b31aSnp5Qj1mY3MwNQ==
-  registrationToken: SU1INWRnekRmbTU1Y1BGRkFKaVZiV0ZRWHZ2d0hGMFFHTm96aUd3TEFCQ3B0R01E
+  csLapiSecret: dXY0SG9xS2EgSmJ8OiR6IV9pYF9KeFFMM2RBVzVkNlViOSwgZ01YbmE+YWZnTmhaciUkdmk+PmtEMWVULEcvbQ==
+  registrationToken: cEw5Q3VHT1ExT0YxOG4zRERPSFJXMDhTU0ZSRnFMY0k0OGg2VkxhZUUzQzZxRDRp
 kind: Secret
 metadata:
   labels:
@@ -707,7 +707,7 @@ spec:
     metadata:
       annotations:
         checksum/lapi-configmap: c6da5ddbb4d70478a94b244bf42e02fc53c27d4ee4021dab500aa603513c2d11
-        checksum/lapi-secret: a1a7400a3a235b2deffd506a81f2ab089e5244aefdf8c9f442db8ecae106c18d
+        checksum/lapi-secret: add3efe05e0931893c848291dcc510593da344633132092333a9101b8a2e7dae
       labels:
         k8s-app: crowdsec
         type: lapi

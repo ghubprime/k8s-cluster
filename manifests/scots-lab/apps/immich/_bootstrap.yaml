@@ -197,6 +197,7 @@ spec:
       hostIPC: false
       hostNetwork: false
       hostPID: false
+      priorityClassName: homelab-data
       serviceAccountName: default
       volumes:
       - emptyDir: {}
@@ -229,6 +230,7 @@ spec:
           requests:
             cpu: 10m
             memory: 32Mi
+      priorityClassName: homelab-data
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -317,6 +319,7 @@ spec:
       hostIPC: false
       hostNetwork: false
       hostPID: false
+      priorityClassName: homelab-data
       serviceAccountName: default
       volumes:
       - name: data
@@ -356,6 +359,7 @@ spec:
         volumeMounts:
         - mountPath: /var/lib/postgresql/data
           name: postgres-data
+      priorityClassName: homelab-data
       volumes:
       - name: postgres-data
         persistentVolumeClaim:

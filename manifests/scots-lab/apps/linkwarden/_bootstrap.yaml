@@ -96,6 +96,7 @@ spec:
               key: KEYCLOAK_CLIENT_SECRET
               name: linkwarden-secret
         image: ghcr.io/linkwarden/linkwarden:v2.9.3
+        imagePullPolicy: IfNotPresent
         name: linkwarden
         ports:
         - containerPort: 3000

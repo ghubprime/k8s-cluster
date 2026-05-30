@@ -92,6 +92,7 @@ spec:
         - secretRef:
             name: romm-secret
         image: rommapp/romm:4.8.1
+        imagePullPolicy: IfNotPresent
         name: romm
         ports:
         - containerPort: 8080

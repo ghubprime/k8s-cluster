@@ -71,6 +71,7 @@ spec:
         - name: HBOX_OPTIONS_TRUST_PROXY
           value: "true"
         image: ghcr.io/sysadminsmedia/homebox:0.11.0
+        imagePullPolicy: IfNotPresent
         name: homebox
         ports:
         - containerPort: 7745
