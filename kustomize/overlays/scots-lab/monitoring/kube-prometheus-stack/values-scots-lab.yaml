@@ -32,6 +32,13 @@ prometheus:
     # Required for Talos/kubelet certs if they are self-signed or have host mismatches
     # But usually not strictly needed with metrics-server if correctly provisioned.
     # Leaving standard.
+    resources:
+      requests:
+        cpu: 300m
+        memory: 1200Mi
+      limits:
+        cpu: 500m
+        memory: 2Gi
 
 alertmanager:
   alertmanagerSpec:

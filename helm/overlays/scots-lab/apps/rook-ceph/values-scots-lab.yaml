@@ -4,10 +4,10 @@ monitoring:
 
 resources:
   requests:
-    # Increased from 10m to 250m to align with actual observed operator consumption (201m).
+    # Increased from 10m to 400m to align with actual observed operator consumption (367m).
     # This ensures the scheduler accurately reserves node capacity, preventing 
     # the Ceph control loop from being CPU-starved during critical cluster reconciliation.
-    cpu: 250m
+    cpu: 400m
     memory: 128Mi
   limits:
     # Establish a safe QoS ceiling to prevent runaway operator loops from 

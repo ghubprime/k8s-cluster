@@ -10,6 +10,10 @@ global:
     source:
       repoURL: https://github.com/ghubprime/k8s-cluster.git
       targetRevision: HEAD
+    # Enforce ServerSideApply cluster-wide to eliminate managedFields etcd bloat
+    syncPolicy:
+      syncOptions:
+        - ServerSideApply=true
 
 argocdApplications:
   argocd:
@@ -146,6 +150,12 @@ argocdApplications:
     name: argocd-apps
     namespace: argocd
     appCategory: apps
+    # Explicitly enforce automated sync policy on the root application 
+    # to guarantee orphaned resource garbage collection
+    syncPolicy:
+      automated:
+        prune: true
+        selfHeal: true
     ignoreDifferences:
       - group: argoproj.io
         kind: Application
