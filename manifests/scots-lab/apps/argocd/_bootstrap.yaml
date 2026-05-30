@@ -25352,7 +25352,7 @@ metadata:
   name: argo-cd-argocd-repo-server
   namespace: argocd
 spec:
-  replicas: 1
+  replicas: 2
   revisionHistoryLimit: 3
   selector:
     matchLabels:
@@ -25664,7 +25664,13 @@ spec:
           periodSeconds: 10
           successThreshold: 1
           timeoutSeconds: 1
-        resources: {}
+        resources:
+          limits:
+            cpu: 500m
+            memory: 1Gi
+          requests:
+            cpu: 100m
+            memory: 256Mi
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
@@ -25701,7 +25707,13 @@ spec:
         image: quay.io/argoproj/argocd:v3.1.9
         imagePullPolicy: IfNotPresent
         name: copyutil
-        resources: {}
+        resources:
+          limits:
+            cpu: 500m
+            memory: 1Gi
+          requests:
+            cpu: 100m
+            memory: 256Mi
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
