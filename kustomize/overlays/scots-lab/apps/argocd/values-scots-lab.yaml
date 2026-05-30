@@ -34,3 +34,15 @@ controller:
     limits:
       cpu: "500m"
       memory: "1024Mi"
+repoServer:
+  # Horizontally scale manifest generation to handle concurrent webhook triggers
+  replicas: 2
+  resources:
+    requests:
+      # Baseline required for Kustomize template inflation
+      cpu: "100m"
+      memory: "256Mi"
+    limits:
+      # Establish a hard ceiling to prevent node starvation during heavy GitOps syncs
+      cpu: "500m"
+      memory: "1Gi"
