@@ -46,6 +46,8 @@ spec:
     syncOptions:
       - ServerSideApply=true
       - ApplyOutOfSyncOnly=true
+      # Prevent unnecessary reconciliation cycles on mutating webhook changes
+      - RespectIgnoreDifferences=true
     retry:
       # Reduce overly aggressive retry limit to fail fast and prevent hanging deployments
       limit: 5
