@@ -1,6 +1,8 @@
 controllers:
   main:
     strategy: Recreate
+    pod:
+      priorityClassName: homelab-data
     containers:
       main:
         env:

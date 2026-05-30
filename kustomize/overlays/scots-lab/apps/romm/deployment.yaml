@@ -22,6 +22,7 @@ spec:
       containers:
         - name: romm
           image: rommapp/romm:4.8.1
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
               name: http

@@ -21,10 +21,13 @@ kubeEtcd:
 
 prometheus:
   prometheusSpec:
+    # Monitoring must survive node pressure events to maintain observability
+    priorityClassName: homelab-critical
     resources:
       requests:
         cpu: 200m
-        memory: 1Gi
+        # Actual baseline ~1.1Gi; 1280Mi provides accurate scheduling signal with headroom
+        memory: 1280Mi
       limits:
         cpu: 500m
         memory: 2Gi
@@ -48,6 +51,7 @@ prometheus:
 alertmanager:
   alertmanagerSpec:
     replicas: 1
+    priorityClassName: homelab-critical
   config:
     global:
       resolve_timeout: 5m
@@ -75,6 +79,7 @@ alertmanager:
 
 grafana:
   enabled: true
+  priorityClassName: homelab-critical
   adminPassword: "admin" # To be replaced by sealed-secrets or real config if needed. We'll leave it as default or let the user change it.
   envFromSecret: grafana-oidc-secret
   grafana.ini:
@@ -136,12 +141,17 @@ grafana:
 kube-state-metrics:
   enabled: true
   namespaceOverride: kube-prometheus-system
+  priorityClassName: homelab-critical
   metricLabelsAllowlist:
-    - pods=[*]
-    - nodes=[*]
+    # Expose only labels used in dashboards and alerts to control time series cardinality.
+    # Wildcard pods=[*] was inflating series count from high-cardinality labels
+    # like pod-template-hash and batch.kubernetes.io/job-name.
+    - pods=[app.kubernetes.io/name,app.kubernetes.io/instance,app.kubernetes.io/component]
+    - nodes=[kubernetes.io/hostname,node.kubernetes.io/instance-type]
 
 prometheus-node-exporter:
   namespaceOverride: kube-prometheus-system
+  priorityClassName: homelab-critical
   hostRootFsMount:
     enabled: true
 

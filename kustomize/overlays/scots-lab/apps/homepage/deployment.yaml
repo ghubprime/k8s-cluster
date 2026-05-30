@@ -43,6 +43,7 @@ spec:
       containers:
         - name: homepage
           image: ghcr.io/gethomepage/homepage:v1.12.3
+          imagePullPolicy: IfNotPresent
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:

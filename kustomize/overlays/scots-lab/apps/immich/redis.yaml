@@ -13,6 +13,7 @@ spec:
       labels:
         app: immich-redis
     spec:
+      priorityClassName: homelab-data
       containers:
         - name: redis
           image: docker.io/redis:7-alpine

@@ -18,6 +18,7 @@ spec:
       containers:
       - name: it-tools
         image: corentinth/it-tools:2024.5.13-a0bc346
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8080
           name: http
