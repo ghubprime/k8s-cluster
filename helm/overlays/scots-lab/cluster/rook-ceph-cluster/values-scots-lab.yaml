@@ -63,7 +63,10 @@ cephClusterSpec:
     mgr:
       requests:
         cpu: 100m
-        memory: 256Mi
+        # Increased memory request from 256Mi to 600Mi to accurately reflect
+        # baseline consumption (~550Mi) and ensure the kube-scheduler 
+        # reserves sufficient node capacity to prevent OOM evictions.
+        memory: 600Mi
       limits:
         memory: 1Gi
     osd:
