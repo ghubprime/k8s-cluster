@@ -29,6 +29,7 @@ spec:
     syncOptions:
     - ServerSideApply=true
     - ApplyOutOfSyncOnly=true
+    - RespectIgnoreDifferences=true
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -61,6 +62,7 @@ spec:
     syncOptions:
     - ServerSideApply=true
     - ApplyOutOfSyncOnly=true
+    - RespectIgnoreDifferences=true
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -95,6 +97,7 @@ spec:
     syncOptions:
     - ServerSideApply=true
     - ApplyOutOfSyncOnly=true
+    - RespectIgnoreDifferences=true
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -127,6 +130,7 @@ spec:
     syncOptions:
     - ServerSideApply=true
     - ApplyOutOfSyncOnly=true
+    - RespectIgnoreDifferences=true
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -160,6 +164,7 @@ spec:
     syncOptions:
     - ServerSideApply=true
     - ApplyOutOfSyncOnly=true
+    - RespectIgnoreDifferences=true
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -192,6 +197,7 @@ spec:
     syncOptions:
     - ServerSideApply=true
     - ApplyOutOfSyncOnly=true
+    - RespectIgnoreDifferences=true
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -225,6 +231,7 @@ spec:
     syncOptions:
     - ServerSideApply=true
     - ApplyOutOfSyncOnly=true
+    - RespectIgnoreDifferences=true
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -258,6 +265,7 @@ spec:
     syncOptions:
     - ServerSideApply=true
     - ApplyOutOfSyncOnly=true
+    - RespectIgnoreDifferences=true
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -290,6 +298,7 @@ spec:
     syncOptions:
     - ServerSideApply=true
     - ApplyOutOfSyncOnly=true
+    - RespectIgnoreDifferences=true
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -322,6 +331,7 @@ spec:
     syncOptions:
     - ServerSideApply=true
     - ApplyOutOfSyncOnly=true
+    - RespectIgnoreDifferences=true
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -354,6 +364,7 @@ spec:
     syncOptions:
     - ServerSideApply=true
     - ApplyOutOfSyncOnly=true
+    - RespectIgnoreDifferences=true
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -386,6 +397,7 @@ spec:
     syncOptions:
     - ServerSideApply=true
     - ApplyOutOfSyncOnly=true
+    - RespectIgnoreDifferences=true
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -419,6 +431,7 @@ spec:
     syncOptions:
     - ServerSideApply=true
     - ApplyOutOfSyncOnly=true
+    - RespectIgnoreDifferences=true
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -451,6 +464,7 @@ spec:
     syncOptions:
     - ServerSideApply=true
     - ApplyOutOfSyncOnly=true
+    - RespectIgnoreDifferences=true
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -483,6 +497,7 @@ spec:
     syncOptions:
     - ServerSideApply=true
     - ApplyOutOfSyncOnly=true
+    - RespectIgnoreDifferences=true
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -515,6 +530,7 @@ spec:
     syncOptions:
     - ServerSideApply=true
     - ApplyOutOfSyncOnly=true
+    - RespectIgnoreDifferences=true
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -547,6 +563,7 @@ spec:
     syncOptions:
     - ServerSideApply=true
     - ApplyOutOfSyncOnly=true
+    - RespectIgnoreDifferences=true
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -579,6 +596,7 @@ spec:
     syncOptions:
     - ServerSideApply=true
     - ApplyOutOfSyncOnly=true
+    - RespectIgnoreDifferences=true
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -611,6 +629,7 @@ spec:
     syncOptions:
     - ServerSideApply=true
     - ApplyOutOfSyncOnly=true
+    - RespectIgnoreDifferences=true
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -644,6 +663,7 @@ spec:
     syncOptions:
     - ServerSideApply=true
     - ApplyOutOfSyncOnly=true
+    - RespectIgnoreDifferences=true
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -676,6 +696,7 @@ spec:
     syncOptions:
     - ServerSideApply=true
     - ApplyOutOfSyncOnly=true
+    - RespectIgnoreDifferences=true
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -708,6 +729,7 @@ spec:
     syncOptions:
     - ServerSideApply=true
     - ApplyOutOfSyncOnly=true
+    - RespectIgnoreDifferences=true
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -741,6 +763,7 @@ spec:
     syncOptions:
     - ServerSideApply=true
     - ApplyOutOfSyncOnly=true
+    - RespectIgnoreDifferences=true
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -773,6 +796,7 @@ spec:
     syncOptions:
     - ServerSideApply=true
     - ApplyOutOfSyncOnly=true
+    - RespectIgnoreDifferences=true
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -805,6 +829,7 @@ spec:
     syncOptions:
     - ServerSideApply=true
     - ApplyOutOfSyncOnly=true
+    - RespectIgnoreDifferences=true
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -838,6 +863,7 @@ spec:
     syncOptions:
     - ServerSideApply=true
     - ApplyOutOfSyncOnly=true
+    - RespectIgnoreDifferences=true
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -870,6 +896,7 @@ spec:
     syncOptions:
     - ServerSideApply=true
     - ApplyOutOfSyncOnly=true
+    - RespectIgnoreDifferences=true
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -902,6 +929,7 @@ spec:
     syncOptions:
     - ServerSideApply=true
     - ApplyOutOfSyncOnly=true
+    - RespectIgnoreDifferences=true
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -934,6 +962,7 @@ spec:
     syncOptions:
     - ServerSideApply=true
     - ApplyOutOfSyncOnly=true
+    - RespectIgnoreDifferences=true
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -966,6 +995,7 @@ spec:
     syncOptions:
     - ServerSideApply=true
     - ApplyOutOfSyncOnly=true
+    - RespectIgnoreDifferences=true
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -1001,6 +1031,7 @@ spec:
     syncOptions:
     - ServerSideApply=true
     - ApplyOutOfSyncOnly=true
+    - RespectIgnoreDifferences=true
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -1033,6 +1064,7 @@ spec:
     syncOptions:
     - ServerSideApply=true
     - ApplyOutOfSyncOnly=true
+    - RespectIgnoreDifferences=true
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -1065,6 +1097,7 @@ spec:
     syncOptions:
     - ServerSideApply=true
     - ApplyOutOfSyncOnly=true
+    - RespectIgnoreDifferences=true
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -1097,6 +1130,7 @@ spec:
     syncOptions:
     - ServerSideApply=true
     - ApplyOutOfSyncOnly=true
+    - RespectIgnoreDifferences=true
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -1129,6 +1163,7 @@ spec:
     syncOptions:
     - ServerSideApply=true
     - ApplyOutOfSyncOnly=true
+    - RespectIgnoreDifferences=true
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -1161,6 +1196,7 @@ spec:
     syncOptions:
     - ServerSideApply=true
     - ApplyOutOfSyncOnly=true
+    - RespectIgnoreDifferences=true
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -1194,6 +1230,7 @@ spec:
     syncOptions:
     - ServerSideApply=true
     - ApplyOutOfSyncOnly=true
+    - RespectIgnoreDifferences=true
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -1226,6 +1263,7 @@ spec:
     syncOptions:
     - ServerSideApply=true
     - ApplyOutOfSyncOnly=true
+    - RespectIgnoreDifferences=true
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -1258,6 +1296,7 @@ spec:
     syncOptions:
     - ServerSideApply=true
     - ApplyOutOfSyncOnly=true
+    - RespectIgnoreDifferences=true
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -1295,6 +1334,7 @@ spec:
     syncOptions:
     - ServerSideApply=true
     - ApplyOutOfSyncOnly=true
+    - RespectIgnoreDifferences=true
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -1327,6 +1367,7 @@ spec:
     syncOptions:
     - ServerSideApply=true
     - ApplyOutOfSyncOnly=true
+    - RespectIgnoreDifferences=true
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -1360,6 +1401,7 @@ spec:
     syncOptions:
     - ServerSideApply=true
     - ApplyOutOfSyncOnly=true
+    - RespectIgnoreDifferences=true
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -1392,6 +1434,7 @@ spec:
     syncOptions:
     - ServerSideApply=true
     - ApplyOutOfSyncOnly=true
+    - RespectIgnoreDifferences=true
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -1424,6 +1467,7 @@ spec:
     syncOptions:
     - ServerSideApply=true
     - ApplyOutOfSyncOnly=true
+    - RespectIgnoreDifferences=true
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -1456,6 +1500,7 @@ spec:
     syncOptions:
     - ServerSideApply=true
     - ApplyOutOfSyncOnly=true
+    - RespectIgnoreDifferences=true
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -1488,6 +1533,7 @@ spec:
     syncOptions:
     - ServerSideApply=true
     - ApplyOutOfSyncOnly=true
+    - RespectIgnoreDifferences=true
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -1520,6 +1566,7 @@ spec:
     syncOptions:
     - ServerSideApply=true
     - ApplyOutOfSyncOnly=true
+    - RespectIgnoreDifferences=true
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -1552,6 +1599,7 @@ spec:
     syncOptions:
     - ServerSideApply=true
     - ApplyOutOfSyncOnly=true
+    - RespectIgnoreDifferences=true
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -1584,6 +1632,7 @@ spec:
     syncOptions:
     - ServerSideApply=true
     - ApplyOutOfSyncOnly=true
+    - RespectIgnoreDifferences=true
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -1617,3 +1666,4 @@ spec:
     syncOptions:
     - ServerSideApply=true
     - ApplyOutOfSyncOnly=true
+    - RespectIgnoreDifferences=true
