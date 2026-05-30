@@ -13,6 +13,8 @@ controllers:
           IMMICH_IGNORE_MOUNT_CHECK_ERRORS: "true"
 
 server:
+  image:
+    pullPolicy: IfNotPresent
   resources:
     requests:
       cpu: 100m
@@ -22,6 +24,8 @@ server:
       memory: 1Gi
 
 machine-learning:
+  image:
+    pullPolicy: IfNotPresent
   resources:
     requests:
       cpu: 100m
