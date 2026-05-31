@@ -72,11 +72,15 @@ cephClusterSpec:
     osd:
       requests:
         cpu: 100m
-        memory: 1Gi
+        # Actual OSD scheduling footprint is ~512Mi; steady-state usage is 887Mi-989Mi
+        memory: 512Mi
       limits:
         # Tighten QoS ceiling to prevent OSD rebalancing from saturating node CPU and evicting pods
         cpu: 400m
-        memory: 1Gi
+        # Ceph Tentacle v20.2.0 requires >1GiB during config initialization (parse_env).
+        # Previous 1Gi limit caused ceph_assert crash in set_val_default(). Set to 4Gi
+        # to match MDS and provide headroom for recovery I/O spikes.
+        memory: 4Gi
     mgr-sidecar:
       requests:
         cpu: 25m

@@ -38,8 +38,4 @@ patches:
       - op: replace
         path: /spec/resources/mgr/requests/memory
         value: 768Mi
-      # Reduce over-provisioned OSD requests to free up scheduling headroom
-      - op: replace
-        path: /spec/resources/osd/requests/memory
-        value: 512Mi
 # Trigger CI rebuild
