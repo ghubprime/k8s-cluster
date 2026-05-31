@@ -29,7 +29,8 @@ prometheus:
         # Actual baseline ~1.1Gi; 1280Mi provides accurate scheduling signal with headroom
         memory: 1280Mi
       limits:
-        cpu: 500m
+        # CPU limit removed to prevent severe throttling during metric scraping bursts
+        # Memory limit retained at 2Gi to prevent uncontrolled node memory saturation
         memory: 2Gi
     # Discover all PodMonitors and ServiceMonitors without needing matching labels
     podMonitorSelectorNilUsesHelmValues: false
