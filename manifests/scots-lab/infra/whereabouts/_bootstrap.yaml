@@ -255,6 +255,7 @@ spec:
             fieldRef:
               fieldPath: metadata.namespace
         image: ghcr.io/k8snetworkplumbingwg/whereabouts:latest
+        imagePullPolicy: IfNotPresent
         name: whereabouts
         resources:
           limits:
