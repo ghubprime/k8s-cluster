@@ -80,7 +80,6 @@ On every push to `main`, the GitHub Actions pipeline:
 3. Runs `generate-manifests.sh --force` to render all Kustomize overlays
 4. Commits the rendered manifests back to the `manifests/` directory
 
-> **⚠️ Critical**: Do **NOT** run `generate-manifests.sh` on Windows. A Kustomize binary bug causes Helm to receive `-c` as a flag, silently deleting output directories. Push raw overlays to GitHub and let CI handle generation.
 
 ### Dual-Generation Architecture
 
