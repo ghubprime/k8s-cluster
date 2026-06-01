@@ -31,7 +31,7 @@ credentials:
 kubectl:
   image:
     repository: registry.k8s.io/kubectl
-    tag: v1.35.2
+    tag: v1.36.1
 
 upgradeCRDs: false
 
