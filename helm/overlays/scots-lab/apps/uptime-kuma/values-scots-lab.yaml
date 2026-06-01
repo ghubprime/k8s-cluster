@@ -3,7 +3,8 @@
 
 image:
   repository: louislam/uptime-kuma
-  tag: "1"
+  # Pinned from rolling :1 tag to exact digest to prevent unnecessary pulls
+  tag: "1@sha256:3d632903e6af34139a37f18055c4f1bfd9b7205ae1138f1e5e8940ddc1d176f9"
   pullPolicy: IfNotPresent
 
 # Persistent storage for SQLite database

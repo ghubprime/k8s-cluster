@@ -17,8 +17,8 @@ spec:
     spec:
       containers:
       - name: drawio
-        # DrawIO uses rolling releases; :latest + IfNotPresent prevents unnecessary pulls
-        image: jgraph/drawio:latest
+        # DrawIO uses rolling releases; pinned to digest to prevent unnecessary pulls
+        image: jgraph/drawio@sha256:63ba7ecd6722edc6fba7ee5285c37cf0e133205e5bf20d0a71646e76caddc1e7
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8080

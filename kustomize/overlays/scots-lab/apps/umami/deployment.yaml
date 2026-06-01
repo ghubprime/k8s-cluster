@@ -20,7 +20,9 @@ spec:
       priorityClassName: homelab-data
       containers:
         - name: umami
-          image: ghcr.io/umami-software/umami:postgresql-latest
+          # Pinned from :postgresql-latest to prevent unnecessary pulls
+          image: ghcr.io/umami-software/umami@sha256:e3f80c0625aad7179b49da27d475357cabb1068b8cacd9a792cfd6966888b123
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 3000
               name: http

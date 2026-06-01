@@ -40,7 +40,8 @@ browserless:
   enabled: true
   image:
     repository: browserless/chrome
-    tag: latest
+    # Pinned from :latest to digest to prevent unnecessary pulls
+    tag: "latest@sha256:20ac8284d3cb556c3fb13b03359e1040134f83d5cac4494ec7c008d83005db7d"
     pullPolicy: IfNotPresent
   env:
     ENABLE_DEBUGGER: "false"

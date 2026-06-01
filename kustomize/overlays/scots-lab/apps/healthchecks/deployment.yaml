@@ -20,8 +20,8 @@ spec:
       priorityClassName: homelab-data
       containers:
         - name: healthchecks
-          # LinuxServer uses rolling ls-xxx tags; :latest + IfNotPresent prevents unnecessary pulls
-          image: lscr.io/linuxserver/healthchecks:latest
+          # LinuxServer uses rolling ls-xxx tags; pinned to digest to prevent unnecessary pulls
+          image: lscr.io/linuxserver/healthchecks@sha256:9c41e787577d7812f7b75d4bbf53a19697403ce7759c108dc772b85cd4531b58
           imagePullPolicy: IfNotPresent
           securityContext:
             runAsUser: 0
