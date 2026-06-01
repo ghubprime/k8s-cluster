@@ -41,7 +41,7 @@ browserless:
   image:
     repository: browserless/chrome
     tag: latest
-    pullPolicy: Always
+    pullPolicy: IfNotPresent
   env:
     ENABLE_DEBUGGER: "false"
     DEFAULT_BLOCK_ADS: "true"
