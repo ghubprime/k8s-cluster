@@ -1,9 +1,9 @@
 kind: Cluster
 name: k8s-scots-lab
 kubernetes:
-  version: v1.35.2
+  version: v1.35.5
 talos:
-  version: v1.12.6
+  version: v1.13.3
 features:
   diskEncryption: false
   enableWorkloadProxy: true
