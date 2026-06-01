@@ -182,7 +182,7 @@ spec:
           value: "false"
         - name: MAX_CONCURRENT_SESSIONS
           value: "2"
-        image: browserless/chrome:latest
+        image: browserless/chrome:latest@sha256:20ac8284d3cb556c3fb13b03359e1040134f83d5cac4494ec7c008d83005db7d
         name: browserless
         ports:
         - containerPort: 3000

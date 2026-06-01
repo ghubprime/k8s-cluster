@@ -66,7 +66,7 @@ spec:
           value: Scots Lab Healthchecks
         - name: REMOTE_USER_HEADER
           value: HTTP_X_FORWARDED_USER
-        image: lscr.io/linuxserver/healthchecks:latest
+        image: lscr.io/linuxserver/healthchecks@sha256:9c41e787577d7812f7b75d4bbf53a19697403ce7759c108dc772b85cd4531b58
         imagePullPolicy: IfNotPresent
         name: healthchecks
         resources:
