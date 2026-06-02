@@ -13,7 +13,7 @@ spec:
   project: default
   source:
     path: manifests/scots-lab/apps/actual-budget
-    repoURL: https://github.com/ghubprime/k8s-cluster.git
+    repoURL: https://github.com/ghubprime/homelab-apps.git
     targetRevision: HEAD
   syncPolicy:
     automated:
@@ -46,7 +46,7 @@ spec:
   project: default
   source:
     path: manifests/scots-lab/apps/adguard-home
-    repoURL: https://github.com/ghubprime/k8s-cluster.git
+    repoURL: https://github.com/ghubprime/homelab-apps.git
     targetRevision: HEAD
   syncPolicy:
     automated:
@@ -181,7 +181,7 @@ spec:
   project: default
   source:
     path: manifests/scots-lab/apps/changedetection
-    repoURL: https://github.com/ghubprime/k8s-cluster.git
+    repoURL: https://github.com/ghubprime/homelab-apps.git
     targetRevision: HEAD
   syncPolicy:
     automated:
@@ -348,7 +348,7 @@ spec:
   project: default
   source:
     path: manifests/scots-lab/apps/drawio
-    repoURL: https://github.com/ghubprime/k8s-cluster.git
+    repoURL: https://github.com/ghubprime/homelab-apps.git
     targetRevision: HEAD
   syncPolicy:
     automated:
@@ -415,7 +415,7 @@ spec:
   project: default
   source:
     path: manifests/scots-lab/apps/gdrive-backup
-    repoURL: https://github.com/ghubprime/k8s-cluster.git
+    repoURL: https://github.com/ghubprime/homelab-apps.git
     targetRevision: HEAD
   syncPolicy:
     automated:
@@ -448,7 +448,7 @@ spec:
   project: default
   source:
     path: manifests/scots-lab/apps/guacamole
-    repoURL: https://github.com/ghubprime/k8s-cluster.git
+    repoURL: https://github.com/ghubprime/homelab-apps.git
     targetRevision: HEAD
   syncPolicy:
     automated:
@@ -514,7 +514,7 @@ spec:
   project: default
   source:
     path: manifests/scots-lab/apps/healthchecks
-    repoURL: https://github.com/ghubprime/k8s-cluster.git
+    repoURL: https://github.com/ghubprime/homelab-apps.git
     targetRevision: HEAD
   syncPolicy:
     automated:
@@ -547,7 +547,7 @@ spec:
   project: default
   source:
     path: manifests/scots-lab/apps/homebox
-    repoURL: https://github.com/ghubprime/k8s-cluster.git
+    repoURL: https://github.com/ghubprime/homelab-apps.git
     targetRevision: HEAD
   syncPolicy:
     automated:
@@ -580,7 +580,7 @@ spec:
   project: default
   source:
     path: manifests/scots-lab/apps/homepage
-    repoURL: https://github.com/ghubprime/k8s-cluster.git
+    repoURL: https://github.com/ghubprime/homelab-apps.git
     targetRevision: HEAD
   syncPolicy:
     automated:
@@ -613,7 +613,7 @@ spec:
   project: default
   source:
     path: manifests/scots-lab/apps/immich
-    repoURL: https://github.com/ghubprime/k8s-cluster.git
+    repoURL: https://github.com/ghubprime/homelab-apps.git
     targetRevision: HEAD
   syncPolicy:
     automated:
@@ -647,7 +647,7 @@ spec:
   project: default
   source:
     path: manifests/scots-lab/apps/it-tools
-    repoURL: https://github.com/ghubprime/k8s-cluster.git
+    repoURL: https://github.com/ghubprime/homelab-apps.git
     targetRevision: HEAD
   syncPolicy:
     automated:
@@ -780,7 +780,7 @@ spec:
   project: default
   source:
     path: manifests/scots-lab/apps/linkwarden
-    repoURL: https://github.com/ghubprime/k8s-cluster.git
+    repoURL: https://github.com/ghubprime/homelab-apps.git
     targetRevision: HEAD
   syncPolicy:
     automated:
@@ -913,7 +913,7 @@ spec:
   project: default
   source:
     path: manifests/scots-lab/apps/netbootxyz
-    repoURL: https://github.com/ghubprime/k8s-cluster.git
+    repoURL: https://github.com/ghubprime/homelab-apps.git
     targetRevision: HEAD
   syncPolicy:
     automated:
@@ -946,7 +946,7 @@ spec:
   project: default
   source:
     path: manifests/scots-lab/apps/nextcloud
-    repoURL: https://github.com/ghubprime/k8s-cluster.git
+    repoURL: https://github.com/ghubprime/homelab-apps.git
     targetRevision: HEAD
   syncPolicy:
     automated:
@@ -979,7 +979,7 @@ spec:
   project: default
   source:
     path: manifests/scots-lab/apps/ntfy
-    repoURL: https://github.com/ghubprime/k8s-cluster.git
+    repoURL: https://github.com/ghubprime/homelab-apps.git
     targetRevision: HEAD
   syncPolicy:
     automated:
@@ -1048,7 +1048,7 @@ spec:
   project: default
   source:
     path: manifests/scots-lab/apps/onetimesecret
-    repoURL: https://github.com/ghubprime/k8s-cluster.git
+    repoURL: https://github.com/ghubprime/homelab-apps.git
     targetRevision: HEAD
   syncPolicy:
     automated:
@@ -1081,7 +1081,7 @@ spec:
   project: default
   source:
     path: manifests/scots-lab/apps/openspeedtest
-    repoURL: https://github.com/ghubprime/k8s-cluster.git
+    repoURL: https://github.com/ghubprime/homelab-apps.git
     targetRevision: HEAD
   syncPolicy:
     automated:
@@ -1114,7 +1114,7 @@ spec:
   project: default
   source:
     path: manifests/scots-lab/apps/outline
-    repoURL: https://github.com/ghubprime/k8s-cluster.git
+    repoURL: https://github.com/ghubprime/homelab-apps.git
     targetRevision: HEAD
   syncPolicy:
     automated:
@@ -1147,7 +1147,7 @@ spec:
   project: default
   source:
     path: manifests/scots-lab/apps/paperless
-    repoURL: https://github.com/ghubprime/k8s-cluster.git
+    repoURL: https://github.com/ghubprime/homelab-apps.git
     targetRevision: HEAD
   syncPolicy:
     automated:
@@ -1180,7 +1180,7 @@ spec:
   project: default
   source:
     path: manifests/scots-lab/apps/photoprism
-    repoURL: https://github.com/ghubprime/k8s-cluster.git
+    repoURL: https://github.com/ghubprime/homelab-apps.git
     targetRevision: HEAD
   syncPolicy:
     automated:
@@ -1247,7 +1247,7 @@ spec:
   project: default
   source:
     path: manifests/scots-lab/apps/rackula
-    repoURL: https://github.com/ghubprime/k8s-cluster.git
+    repoURL: https://github.com/ghubprime/homelab-apps.git
     targetRevision: HEAD
   syncPolicy:
     automated:
@@ -1280,7 +1280,7 @@ spec:
   project: default
   source:
     path: manifests/scots-lab/apps/romm
-    repoURL: https://github.com/ghubprime/k8s-cluster.git
+    repoURL: https://github.com/ghubprime/homelab-apps.git
     targetRevision: HEAD
   syncPolicy:
     automated:
@@ -1418,7 +1418,7 @@ spec:
   project: default
   source:
     path: manifests/scots-lab/apps/stirling-pdf
-    repoURL: https://github.com/ghubprime/k8s-cluster.git
+    repoURL: https://github.com/ghubprime/homelab-apps.git
     targetRevision: HEAD
   syncPolicy:
     automated:
@@ -1484,7 +1484,7 @@ spec:
   project: default
   source:
     path: manifests/scots-lab/apps/umami
-    repoURL: https://github.com/ghubprime/k8s-cluster.git
+    repoURL: https://github.com/ghubprime/homelab-apps.git
     targetRevision: HEAD
   syncPolicy:
     automated:
@@ -1517,7 +1517,7 @@ spec:
   project: default
   source:
     path: manifests/scots-lab/apps/uptime-kuma
-    repoURL: https://github.com/ghubprime/k8s-cluster.git
+    repoURL: https://github.com/ghubprime/homelab-apps.git
     targetRevision: HEAD
   syncPolicy:
     automated:
@@ -1583,7 +1583,7 @@ spec:
   project: default
   source:
     path: manifests/scots-lab/apps/vert
-    repoURL: https://github.com/ghubprime/k8s-cluster.git
+    repoURL: https://github.com/ghubprime/homelab-apps.git
     targetRevision: HEAD
   syncPolicy:
     automated:
@@ -1650,7 +1650,7 @@ spec:
   project: default
   source:
     path: manifests/scots-lab/apps/znuny
-    repoURL: https://github.com/ghubprime/k8s-cluster.git
+    repoURL: https://github.com/ghubprime/homelab-apps.git
     targetRevision: HEAD
   syncPolicy:
     automated:

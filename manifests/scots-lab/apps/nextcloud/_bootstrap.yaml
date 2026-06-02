@@ -174,7 +174,7 @@ type: Opaque
 apiVersion: v1
 data:
   password: Y2hhbmdlbWU=
-  postgres-password: RG5jazZJcTVqUw==
+  postgres-password: bk5KbmZ3aTY1Zg==
 kind: Secret
 metadata:
   labels:
