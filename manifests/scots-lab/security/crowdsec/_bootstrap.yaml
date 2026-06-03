@@ -568,8 +568,8 @@ metadata:
 ---
 apiVersion: v1
 data:
-  csLapiSecret: eiZrIl1icz54cSAkLlZ6Oi01LmMlI354VEtqVS9lekg3cEExekJsPVZSXVJ3cmJERjkmT0dBLHxHKT9IXlhUag==
-  registrationToken: RXpwcU5VcGVOWWt4R2JsTmlxUTE3ZDNpbjVBWDF2dk1nM1d3cjR0SDg4cFhIZDF6
+  csLapiSecret: Lnk+ID1OJ0Y8KFovaHArcUQ2azdUUUN9a2FDeCZlY01rJCRYJDxxT2tyb3g6WjksVClwRSd2Zmg3Vm5vfWRIOA==
+  registrationToken: bVdYd2dOYVY1OTVmTnBxd09jaUFEakxxVVZwOWppUVR3eHJ1SE56QU9wd24xenk3
 kind: Secret
 metadata:
   labels:
@@ -707,7 +707,7 @@ spec:
     metadata:
       annotations:
         checksum/lapi-configmap: c6da5ddbb4d70478a94b244bf42e02fc53c27d4ee4021dab500aa603513c2d11
-        checksum/lapi-secret: abcdde08ad923508cc8c5a44f5d8e85577cac26d7dc4ebc5ad2b3b148b18edf6
+        checksum/lapi-secret: c788ad627363a808eb233325aa5f0de33445826237fdf215039279d4e8024dda
       labels:
         k8s-app: crowdsec
         type: lapi
@@ -1038,22 +1038,6 @@ spec:
         protocol: UDP
       - port: "53"
         protocol: TCP
----
-apiVersion: cilium.io/v2
-kind: CiliumClusterwideNetworkPolicy
-metadata:
-  name: crowdsec-omni-proxy-safety-valve
-  namespace: crowdsec
-spec:
-  description: 'Safety valve: always allow Omni proxy, SideroLink, and node subnet
-    traffic. Prevents CrowdSec bouncer from ever severing the control plane connection
-    (Incident 1, 2026-04-19).'
-  endpointSelector: {}
-  ingress:
-  - fromCIDR:
-    - 34.82.1.163/32
-    - fdae:41e4::/64
-    - 192.168.8.0/24
 ---
 apiVersion: v1
 kind: Pod
