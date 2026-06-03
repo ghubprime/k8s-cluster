@@ -568,8 +568,8 @@ metadata:
 ---
 apiVersion: v1
 data:
-  csLapiSecret: UXhxVnZRLWN4NmY0Z3FSayApJTNRR1VnaH5lZy1IfVpxa1pQX0lHZ3U4MmgiOHd3NFtBI3FqPj0tNWAgb213Jg==
-  registrationToken: SnF5ZVQ4ZTI0NWg5Mzg5Q2dsTXU3NUQxOGpIbTJOektTNzNkTmRlSUxmQ0FCZ1Q1
+  csLapiSecret: Qjd7eyowJUcjcmhncSt4J195NTxdTCBkJz1cZXpwVTJ+JiUzQSFRRSZoL0lwN21GUHRXI1UvUXggRzM0TGwidA==
+  registrationToken: SG54TUxJd0pxS2VNOVFqaFptWFVLTDBIUUZtYjNud3U4VkpwRFlRQWtyQ0dpOWY0
 kind: Secret
 metadata:
   labels:
@@ -707,7 +707,7 @@ spec:
     metadata:
       annotations:
         checksum/lapi-configmap: c6da5ddbb4d70478a94b244bf42e02fc53c27d4ee4021dab500aa603513c2d11
-        checksum/lapi-secret: 49c51b87c1ac1d7e7993673b470b38f6e191f6fc7dd5549f10ff556a218b5288
+        checksum/lapi-secret: 9b556a315a788de5533bada9096d0dd0cecf0bac497a9c507006f79dba5e53d3
       labels:
         k8s-app: crowdsec
         type: lapi
@@ -744,7 +744,7 @@ spec:
               fieldPath: metadata.name
         - name: BOUNCER_KEY_KUBERNETES
           value: kubernetes-bouncer-static-key
-        image: crowdsecurity/crowdsec:v1.7.7
+        image: crowdsecurity/crowdsec:v1.7.8
         imagePullPolicy: IfNotPresent
         livenessProbe:
           failureThreshold: 3
@@ -863,7 +863,7 @@ spec:
           value: "true"
         - name: LOCAL_API_URL
           value: http://crowdsec-service.crowdsec:8080
-        image: crowdsecurity/crowdsec:v1.7.7
+        image: crowdsecurity/crowdsec:v1.7.8
         imagePullPolicy: IfNotPresent
         livenessProbe:
           failureThreshold: 3
@@ -940,7 +940,7 @@ spec:
           value: crowdsec-service.crowdsec
         - name: LAPI_PORT
           value: "8080"
-        image: crowdsecurity/crowdsec:v1.7.7
+        image: crowdsecurity/crowdsec:v1.7.8
         imagePullPolicy: IfNotPresent
         name: wait-for-lapi-and-register
         resources:
