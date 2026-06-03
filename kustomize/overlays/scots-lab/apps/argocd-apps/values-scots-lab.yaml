@@ -388,7 +388,7 @@ argocdApplications:
   actual-budget:
     repoURL: https://github.com/ghubprime/homelab-apps.git
     disableAutomated: false
-    disable: false
+    disable: true
     name: actual-budget
     namespace: actual-budget
     appCategory: apps
