@@ -47,6 +47,8 @@ patches:
             maxPods: 250
             shutdownGracePeriod: "600s"
             shutdownGracePeriodCriticalPods: "120s"
+            imageGCHighThresholdPercent: 60
+            imageGCLowThresholdPercent: 50
 
         features:
           hostDNS:
