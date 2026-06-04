@@ -49,6 +49,15 @@ patches:
             shutdownGracePeriodCriticalPods: "120s"
             imageGCHighThresholdPercent: 60
             imageGCLowThresholdPercent: 50
+            # Lower soft eviction thresholds from default 15% to 10% to prevent
+            # pod evictions during transient upgrade churn on 29GB eMMC nodes.
+            # Baseline image usage sits at ~83% (17% free), too close to the 15% default.
+            evictionSoft:
+              nodefs.available: "10%"
+              imagefs.available: "10%"
+            evictionSoftGracePeriod:
+              nodefs.available: "1m30s"
+              imagefs.available: "1m30s"
 
         features:
           hostDNS:
