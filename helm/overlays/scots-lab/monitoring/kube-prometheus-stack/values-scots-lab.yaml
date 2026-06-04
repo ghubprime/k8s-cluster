@@ -81,7 +81,8 @@ alertmanager:
 grafana:
   enabled: true
   priorityClassName: homelab-critical
-  adminPassword: "admin" # To be replaced by sealed-secrets or real config if needed. We'll leave it as default or let the user change it.
+  # Admin password removed — OIDC via Keycloak is the primary auth method (Rule #21)
+  # Grafana auto-generates a random admin password if not specified
   envFromSecret: grafana-oidc-secret
   grafana.ini:
     server:

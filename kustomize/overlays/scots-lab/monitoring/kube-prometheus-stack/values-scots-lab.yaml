@@ -47,8 +47,22 @@ alertmanager:
 
 grafana:
   enabled: true
-  adminPassword: "admin" # To be replaced by sealed-secrets or real config if needed. We'll leave it as default or let the user change it.
+  # OIDC via Keycloak (Rule #21) — client secret injected from SealedSecret
+  envFromSecret: "grafana-oidc-secret"
   namespaceOverride: kube-prometheus-system
+  grafana.ini:
+    server:
+      root_url: https://grafana.srbii.com
+    auth.generic_oauth:
+      enabled: true
+      name: Keycloak
+      client_id: grafana
+      scopes: openid profile email
+      auth_url: https://auth.srbii.com/realms/homelab/protocol/openid-connect/auth
+      token_url: https://auth.srbii.com/realms/homelab/protocol/openid-connect/token
+      api_url: https://auth.srbii.com/realms/homelab/protocol/openid-connect/userinfo
+      role_attribute_path: "contains(realm_access.roles[*], 'admin') && 'Admin' || 'Viewer'"
+      allow_sign_up: true
   service:
     annotations:
       omni-kube-service-exposer.sidero.dev/port: "50086"

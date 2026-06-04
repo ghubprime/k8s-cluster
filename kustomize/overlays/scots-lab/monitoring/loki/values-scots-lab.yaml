@@ -1,7 +1,9 @@
-# Loki Helm values for scots-lab (monolithic / single-binary mode)
+# Loki Helm values for scots-lab (Monolithic mode)
+# Migrated from chart 6.55.0 → 13.1.2 (grafana-community/helm-charts)
 # Appropriate for a 3-node homelab cluster with filesystem storage on Ceph
 
-deploymentMode: SingleBinary
+# Deployment mode — "Monolithic" replaces the deprecated "SingleBinary" name
+deploymentMode: Monolithic
 
 loki:
   # Authentication disabled for internal cluster use
@@ -37,7 +39,7 @@ loki:
     retention_enabled: true
     delete_request_store: filesystem
 
-# Single binary deployment
+# Monolithic deployment (uses singleBinary key for pod config)
 singleBinary:
   replicas: 1
   persistence:
@@ -52,7 +54,7 @@ singleBinary:
       cpu: 500m
       memory: 1Gi
 
-# Disable the NGINX gateway — unnecessary for single-binary homelab
+# Disable the NGINX gateway — unnecessary for monolithic homelab
 gateway:
   enabled: false
 
@@ -70,15 +72,19 @@ write:
 backend:
   replicas: 0
 
-# Monitoring - enable ServiceMonitor for Prometheus scraping
+# ServiceMonitor for Prometheus scraping (top-level in 13.x)
+serviceMonitor:
+  enabled: true
+
+# Loki Canary not needed for homelab
+lokiCanary:
+  enabled: false
+
+# Monitoring dashboards/rules (restructured in 12.x+)
 monitoring:
-  serviceMonitor:
-    enabled: true
-  selfMonitoring:
+  dashboards:
     enabled: false
-    grafanaAgent:
-      installOperator: false
-  lokiCanary:
+  rules:
     enabled: false
 
 # Test pods not needed
