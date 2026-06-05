@@ -555,6 +555,7 @@ spec:
   resources:
     requests:
       memory: 400Mi
+  retention: 7d
   ruleSelector:
     matchLabels:
       prometheus: rook-prometheus
@@ -563,6 +564,15 @@ spec:
   serviceMonitorSelector:
     matchLabels:
       team: rook
+  storage:
+    volumeClaimTemplate:
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 5Gi
+        storageClassName: ceph-block
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
