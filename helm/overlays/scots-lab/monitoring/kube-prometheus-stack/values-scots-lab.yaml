@@ -40,6 +40,16 @@ prometheus:
     retention: 15d
     retentionSize: 20GB
     scrapeConfigSelectorNilUsesHelmValues: false
+    # Persistent storage — moves TSDB off ephemeral eMMC to Ceph
+    # Prevents DiskPressure evictions on 27GB root partitions
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: ceph-block
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 25Gi
     # Required for Talos/kubelet certs if they are self-signed or have host mismatches
     # But usually not strictly needed with metrics-server if correctly provisioned.
     # Leaving standard.
@@ -53,6 +63,15 @@ alertmanager:
   alertmanagerSpec:
     replicas: 1
     priorityClassName: homelab-critical
+    # Persistent storage for alert state across restarts
+    storage:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: ceph-block
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 1Gi
   config:
     global:
       resolve_timeout: 5m
