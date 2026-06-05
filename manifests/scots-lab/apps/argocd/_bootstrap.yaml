@@ -24628,6 +24628,12 @@ data:
     clientID: argocd-client
     clientSecret: $argocd-oidc-secret:oidc.keycloak.clientSecret
     requestedScopes: ["openid", "profile", "email", "groups"]
+  resource.customizations.ignoreDifferences.gateway.networking.k8s.io_HTTPRoute: |
+    jqPathExpressions:
+      - '.spec.parentRefs[]?.group'
+      - '.spec.parentRefs[]?.kind'
+      - '.spec.rules[]?.backendRefs[]?.weight'
+      - '.spec.rules[]?.matches'
   resource.customizations.ignoreResourceUpdates.ConfigMap: |
     jqPathExpressions:
       # Ignore the cluster-autoscaler status
@@ -25361,7 +25367,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/cm: 934b6f9eed6486005f7dee46897ad1118f6e13cec8cc38eb61a45e3febcde82e
+        checksum/cm: 80085f009e6f43761a85f5486c055d15a1b40ba2a1a883d47c921ce066e754ce
         checksum/cmd-params: 620fabf6ede5d6f2d861889bf074d0a872aa2855d4fb6702330bfffe0e20c9b9
       labels:
         app.kubernetes.io/component: repo-server
@@ -25785,7 +25791,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/cm: 934b6f9eed6486005f7dee46897ad1118f6e13cec8cc38eb61a45e3febcde82e
+        checksum/cm: 80085f009e6f43761a85f5486c055d15a1b40ba2a1a883d47c921ce066e754ce
         checksum/cmd-params: 620fabf6ede5d6f2d861889bf074d0a872aa2855d4fb6702330bfffe0e20c9b9
       labels:
         app.kubernetes.io/component: server
@@ -26248,7 +26254,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/cm: 934b6f9eed6486005f7dee46897ad1118f6e13cec8cc38eb61a45e3febcde82e
+        checksum/cm: 80085f009e6f43761a85f5486c055d15a1b40ba2a1a883d47c921ce066e754ce
         checksum/cmd-params: 620fabf6ede5d6f2d861889bf074d0a872aa2855d4fb6702330bfffe0e20c9b9
       labels:
         app.kubernetes.io/component: application-controller
