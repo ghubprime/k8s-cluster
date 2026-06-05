@@ -11,6 +11,12 @@ configs:
   cm:
     url: https://argocd.srbii.com
     timeout.reconciliation: "15m"
+    resource.customizations.ignoreDifferences.gateway.networking.k8s.io_HTTPRoute: |
+      jqPathExpressions:
+        - '.spec.parentRefs[]?.group'
+        - '.spec.parentRefs[]?.kind'
+        - '.spec.rules[]?.backendRefs[]?.weight'
+        - '.spec.rules[]?.matches'
     oidc.config: |
       name: Keycloak
       issuer: https://auth.srbii.com/realms/homelab
