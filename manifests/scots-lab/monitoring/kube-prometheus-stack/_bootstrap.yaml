@@ -78247,7 +78247,7 @@ metadata:
 ---
 apiVersion: v1
 data:
-  admin-password: cFk1UlNmcDRVcDJja0lGeWt5cTZSTDg4elcxazBjdkhZYWFPek1WaQ==
+  admin-password: UDdTdW5xTkE4bkJGdDBPSjBySXMyejhlMWJ2OUROR2ZBd3dQQmVNNQ==
   admin-user: YWRtaW4=
   ldap-toml: ""
 kind: Secret
@@ -78482,7 +78482,7 @@ spec:
         checksum/config: c9b0eccfde188c3ab31435e524cc3fc25f2913efecb3bee559d4c96cf8e322d7
         checksum/dashboards-json-config: d6da0f1f5f3537395450eb1fc5f2a5a30735823885d3ed13cd54a67c09d8f12f
         checksum/sc-dashboard-provider-config: e70bf6a851099d385178a76de9757bb0bef8299da6d8443602590e44f05fdf24
-        checksum/secret: 4184ccec200886206e704ca28721236b745945aeb3031b37460430aacdc54bc1
+        checksum/secret: 9d31592b199a06cac16687c20587b89961322c38280f73ce9c3093fda174619b
         kubectl.kubernetes.io/default-container: grafana
       labels:
         app.kubernetes.io/instance: kube-prometheus-stack
@@ -79254,6 +79254,15 @@ spec:
     seccompProfile:
       type: RuntimeDefault
   serviceAccountName: kube-prometheus-stack-alertmanager
+  storage:
+    volumeClaimTemplate:
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi
+        storageClassName: ceph-block
   version: v0.32.1
 ---
 apiVersion: monitoring.coreos.com/v1
@@ -79336,6 +79345,15 @@ spec:
   serviceMonitorNamespaceSelector: {}
   serviceMonitorSelector: {}
   shards: 1
+  storage:
+    volumeClaimTemplate:
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 25Gi
+        storageClassName: ceph-block
   tsdb:
     outOfOrderTimeWindow: 0s
   version: v3.12.0-distroless
