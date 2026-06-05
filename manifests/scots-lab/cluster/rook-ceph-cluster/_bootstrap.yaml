@@ -560,6 +560,10 @@ spec:
     matchLabels:
       prometheus: rook-prometheus
       role: alert-rules
+  securityContext:
+    fsGroup: 65534
+    runAsNonRoot: true
+    runAsUser: 65534
   serviceAccountName: prometheus
   serviceMonitorSelector:
     matchLabels:
