@@ -24628,6 +24628,16 @@ data:
     clientID: argocd-client
     clientSecret: $argocd-oidc-secret:oidc.keycloak.clientSecret
     requestedScopes: ["openid", "profile", "email", "groups"]
+  resource.customizations.ignoreDifferences.apps_StatefulSet: |
+    jqPathExpressions:
+      - '.spec.volumeClaimTemplates[]?.status'
+      - '.spec.volumeClaimTemplates[]?.spec.volumeMode'
+      - '.spec.volumeClaimTemplates[]?.spec.accessModes'
+      - '.spec.volumeClaimTemplates[]?.spec.resources'
+  resource.customizations.ignoreDifferences.gateway.networking.k8s.io_Gateway: |
+    jqPathExpressions:
+      - '.spec.listeners[]?.tls?.certificateRefs[]?.group'
+      - '.spec.listeners[]?.tls?.certificateRefs[]?.kind'
   resource.customizations.ignoreDifferences.gateway.networking.k8s.io_HTTPRoute: |
     jqPathExpressions:
       - '.spec.parentRefs[]?.group'
@@ -25369,7 +25379,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/cm: 72be8758febc654cc7b9dae5145e413c749883955f73f869f86de44773b1c798
+        checksum/cm: 28bb384c51a78cd274e7f8728c2d3fac68951f980823f0fc64c01c6cbfe7dab6
         checksum/cmd-params: 620fabf6ede5d6f2d861889bf074d0a872aa2855d4fb6702330bfffe0e20c9b9
       labels:
         app.kubernetes.io/component: repo-server
@@ -25793,7 +25803,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/cm: 72be8758febc654cc7b9dae5145e413c749883955f73f869f86de44773b1c798
+        checksum/cm: 28bb384c51a78cd274e7f8728c2d3fac68951f980823f0fc64c01c6cbfe7dab6
         checksum/cmd-params: 620fabf6ede5d6f2d861889bf074d0a872aa2855d4fb6702330bfffe0e20c9b9
       labels:
         app.kubernetes.io/component: server
@@ -26256,7 +26266,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/cm: 72be8758febc654cc7b9dae5145e413c749883955f73f869f86de44773b1c798
+        checksum/cm: 28bb384c51a78cd274e7f8728c2d3fac68951f980823f0fc64c01c6cbfe7dab6
         checksum/cmd-params: 620fabf6ede5d6f2d861889bf074d0a872aa2855d4fb6702330bfffe0e20c9b9
       labels:
         app.kubernetes.io/component: application-controller
