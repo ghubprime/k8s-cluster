@@ -85,6 +85,16 @@ spec:
     matchLabels:
       role: alert-rules
       prometheus: rook-prometheus
+  retention: 7d
+  # Persistent storage — moves TSDB off ephemeral eMMC to Ceph
+  storage:
+    volumeClaimTemplate:
+      spec:
+        storageClassName: ceph-block
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 5Gi
   resources:
     requests:
       memory: 400Mi

@@ -32,6 +32,16 @@ prometheus:
     # Required for Talos/kubelet certs if they are self-signed or have host mismatches
     # But usually not strictly needed with metrics-server if correctly provisioned.
     # Leaving standard.
+    # Persistent storage — moves TSDB off ephemeral eMMC to Ceph
+    # Prevents DiskPressure evictions on 27GB root partitions
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: ceph-block
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 25Gi
     resources:
       requests:
         cpu: 300m
@@ -43,6 +53,15 @@ prometheus:
 alertmanager:
   alertmanagerSpec:
     replicas: 1
+    # Persistent storage for alert state across restarts
+    storage:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: ceph-block
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 1Gi
   namespaceOverride: kube-prometheus-system
 
 grafana:
