@@ -20,8 +20,10 @@ cephClusterSpec:
   storage:
     useAllNodes: false
     useAllDevices: false
-    # Only match data HDDs (sdb, sdc). After eMMC boot migration, sda is the M.2 SATA SSD (unused).
+    # Only match data HDDs (sdb, sdc). M.2 SSD (sda) used for WAL+DB metadata acceleration.
     deviceFilter: ^sd[bc]$
+    config:
+      metadataDevice: sda
     nodes:
     - name: talos-23m-4vp
       devices:
