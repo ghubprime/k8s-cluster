@@ -24633,6 +24633,8 @@ data:
       - '.spec.parentRefs[]?.group'
       - '.spec.parentRefs[]?.kind'
       - '.spec.rules[]?.backendRefs[]?.weight'
+      - '.spec.rules[]?.backendRefs[]?.group'
+      - '.spec.rules[]?.backendRefs[]?.kind'
       - '.spec.rules[]?.matches'
   resource.customizations.ignoreResourceUpdates.ConfigMap: |
     jqPathExpressions:
@@ -25367,7 +25369,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/cm: 80085f009e6f43761a85f5486c055d15a1b40ba2a1a883d47c921ce066e754ce
+        checksum/cm: 72be8758febc654cc7b9dae5145e413c749883955f73f869f86de44773b1c798
         checksum/cmd-params: 620fabf6ede5d6f2d861889bf074d0a872aa2855d4fb6702330bfffe0e20c9b9
       labels:
         app.kubernetes.io/component: repo-server
@@ -25791,7 +25793,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/cm: 80085f009e6f43761a85f5486c055d15a1b40ba2a1a883d47c921ce066e754ce
+        checksum/cm: 72be8758febc654cc7b9dae5145e413c749883955f73f869f86de44773b1c798
         checksum/cmd-params: 620fabf6ede5d6f2d861889bf074d0a872aa2855d4fb6702330bfffe0e20c9b9
       labels:
         app.kubernetes.io/component: server
@@ -26254,7 +26256,7 @@ spec:
   template:
     metadata:
       annotations:
-        checksum/cm: 80085f009e6f43761a85f5486c055d15a1b40ba2a1a883d47c921ce066e754ce
+        checksum/cm: 72be8758febc654cc7b9dae5145e413c749883955f73f869f86de44773b1c798
         checksum/cmd-params: 620fabf6ede5d6f2d861889bf074d0a872aa2855d4fb6702330bfffe0e20c9b9
       labels:
         app.kubernetes.io/component: application-controller
