@@ -460,6 +460,8 @@ spec:
         memory: 50Mi
   skipUpgradeChecks: false
   storage:
+    config:
+      metadataDevice: sda
     deviceFilter: ^sd[bc]$
     nodes:
     - devices:
