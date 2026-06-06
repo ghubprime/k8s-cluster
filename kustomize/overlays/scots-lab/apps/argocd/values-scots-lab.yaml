@@ -1,5 +1,9 @@
 dex:
   enabled: false
+# Elevate all ArgoCD components above application workloads to protect the
+# GitOps control plane from node eviction (repo-server was evicted 2026-06-05)
+global:
+  priorityClassName: homelab-critical
 notifications:
   enabled: false
 applicationSet:

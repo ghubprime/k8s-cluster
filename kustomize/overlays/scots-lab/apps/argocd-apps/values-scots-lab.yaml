@@ -268,6 +268,15 @@ argocdApplications:
     appCategory: apps
     syncWave: "3"
     description: ITSM ticketing system (OTRS fork) for helpdesk ops
+    # Suppress StatefulSet VCT drift that the API server injects (apiVersion/kind)
+    # causing a perpetual autoHeal loop (585+ attempts observed 2026-06-06)
+    ignoreDifferences:
+      - group: apps
+        kind: StatefulSet
+        name: znuny-mariadb
+        jqPathExpressions:
+          - .spec.volumeClaimTemplates[]?.apiVersion
+          - .spec.volumeClaimTemplates[]?.kind
   adguard-home:
     repoURL: https://github.com/ghubprime/homelab-apps.git
     disableAutomated: false
