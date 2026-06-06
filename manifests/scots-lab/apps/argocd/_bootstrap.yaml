@@ -25242,6 +25242,7 @@ spec:
       dnsPolicy: ClusterFirst
       nodeSelector:
         kubernetes.io/os: linux
+      priorityClassName: homelab-critical
       serviceAccountName: argocd-applicationset-controller
       terminationGracePeriodSeconds: 30
       volumes:
@@ -25343,6 +25344,7 @@ spec:
       dnsPolicy: ClusterFirst
       nodeSelector:
         kubernetes.io/os: linux
+      priorityClassName: homelab-critical
       securityContext:
         runAsNonRoot: true
         runAsUser: 999
@@ -25746,6 +25748,7 @@ spec:
           name: var-files
       nodeSelector:
         kubernetes.io/os: linux
+      priorityClassName: homelab-critical
       serviceAccountName: argo-cd-argocd-repo-server
       terminationGracePeriodSeconds: 30
       volumes:
@@ -26197,6 +26200,7 @@ spec:
       dnsPolicy: ClusterFirst
       nodeSelector:
         kubernetes.io/os: linux
+      priorityClassName: homelab-critical
       serviceAccountName: argocd-server
       terminationGracePeriodSeconds: 30
       volumes:
@@ -26613,6 +26617,7 @@ spec:
       dnsPolicy: ClusterFirst
       nodeSelector:
         kubernetes.io/os: linux
+      priorityClassName: homelab-critical
       serviceAccountName: argocd-application-controller
       terminationGracePeriodSeconds: 30
       volumes:
@@ -26707,6 +26712,7 @@ spec:
             type: RuntimeDefault
       nodeSelector:
         kubernetes.io/os: linux
+      priorityClassName: homelab-critical
       restartPolicy: OnFailure
       serviceAccountName: argo-cd-argocd-redis-secret-init
   ttlSecondsAfterFinished: 60

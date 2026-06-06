@@ -1614,6 +1614,13 @@ spec:
   destination:
     namespace: znuny
     server: https://kubernetes.default.svc
+  ignoreDifferences:
+  - group: apps
+    jqPathExpressions:
+    - .spec.volumeClaimTemplates[]?.apiVersion
+    - .spec.volumeClaimTemplates[]?.kind
+    kind: StatefulSet
+    name: znuny-mariadb
   project: default
   source:
     path: manifests/scots-lab/apps/znuny
