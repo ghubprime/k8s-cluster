@@ -78247,7 +78247,7 @@ metadata:
 ---
 apiVersion: v1
 data:
-  admin-password: U2ZNb0Fpb1lBYnMwWU1vNFN6cFpBdks0RGJGZEQ4QTR6STBSR0FvTQ==
+  admin-password: SndlVHVyOEhjQ2ZRUkxhNVRoOXRpQXhVZEQ2QVAzdjFyTGFGSEptMA==
   admin-user: YWRtaW4=
   ldap-toml: ""
 kind: Secret
@@ -78482,7 +78482,7 @@ spec:
         checksum/config: c9b0eccfde188c3ab31435e524cc3fc25f2913efecb3bee559d4c96cf8e322d7
         checksum/dashboards-json-config: d6da0f1f5f3537395450eb1fc5f2a5a30735823885d3ed13cd54a67c09d8f12f
         checksum/sc-dashboard-provider-config: e70bf6a851099d385178a76de9757bb0bef8299da6d8443602590e44f05fdf24
-        checksum/secret: dd8f90e3f872e62a3c8d68254ac3d3db43709380703783c7c053955690ac9ccc
+        checksum/secret: 97f5edf6edd86230d7632d823532ee72224828df8410076deda84c66cd28fbfd
         kubectl.kubernetes.io/default-container: grafana
       labels:
         app.kubernetes.io/instance: kube-prometheus-stack

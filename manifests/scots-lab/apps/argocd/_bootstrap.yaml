@@ -24408,6 +24408,20 @@ rules:
   - create
 ---
 apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: emergency-unban-ccwnp
+rules:
+- apiGroups:
+  - cilium.io
+  resources:
+  - ciliumclusterwidenetworkpolicies
+  verbs:
+  - get
+  - list
+  - delete
+---
+apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   labels:
@@ -24569,7 +24583,7 @@ metadata:
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: cluster-admin
+  name: emergency-unban-ccwnp
 subjects:
 - kind: ServiceAccount
   name: emergency-unban
@@ -26737,7 +26751,7 @@ spec:
           kubectl delete ccwnp --all
 
           echo "Emergency kernel unban complete!"
-        image: bitnami/kubectl:latest
+        image: bitnami/kubectl:1.36.1
         name: kubectl
       restartPolicy: OnFailure
       serviceAccountName: emergency-unban
