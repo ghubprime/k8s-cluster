@@ -1,3 +1,14 @@
+# Purpose-built ClusterRole — scoped to only CiliumClusterwideNetworkPolicy
+# Replaces cluster-admin binding (2026-06-06 security hardening)
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: emergency-unban-ccwnp
+rules:
+- apiGroups: ["cilium.io"]
+  resources: ["ciliumclusterwidenetworkpolicies"]
+  verbs: ["get", "list", "delete"]
+---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
@@ -5,7 +16,7 @@ metadata:
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: cluster-admin
+  name: emergency-unban-ccwnp
 subjects:
 - kind: ServiceAccount
   name: emergency-unban
@@ -32,7 +43,7 @@ spec:
       serviceAccountName: emergency-unban
       containers:
       - name: kubectl
-        image: bitnami/kubectl:latest
+        image: bitnami/kubectl:1.36.1
         command:
         - /bin/sh
         - -c

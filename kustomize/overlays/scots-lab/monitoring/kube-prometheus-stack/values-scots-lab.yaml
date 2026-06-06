@@ -103,6 +103,11 @@ kube-state-metrics:
 
 prometheus-node-exporter:
   namespaceOverride: kube-prometheus-system
+  # Reduce node-exporter scrape from 30s to 60s — node metrics change slowly
+  # and this halves the series ingestion rate from the highest-cardinality monitor
+  prometheus:
+    monitor:
+      interval: 60s
   hostRootFsMount:
     enabled: true
 
