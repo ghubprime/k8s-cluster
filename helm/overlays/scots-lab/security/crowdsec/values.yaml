@@ -1,6 +1,8 @@
 container_runtime: containerd
 
 agent:
+  # Ensure CrowdSec agents survive eviction during disk pressure events
+  priorityClassName: homelab-critical
   # Right-sized from chart defaults (500m/250Mi req, 500m/250Mi lim)
   # Agents mostly idle — wake periodically to parse logs and poll LAPI
   resources:
@@ -16,6 +18,8 @@ agent:
       program: kgateway
 
 lapi:
+  # Ensure CrowdSec LAPI survives eviction during disk pressure events
+  priorityClassName: homelab-critical
   # Right-sized from chart defaults (500m/500Mi req=lim Guaranteed)
   # LAPI handles lightweight REST calls from agents and bouncer
   resources:

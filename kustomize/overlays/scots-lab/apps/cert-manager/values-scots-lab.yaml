@@ -2,5 +2,8 @@ crds:
   enabled: true
 extraArgs:
   - --enable-gateway-api
+# Ensure cert-manager survives eviction during disk pressure events
+global:
+  priorityClassName: homelab-critical
 #startupapicheck:
 #  enabled: false

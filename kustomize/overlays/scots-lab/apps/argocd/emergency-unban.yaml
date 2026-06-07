@@ -43,7 +43,8 @@ spec:
       serviceAccountName: emergency-unban
       containers:
       - name: kubectl
-        image: bitnami/kubectl:1.36.1
+        # Official K8s image — bitnami/kubectl deprecated Sept 2025
+        image: registry.k8s.io/kubectl:v1.36.1
         command:
         - /bin/sh
         - -c

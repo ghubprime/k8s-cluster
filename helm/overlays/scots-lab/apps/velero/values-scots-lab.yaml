@@ -33,6 +33,9 @@ kubectl:
     repository: registry.k8s.io/kubectl
     tag: v1.36.1
 
+# Ensure Velero survives eviction during disk pressure events
+priorityClassName: homelab-critical
+
 upgradeCRDs: false
 
 # Homelab resource override — OOMKill threshold must exceed CRD discovery peak
