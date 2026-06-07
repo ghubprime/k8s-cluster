@@ -1,2 +1,12 @@
 # Scots-Lab environmental overrides for Sealed Secrets
 fullnameOverride: sealed-secrets-controller
+# Protect from eviction during disk pressure events
+priorityClassName: homelab-critical
+# Right-size for homelab (~30 SealedSecrets, lightweight controller)
+resources:
+  requests:
+    cpu: 25m
+    memory: 32Mi
+  limits:
+    cpu: 250m
+    memory: 128Mi

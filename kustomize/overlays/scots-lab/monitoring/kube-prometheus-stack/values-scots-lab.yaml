@@ -69,6 +69,13 @@ grafana:
   # OIDC via Keycloak (Rule #21) — client secret injected from SealedSecret
   envFromSecret: "grafana-oidc-secret"
   namespaceOverride: kube-prometheus-system
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
   grafana.ini:
     server:
       root_url: https://grafana.srbii.com
@@ -100,6 +107,13 @@ kube-state-metrics:
   metricLabelsAllowlist:
     - pods=[*]
     - nodes=[*]
+  resources:
+    requests:
+      cpu: 25m
+      memory: 64Mi
+    limits:
+      cpu: 250m
+      memory: 256Mi
 
 prometheus-node-exporter:
   namespaceOverride: kube-prometheus-system
@@ -110,6 +124,22 @@ prometheus-node-exporter:
       interval: 60s
   hostRootFsMount:
     enabled: true
+  resources:
+    requests:
+      cpu: 25m
+      memory: 32Mi
+    limits:
+      cpu: 250m
+      memory: 128Mi
+
+prometheusOperator:
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
 
 namespaceOverride: kube-prometheus-system
 
