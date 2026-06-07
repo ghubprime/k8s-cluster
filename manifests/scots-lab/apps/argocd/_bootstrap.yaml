@@ -25230,7 +25230,13 @@ spec:
         - containerPort: 7000
           name: webhook
           protocol: TCP
-        resources: {}
+        resources:
+          limits:
+            cpu: 250m
+            memory: 256Mi
+          requests:
+            cpu: 50m
+            memory: 64Mi
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
@@ -25345,7 +25351,13 @@ spec:
         - containerPort: 6379
           name: redis
           protocol: TCP
-        resources: {}
+        resources:
+          limits:
+            cpu: 250m
+            memory: 256Mi
+          requests:
+            cpu: 50m
+            memory: 64Mi
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
@@ -26184,7 +26196,13 @@ spec:
           periodSeconds: 10
           successThreshold: 1
           timeoutSeconds: 1
-        resources: {}
+        resources:
+          limits:
+            cpu: 500m
+            memory: 512Mi
+          requests:
+            cpu: 50m
+            memory: 128Mi
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:

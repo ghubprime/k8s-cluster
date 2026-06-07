@@ -444,7 +444,17 @@ spec:
         - :8081
         command:
         - controller
-        env: null
+        env:
+        - name: GOMAXPROCS
+          valueFrom:
+            resourceFieldRef:
+              divisor: "1"
+              resource: limits.cpu
+        - name: GOMEMLIMIT
+          valueFrom:
+            resourceFieldRef:
+              divisor: "1"
+              resource: limits.memory
         image: docker.io/bitnami/sealed-secrets-controller:0.37.0
         imagePullPolicy: IfNotPresent
         livenessProbe:
@@ -474,8 +484,12 @@ spec:
           successThreshold: 1
           timeoutSeconds: 1
         resources:
-          limits: {}
-          requests: {}
+          limits:
+            cpu: 250m
+            memory: 128Mi
+          requests:
+            cpu: 25m
+            memory: 32Mi
         securityContext:
           capabilities:
             drop:
@@ -486,6 +500,7 @@ spec:
         volumeMounts:
         - mountPath: /tmp
           name: tmp
+      priorityClassName: homelab-critical
       securityContext:
         fsGroup: 65534
       serviceAccountName: sealed-secrets-controller
