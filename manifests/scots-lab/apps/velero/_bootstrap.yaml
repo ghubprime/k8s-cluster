@@ -3349,6 +3349,7 @@ spec:
         volumeMounts:
         - mountPath: /target
           name: plugins
+      priorityClassName: homelab-critical
       restartPolicy: Always
       serviceAccountName: velero-server
       terminationGracePeriodSeconds: 3600

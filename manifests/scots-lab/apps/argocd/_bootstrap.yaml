@@ -26751,7 +26751,7 @@ spec:
           kubectl delete ccwnp --all
 
           echo "Emergency kernel unban complete!"
-        image: bitnami/kubectl:1.36.1
+        image: registry.k8s.io/kubectl:v1.36.1
         name: kubectl
       restartPolicy: OnFailure
       serviceAccountName: emergency-unban
