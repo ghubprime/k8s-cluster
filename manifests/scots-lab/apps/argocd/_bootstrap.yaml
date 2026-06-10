@@ -26761,14 +26761,13 @@ spec:
   template:
     spec:
       containers:
-      - command:
-        - /bin/sh
-        - -c
-        - |
-          echo "Mopping up the final orphaned ghost policy left by dying pods..."
-          kubectl delete ccwnp --all
-
-          echo "Emergency kernel unban complete!"
+      - args:
+        - delete
+        - ccwnp
+        - --all
+        - --ignore-not-found
+        command:
+        - kubectl
         image: registry.k8s.io/kubectl:v1.36.1
         name: kubectl
       restartPolicy: OnFailure
