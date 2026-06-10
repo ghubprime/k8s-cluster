@@ -43,14 +43,8 @@ spec:
       serviceAccountName: emergency-unban
       containers:
       - name: kubectl
-        # Official K8s image — bitnami/kubectl deprecated Sept 2025
+        # Official K8s image — distroless, no /bin/sh available
         image: registry.k8s.io/kubectl:v1.36.1
-        command:
-        - /bin/sh
-        - -c
-        - |
-          echo "Mopping up the final orphaned ghost policy left by dying pods..."
-          kubectl delete ccwnp --all
-          
-          echo "Emergency kernel unban complete!"
+        command: ["kubectl"]
+        args: ["delete", "ccwnp", "--all", "--ignore-not-found"]
       restartPolicy: OnFailure
