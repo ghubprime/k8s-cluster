@@ -46,9 +46,15 @@ prometheus:
       requests:
         cpu: 300m
         memory: 1200Mi
+        # Ephemeral storage for WAL, compaction temp files, config subpath mounts.
+        # TSDB data lives on the 25Gi Ceph PVC — this only covers kubelet-local overhead.
+        # Without this limit, volume-subpath bloat consumed 13.1GB during the 2026-06-10
+        # power incident, triggering DiskPressure on the 29GB eMMC EPHEMERAL partition.
+        ephemeral-storage: 2Gi
       limits:
         cpu: 500m
         memory: 2Gi
+        ephemeral-storage: 4Gi
 
 alertmanager:
   alertmanagerSpec:
