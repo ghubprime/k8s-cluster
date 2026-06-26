@@ -3498,7 +3498,7 @@ metadata:
   name: velero-cluster-backup
   namespace: velero
 spec:
-  schedule: 0 */6 * * *
+  schedule: 0 0,6,12,18 * * *
   template:
     includedNamespaces:
     - '*'
@@ -3516,7 +3516,7 @@ metadata:
   name: velero-deep-cluster-backup
   namespace: velero
 spec:
-  schedule: 0 1 */2 * *
+  schedule: 0 6 */2 * *
   template:
     defaultVolumesToFsBackup: true
     includedNamespaces:
