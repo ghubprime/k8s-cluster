@@ -71,7 +71,7 @@ schedules:
   # Runs every 6 hours — fast, low-cost, captures all K8s object state + point-in-time PVC snapshots
   cluster-backup:
     disabled: false
-    schedule: "0 */6 * * *"
+    schedule: "0 0,6,12,18 * * *"  # Explicit hours to avoid 01-05 UTC (6-10 PM PDT)
     template:
       ttl: "720h"
       includedNamespaces:
@@ -81,7 +81,7 @@ schedules:
   # Runs every 48 hours — the "restore everything" safety net for full data recovery
   deep-cluster-backup:
     disabled: false
-    schedule: "0 1 */2 * *"
+    schedule: "0 6 */2 * *"  # Shifted from 1 AM UTC (6 PM PDT) to 6 AM UTC (11 PM PDT)
     template:
       ttl: "2160h"
       includedNamespaces:
