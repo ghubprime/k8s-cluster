@@ -10,3 +10,19 @@ helmCharts:
     releaseName: cert-manager
     namespace: cert-manager
     includeCRDs: true
+    # RULES.md Rule #29 — MUST match the `namespace:` above.
+    #
+    # The chart puts the leaderelection Role/RoleBinding in
+    # global.leaderElection.namespace (default "kube-system") AND passes the same value as
+    # --leader-election-namespace on the controller. The blanket `namespace: cert-manager`
+    # above rewrites the Role/RoleBinding into cert-manager, but NOT the arg (it is an opaque
+    # string in an args array). Leaving the default therefore points the controller at
+    # kube-system, where it has no lease permission: it never acquires leadership and does
+    # ZERO reconciliation, while still reporting Running / Synced / Healthy / Ready=True.
+    #
+    # That mismatch renewed no certificates for 72 days (2026-05-27 -> 2026-08-07).
+    # See Knowledge/cert-manager-leader-election-failure.md
+    valuesInline:
+      global:
+        leaderElection:
+          namespace: cert-manager

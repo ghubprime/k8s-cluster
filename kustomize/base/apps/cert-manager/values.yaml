@@ -1,3 +1,21 @@
+# ============================================================================
+# ⚠️  ORPHANED FILE — NOT USED BY ANY RENDER. EDITS HERE DO NOTHING.
+#
+# Nothing references this file. The overlay at
+#   kustomize/overlays/scots-lab/apps/cert-manager/kustomization.yaml
+# renders cert-manager through a native `helmCharts:` block with no `valuesFile:`,
+# so the chart renders with UPSTREAM DEFAULTS plus whatever is in that block's
+# `valuesInline:`.
+#
+# `kustomize/overlays/scots-lab/apps/cert-manager/values-scots-lab.yaml` is orphaned
+# for the same reason. Verified against the live cluster 2026-08-07: the running
+# Deployment has no --enable-gateway-api, no priorityClassName, and empty resources{} —
+# i.e. none of the intended overrides are in effect.
+#
+# To actually change cert-manager, edit the overlay's `helmCharts:` block.
+# Same trap as the stale kube-prometheus-stack values file (Knowledge/known-issues.md).
+# ============================================================================
+
 # +docs:section=Global
 
 # Default values for cert-manager.
@@ -48,17 +66,10 @@ global:
   leaderElection:
     # Override the namespace used for the leader election lease.
     #
-    # MUST stay "cert-manager" — see RULES.md Rule #29.
-    # The scots-lab overlay sets a blanket `namespace: cert-manager`, and Kustomize's namespace
-    # transformer rewrites the chart's leaderelection Role/RoleBinding into that namespace. It
-    # does NOT rewrite the controller's --leader-election-namespace arg, which is a plain string
-    # in an args array. Setting this to "kube-system" therefore points the controller at a
-    # namespace where it has no lease permissions: it never acquires leadership and performs
-    # ZERO reconciliation, while still reporting Running / Synced / Healthy / Ready=True.
-    #
-    # That exact mismatch renewed no certificates for 72 days (2026-05-27 -> 2026-08-07) and
-    # brought both cluster certs within 11 days of simultaneous expiry.
-    # See Knowledge/cert-manager-leader-election-failure.md
+    # NOTE: editing this file has NO EFFECT — see the ORPHANED banner at the top.
+    # The live value is set via valuesInline in
+    #   kustomize/overlays/scots-lab/apps/cert-manager/kustomization.yaml
+    # and MUST equal that overlay's `namespace:` (RULES.md Rule #29).
     namespace: "cert-manager"
 
     # The duration that non-leader candidates will wait after observing a
