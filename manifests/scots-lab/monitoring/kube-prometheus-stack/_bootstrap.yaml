@@ -82858,6 +82858,66 @@ metadata:
   labels:
     app: kube-prometheus-stack
     release: kube-prometheus-stack
+  name: scots-lab-cert-manager-renewal
+  namespace: kube-prometheus-system
+spec:
+  groups:
+  - name: scots-lab.cert-manager-renewal
+    rules:
+    - alert: CertificateRenewalStalled
+      annotations:
+        description: 'Certificate {{ $labels.namespace }}/{{ $labels.name }} passed
+          its renewalTime over an hour ago and has not been reissued. The certificate
+          is still valid, so `Ready` will read True and ArgoCD will read Healthy —
+          neither is evidence renewal works (Rule #30). Most likely the controller
+          is not reconciling at all. Check it holds its lease: `kubectl get lease
+          cert-manager-controller -n cert-manager -o jsonpath=''{.spec.holderIdentity}''`
+          must name a RUNNING pod, then `kubectl logs -n cert-manager deploy/cert-manager
+          | grep -i forbidden`. Confirm recovery by watching notBefore advance, not
+          by Ready.'
+        summary: cert-manager has not renewed {{ $labels.namespace }}/{{ $labels.name
+          }}
+      expr: certmanager_certificate_renewal_timestamp_seconds < time()
+      for: 1h
+      labels:
+        severity: warning
+    - alert: CertificateRenewalStalledCritical
+      annotations:
+        description: '{{ $labels.namespace }}/{{ $labels.name }} has been overdue
+          for renewal for more than 24 hours. Certificates here are 90-day with renewal
+          at the 60-day mark, leaving only ~30 days of slack before expiry. This previously
+          ran undetected for 72 days and came within 11 days of expiring the internal
+          CA and the *.scots-lab.local wildcard simultaneously, which would have broken
+          every internal HTTPS endpoint at once. Treat as an outage in progress. See
+          Knowledge/cert-manager-leader-election-failure.md.'
+        summary: cert-manager renewal broken >24h for {{ $labels.namespace }}/{{ $labels.name
+          }}
+      expr: certmanager_certificate_renewal_timestamp_seconds < time()
+      for: 24h
+      labels:
+        severity: critical
+    - alert: CertificateMonitoringBlind
+      annotations:
+        description: 'No certmanager_certificate_* series have been present for 30
+          minutes, so CertificateExpiringSoon, CertificateRenewalStalled and CertificateRenewalStalledCritical
+          cannot fire regardless of the real state of the certificates. Either cert-manager
+          is down or it is no longer being scraped. Check the ServiceMonitor still
+          exists and is adopted: `kubectl get servicemonitor cert-manager -n cert-manager`,
+          then confirm the targets are up in Prometheus. Until this clears, certificate
+          expiry is unmonitored — verify by hand with `kubectl get certificates -A
+          -o custom-columns=NS:.metadata.namespace,NAME:.metadata.name,NOTBEFORE:.status.notBefore,NOTAFTER:.status.notAfter,RENEWAL:.status.renewalTime`.'
+        summary: cert-manager metrics are absent — certificate alerting is blind
+      expr: absent(certmanager_certificate_renewal_timestamp_seconds)
+      for: 30m
+      labels:
+        severity: warning
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  labels:
+    app: kube-prometheus-stack
+    release: kube-prometheus-stack
   name: scots-lab-ephemeral-storage
   namespace: kube-prometheus-system
 spec:
