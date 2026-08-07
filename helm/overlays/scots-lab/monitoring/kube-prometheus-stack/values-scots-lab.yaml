@@ -100,8 +100,22 @@ alertmanager:
 grafana:
   enabled: true
   priorityClassName: homelab-critical
-  # Admin password removed — OIDC via Keycloak is the primary auth method (Rule #21)
-  # Grafana auto-generates a random admin password if not specified
+  # OIDC via Keycloak is the primary auth method (Rule #21); this is the local
+  # fallback admin.
+  #
+  # Previously left unset so the chart would auto-generate. That is what caused
+  # the churn: with no cluster `lookup` available during offline `kustomize build`,
+  # the chart minted a NEW random admin-password on every CI render, so each push
+  # to main rewrote the Secret, changed the checksum/secret annotation, and
+  # restarted Grafana — leaving the documented admin password invalid.
+  #
+  # admin.existingSecret suppresses the chart's own Secret entirely (LDAP is
+  # disabled, so ldap-toml is not needed from it). The SealedSecret carries the
+  # value that was already live, so this is a no-op for the running instance.
+  admin:
+    existingSecret: grafana-admin-creds
+    userKey: admin-user
+    passwordKey: admin-password
   envFromSecret: grafana-oidc-secret
   grafana.ini:
     server:

@@ -1,5 +1,23 @@
 container_runtime: containerd
 
+# LAPI credentials come from a SealedSecret (sealed-crowdsec-lapi.yaml).
+#
+# Left unset, the chart derives csLapiSecret and registrationToken from a
+# `lookup` of the live crowdsec-lapi-secrets, and falls back to freshly random
+# values when that lookup returns nothing — which is always, during offline
+# `kustomize build` in CI. So every push to main re-keyed the LAPI shared secret
+# and the bouncer registration token, changed checksum/lapi-secret, and restarted
+# the whole CrowdSec stack.
+#
+# The sealed values are the ones already live in the cluster, captured straight
+# from the running Secret, so this is a no-op for registered agents and bouncers
+# rather than a rotation. Rotating these is a separate, supervised task.
+secrets:
+  externalSecret:
+    name: crowdsec-lapi-creds
+    csLapiSecretKey: csLapiSecret
+    registrationTokenKey: registrationToken
+
 agent:
   # Ensure CrowdSec agents survive eviction during disk pressure events
   priorityClassName: homelab-critical

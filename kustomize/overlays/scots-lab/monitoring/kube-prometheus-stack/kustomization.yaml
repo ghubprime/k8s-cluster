@@ -4,6 +4,7 @@ namespace: kube-prometheus-system
 resources:
   - ../../../../base/monitoring/kube-prometheus-stack/
   - sealed-grafana-oidc-secret.yaml
+  - sealed-grafana-admin.yaml
   - httproute.yaml
   # Early-warning rules for the 29 GB EPHEMERAL partition. The upstream
   # node-exporter alerts fire below the kubelet eviction threshold, so on these
