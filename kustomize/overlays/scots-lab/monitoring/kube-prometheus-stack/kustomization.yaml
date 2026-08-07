@@ -10,6 +10,10 @@ resources:
   # node-exporter alerts fire below the kubelet eviction threshold, so on these
   # nodes pods are evicted before any alert triggers.
   - ephemeral-storage-rules.yaml
+  # Detect a stalled cert-manager renewal loop ~3 months before expiry, plus an
+  # absent() guard so certificate alerting fails closed rather than silently
+  # going blind (which is how the 2026-05→08 renewal outage stayed invisible).
+  - cert-manager-renewal-rules.yaml
 helmCharts:
 - name: kube-prometheus-stack
   repo: https://prometheus-community.github.io/helm-charts
