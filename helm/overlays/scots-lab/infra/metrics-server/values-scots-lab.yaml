@@ -1,4 +1,4 @@
-# Metrics Server values for scots-lab (Talos Linux v1.12.6 bare-metal)
+# Metrics Server values for scots-lab (Talos Linux v1.13.3 bare-metal)
 # Provides the Kubernetes Metrics API for kubectl top and HPA autoscaling
 
 args:

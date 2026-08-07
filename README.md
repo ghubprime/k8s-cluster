@@ -9,13 +9,13 @@ The primary repository defining the `k8s-scots-lab` bare-metal Kubernetes cluste
 ```
 ┌─────────────────────────────────────────────────┐
 │  k8s-cluster.yaml (Omni Cluster Template)       │
-│  ├─ Talos v1.12.6 / Kubernetes v1.35.2          │
+│  ├─ Talos v1.13.3 / Kubernetes v1.36.1          │
 │  ├─ 3x ODROID H4 Ultra (ControlPlane)           │
 │  └─ extraManifests → bootstrap/                 │
 │       ├─ Multus CNI                             │
 │       ├─ Gateway API CRDs                       │
 │       ├─ ArgoCD                                 │
-│       └─ ArgoCD App-of-Apps (48 applications)  │
+│       └─ ArgoCD App-of-Apps (49 applications)  │
 └─────────────────────────────────────────────────┘
          │
          ▼  omnictl cluster template sync
@@ -28,12 +28,12 @@ The primary repository defining the `k8s-scots-lab` bare-metal Kubernetes cluste
          │
          ▼  ArgoCD syncs from manifests/
 ┌─────────────────────────────────────────────────┐
-│  Live Cluster (48 ArgoCD Applications)          │
+│  Live Cluster (49 ArgoCD Applications)          │
 │  Wave -1: CRDs (Gateway API, kGateway)          │
 │  Wave  0: Infra (Cilium, Multus, Whereabouts)   │
 │  Wave  1: Core (ArgoCD, cert-manager, Ceph,     │
-│           Metrics Server, Velero, SealedSecrets) │
-│           CrowdSec, Cloudflare)                  │
+│           Metrics Server, Velero, SealedSecrets,│
+│           CrowdSec, Cloudflare)                 │
 │  Wave  2: Services (Ceph Cluster, kGateway)     │
 │  Wave  3: Apps & Monitoring (kube-prometheus...) │
 └─────────────────────────────────────────────────┘
