@@ -567,19 +567,6 @@ metadata:
   name: crowdsec-docker-start-script-configmap
 ---
 apiVersion: v1
-data:
-  csLapiSecret: PUwodHdcSSpMZXJGeic2LH0uPWBoSH5laiQ9fF11YlZ4QHhBUUBlIHQudF5EPE13dj42UzErSm4nelZ3a0FEbA==
-  registrationToken: azhsUVVaWkRySDdHR1NRbmZrTmNuUE00UHgxRW85NHRGbmRkREdHNVBHN0Y2WWY3
-kind: Secret
-metadata:
-  labels:
-    k8s-app: crowdsec
-    type: lapi
-    version: v1
-  name: crowdsec-lapi-secrets
-type: Opaque
----
-apiVersion: v1
 kind: Service
 metadata:
   labels:
@@ -707,7 +694,7 @@ spec:
     metadata:
       annotations:
         checksum/lapi-configmap: c6da5ddbb4d70478a94b244bf42e02fc53c27d4ee4021dab500aa603513c2d11
-        checksum/lapi-secret: e80262fb78f7c4112f5601fa08def139c6c864b38b11a3130b72ad15989f9ee7
+        checksum/lapi-secret: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
       labels:
         k8s-app: crowdsec
         type: lapi
@@ -732,12 +719,12 @@ spec:
           valueFrom:
             secretKeyRef:
               key: csLapiSecret
-              name: crowdsec-lapi-secrets
+              name: crowdsec-lapi-creds
         - name: REGISTRATION_TOKEN
           valueFrom:
             secretKeyRef:
               key: registrationToken
-              name: crowdsec-lapi-secrets
+              name: crowdsec-lapi-creds
         - name: CUSTOM_HOSTNAME
           valueFrom:
             fieldRef:
@@ -929,7 +916,7 @@ spec:
           valueFrom:
             secretKeyRef:
               key: registrationToken
-              name: crowdsec-lapi-secrets
+              name: crowdsec-lapi-creds
         - name: USERNAME
           valueFrom:
             fieldRef:
@@ -1016,6 +1003,21 @@ spec:
       restartPolicy: OnFailure
       serviceAccountName: crowdsec-allowlist-provisioner
   ttlSecondsAfterFinished: 600
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  name: crowdsec-lapi-creds
+  namespace: crowdsec
+spec:
+  encryptedData:
+    csLapiSecret: AgBhfARnUu7bGvXGxI3jAAZ8p8QckkHvXcSaT3m9SAArOPiawrbIdnuauiq+M781uvnXzLACZ3ken54xmKLeNILdaNv8qhA+iF5WPEF/9NvFt2YC1Ib30dEbiAmseC2JFgfp7SWXg7BLYBYVN1A5gVmtbQ9/BepQlA0r7DmFSBeI6QiaNX0n2KJTSOZ4wwkuE1ZVFeSQZjdsNf+W50V+/C6/XoPRmpj5X1uKJd51ffkwvtUxmC3boiJSVIWWLBQBUn87TFXeVJsF4nL9saG8N7e5xrbBfUHui9hFI4KB9bxRoTGn+r9GzxB7qVWGwGNThMjOpg7d0gze/3n7k0fPsEkTzR/+r/VqINMzbtBOpNkhXq9E9mrIgfxdIjw0bP/AHnW4g2K0PNpZSlvAU8SdDrB/V3PAOmN/TBRChA8sI67GmSuuAaDwd9TegLLTqhGjXEZqcZ58t1ep4EI8F7MWWw63E3nmAbRB+z36UDkn70r0ehE2Bmmz2z2rKSvVpyT8qb0q3Q+esjE81qJrN3j2tqlQiUBXf0kiBqzj5tb/9AHxZ3By9D8wGblitCt6Y0N0THFpo667xdJWMQAmrVYvXzVqtG+QGPrfFwICBd6ZO3eQg/6ZT9d2zFU2DvkV2jMkLdkmNffaq2ey/iKCmtTk+nAu/ZfKICw5dp1xaXWPTaZS4MQvzTaL8wsoy9nscbp3mYPYqYkKKO5BeLqvVUJGaAD9QyNKm/xTB8wR+tcIaReT9q11XWe23wLwdqTWPNKBNxnjOYjdxmINuwbglQX8hZ6E
+    registrationToken: AgA9DRGFI1HPlflnFceEIzYZ2Z4HzuBgEOWFqok63OjophXVnl1EwiGWOlS8JdxbwrxPLqpZ7RdJY2YkqBFBzCOlyazx08/OLhU1hla2mjhIQX66g4w1YPWPRx4g6qrmBAgPXtJ0529dXIcQMs8zCkolyTD8KVXHicdVNBRhTe4CgWANP12dBdSe4KhcJq9tl9pf/YfJRMgkvQueWJGftsPs2iPmC38Td3RiudKORwKXbKYYuhW3g7JgPcTX/lcsWH1Vgn3Ek6+emwt7ifNXz5rO5qoYAHJNFplgyUnaKe4x9poMFdOTrbKcKOgCPYgGHuISLg8RO7afj9qn+hS+apk5PIZyUsaDrhRYsgZZo1JR4lQWN5tP1whHf+xfiHNPGOpkoewhrKEp2TdC76ROHf7+VaLWne5yIuedQfMJ1LZv5vOls9XR+d0JQvDOvFcXlCGOscFVK2LlVChG+XvlPQAWBWMiPtdm3D3wiX+rPcwnSEFH0voz3wQJLCf2Gy5bi27nulKc8mdzZwddwgZxKWLVJfgwSkO1vPHQtBbKQZ8EvYt47+MwMVOdJxqxDZoCSo+g9R9AIcFaz9qE0J5h1idAtPndop/+quEybRthwzNMCpjtEY2rPChGB94SJmC8Lj/Hkg8weyXL4DuyFyME+qJh4JP57TprAn6bJ1ZSdon7DjwHrEmuo1X6qoV6Tlfw3JK32uPt2amVUlX2e64io62bWZjir5M+S1UimqrJMsxwxnD5K8BEkRZGNAINzQrYsAI=
+  template:
+    metadata:
+      name: crowdsec-lapi-creds
+      namespace: crowdsec
+    type: Opaque
 ---
 apiVersion: cilium.io/v2
 kind: CiliumClusterwideNetworkPolicy

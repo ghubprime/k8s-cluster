@@ -78246,23 +78246,6 @@ metadata:
   namespace: kube-prometheus-system
 ---
 apiVersion: v1
-data:
-  admin-password: QVJPYmtram5qdk1YOHVyUjdPajVTcEVENlBuMERVdHVWblR0VVd2YQ==
-  admin-user: YWRtaW4=
-  ldap-toml: ""
-kind: Secret
-metadata:
-  labels:
-    app.kubernetes.io/component: admin-secret
-    app.kubernetes.io/instance: kube-prometheus-stack
-    app.kubernetes.io/name: grafana
-    app.kubernetes.io/version: 13.0.1-security-01
-    helm.sh/chart: grafana-12.4.2
-  name: kube-prometheus-stack-grafana
-  namespace: kube-prometheus-system
-type: Opaque
----
-apiVersion: v1
 kind: Service
 metadata:
   labels:
@@ -78482,7 +78465,6 @@ spec:
         checksum/config: c9b0eccfde188c3ab31435e524cc3fc25f2913efecb3bee559d4c96cf8e322d7
         checksum/dashboards-json-config: d6da0f1f5f3537395450eb1fc5f2a5a30735823885d3ed13cd54a67c09d8f12f
         checksum/sc-dashboard-provider-config: e70bf6a851099d385178a76de9757bb0bef8299da6d8443602590e44f05fdf24
-        checksum/secret: dd0c0bbdcaa25cb8382f54322135be72b6db84934a2c98a2855ded5b223ccef1
         kubectl.kubernetes.io/default-container: grafana
       labels:
         app.kubernetes.io/instance: kube-prometheus-stack
@@ -78509,12 +78491,12 @@ spec:
           valueFrom:
             secretKeyRef:
               key: admin-user
-              name: kube-prometheus-stack-grafana
+              name: grafana-admin-creds
         - name: REQ_PASSWORD
           valueFrom:
             secretKeyRef:
               key: admin-password
-              name: kube-prometheus-stack-grafana
+              name: grafana-admin-creds
         - name: REQ_URL
           value: http://localhost:3000/api/admin/provisioning/dashboards/reload
         - name: REQ_METHOD
@@ -78547,12 +78529,12 @@ spec:
           valueFrom:
             secretKeyRef:
               key: admin-user
-              name: kube-prometheus-stack-grafana
+              name: grafana-admin-creds
         - name: REQ_PASSWORD
           valueFrom:
             secretKeyRef:
               key: admin-password
-              name: kube-prometheus-stack-grafana
+              name: grafana-admin-creds
         - name: REQ_URL
           value: http://localhost:3000/api/admin/provisioning/datasources/reload
         - name: REQ_METHOD
@@ -78579,12 +78561,12 @@ spec:
           valueFrom:
             secretKeyRef:
               key: admin-user
-              name: kube-prometheus-stack-grafana
+              name: grafana-admin-creds
         - name: GF_SECURITY_ADMIN_PASSWORD
           valueFrom:
             secretKeyRef:
               key: admin-password
-              name: kube-prometheus-stack-grafana
+              name: grafana-admin-creds
         - name: GF_PATHS_DATA
           value: /var/lib/grafana/
         - name: GF_PATHS_LOGS
@@ -79158,6 +79140,21 @@ spec:
           type: RuntimeDefault
       serviceAccountName: kube-prometheus-stack-admission
   ttlSecondsAfterFinished: 60
+---
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  name: grafana-admin-creds
+  namespace: kube-prometheus-system
+spec:
+  encryptedData:
+    admin-password: AgBZHSLaI0b/iUf5dXT9lYLbcm64vSk78ZuZO8hLOdjYlCVzFFc2vE+6CbK5kLF1Bpb8LzIlyorFoYQ9V38wENyocx40eNZuVLaQXR5ixqqBUhOVS7M3t6rftc6nFi5nQsvjS0DnkCaBgyeeOhcKYsVXoD69o5MkHNqVNydvEe1iHLzROajpnPkdVXjFW7FvN2vR4tgY4r8suQOj8BYhmkth0IPtr9mVnDqXk5oQDntFwcJEBEHVCdyJcNrp0atO+/ZGXBGhiPqhzNpaWbMdIXSrAW7qLO6AyA+dq4zZt6vFtkybSX+2jl7x2xfc5WL/IW+AMRLRsU2rAMeGRsNd0Ew7/WGO7y3hp4JKPrHbY1henlMNu9d17VGtYZnv+geshMo+djjX4MfatXJLiLpK8XTK94z26uJVAUj2JxS1vtcPV1fKOe5CaAcMfSichVpEe36ByHmtiOgDcUFR/H86LOQueBjyh8ALfgbnkEb979UJlQGcdCCY1j0Kp1vHAVBoDPzLu9Tlsz4DBKJ67JU0I7zzQkftu8HJWz78RiN+CjivA3Q3HQHtx4Qi4M9N8kiZbN2DPf7mKeVxPOjG82f+Cq68kIbja1UElRwLnn1z0YLBqRZM/aG0H45bo8lVRD7SgURRwaPNmq1W5UD94Bpr8n3df0tPZuPk8yNHi+uuhqMXwup8ZQ/LevPlzdg1hI1ga01bEj8cwrTO412vv8yVn54veDzkwmz5ly6cG5wAaGdF0ovM2kqk3EXr
+    admin-user: AgCkTJe+GrZJhGWeuOayV9a5PcMnAIPYsdCpLEWmg2XAkWDC21rd1/PBXA6Vt3nnMw6hJtHp2fvfkHscAJDM3W4qakcwdGHjXi+QZhx7oLgNeI0zszvObNRQwqCwPF2ohunOLHr5SDIHyA2pklXE8y4U9+WuH6JrhiO69jrBsWcLKcV/vZQdxoALofXZf/Kr7Xqad1V3qMNSgSRTnRwemnKnqbWVH61wr1VIlB6v4iy/PR0jSrB7xjHkGgheta0Qwr/WiZTP/E53prNpfaOoaxhagw/xI1JD5LZqNdIGgI08dXeFqH0DXKCp9J8hdgrzAZ1Cgw8uzMHaIRBw9XaoP+yb2KWaqWizzcnEHMScZx9eNIUJ3Y9WXENZ0HzmsHaUfmckMXUiCTGy5F5Gxrn0bhZlYS56lq1RpaZmzJMAngXaJlYNreF701GEGnVQJvU8eFXIxyxAgPbM8vDv8cou6RFi6gtJu13rNVp8uVcTRCoHUpWzFvO84WkYbmR7qlkGj7V+35ZDbgt9XHSaiJo5esiqZGsdW9YmrN3OnWvw530k6V5xjSnztb7fxNoc1/E+diR0c33dOQAsuiYNJxSRXDXW/pwwXzRMR+Xhv0rZmN6no6YPyrn8XeKV17t8VQN5N5Zqn2XQEiutmkXnUaa4ZT9hjbXNIv2ttwlcArTU72xYeOPknoMbTgGAGIcyNCCJ6IrWIlFFNg==
+  template:
+    metadata:
+      name: grafana-admin-creds
+      namespace: kube-prometheus-system
+    type: Opaque
 ---
 apiVersion: bitnami.com/v1alpha1
 kind: SealedSecret
