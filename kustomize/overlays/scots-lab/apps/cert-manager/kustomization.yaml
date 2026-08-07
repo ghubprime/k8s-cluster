@@ -26,3 +26,22 @@ helmCharts:
       global:
         leaderElection:
           namespace: cert-manager
+
+      # Scrape cert-manager so certificate-expiry alerting actually works.
+      #
+      # `CertificateExpiringSoon` has always existed as a Prometheus rule
+      #   certmanager_certificate_expiration_timestamp_seconds - time() < 1209600
+      # but the metric had ZERO series because nothing scraped cert-manager. The rule could
+      # never fire, and did not, while both cluster certs sat 11 days from expiry during a
+      # 72-day renewal outage (2026-05-27 -> 2026-08-07). Rule #30.
+      #
+      # Using the chart's own ServiceMonitor rather than a hand-written one: its selector
+      # covers all three components (controller, cainjector, webhook) and it tracks the
+      # correct targetPort across chart upgrades.
+      #
+      # Prometheus here runs serviceMonitorSelector: {} / serviceMonitorNamespaceSelector: {},
+      # so no `release: kube-prometheus-stack` label is required for adoption.
+      prometheus:
+        enabled: true
+        servicemonitor:
+          enabled: true
