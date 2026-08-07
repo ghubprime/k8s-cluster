@@ -5,6 +5,10 @@ resources:
   - ../../../../base/monitoring/kube-prometheus-stack/
   - sealed-grafana-oidc-secret.yaml
   - httproute.yaml
+  # Early-warning rules for the 29 GB EPHEMERAL partition. The upstream
+  # node-exporter alerts fire below the kubelet eviction threshold, so on these
+  # nodes pods are evicted before any alert triggers.
+  - ephemeral-storage-rules.yaml
 helmCharts:
 - name: kube-prometheus-stack
   repo: https://prometheus-community.github.io/helm-charts
