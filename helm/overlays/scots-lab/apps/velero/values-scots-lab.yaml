@@ -86,5 +86,33 @@ schedules:
       ttl: "2160h"
       includedNamespaces:
         - '*'
+      # Observability TSDB is deliberately NOT filesystem-backed-up.
+      #
+      # Measured from the last healthy deep backup (2026-08-01), 31.29 GB traversed:
+      #     kube-prometheus-system  19.04 GB   Prometheus + Alertmanager TSDB
+      #     loki                     8.31 GB   log chunks
+      #     rook-ceph                1.47 GB   rook's own Prometheus TSDB
+      #     ------------------------------------------------------------------
+      #     observability           28.82 GB   92% of the backup
+      #     ALL application data     2.47 GB    8%
+      #
+      # This is telemetry: high-churn (rewritten continuously, so it dedupes badly
+      # across snapshots), self-regenerating, and not something anyone would restore
+      # — you would rebuild the TSDB from scratch rather than roll it back. Shipping
+      # it to R2 was ~92% of the object-storage bill for ~0% of the recovery value,
+      # and the resulting bucket growth is what prompted the manual R2 cleanup on
+      # 2026-08-02 that destroyed the kopia repository metadata (Rule #31).
+      #
+      # These namespaces are still fully covered by:
+      #   - the Tier 1 cluster-backup every 6h (K8s objects + CSI snapshots), and
+      #   - Ceph RBD replication (size 3) for the live PVCs.
+      # Only the off-site byte-for-byte filesystem copy is skipped.
+      #
+      # PVCs affected: alertmanager-...-db (1Gi), prometheus-...-db (25Gi),
+      # storage-loki-0 (20Gi), prometheus-rook-prometheus-db (5Gi) — all telemetry.
+      excludedNamespaces:
+        - kube-prometheus-system
+        - loki
+        - rook-ceph
       defaultVolumesToFsBackup: true
       snapshotVolumes: true
