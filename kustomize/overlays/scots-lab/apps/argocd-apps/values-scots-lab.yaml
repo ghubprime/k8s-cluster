@@ -26,7 +26,19 @@ argocdApplications:
     description: GitOps continuous delivery engine
   talos:
     disableAutomated: false
-    disable: false
+    # Disabled 2026-08-07. This app deploys omnictl-cluster-sync-job, which runs
+    # `omnictl cluster template validate && sync` against the live Omni control
+    # plane. It has never worked: its manifest rendered 0 bytes from 2026-03-29
+    # until tonight, and its image ghcr.io/ghubprime/omnictl does not exist —
+    # anonymous GHCR token requests 403 for it, Sidero publishes no public
+    # omnictl image, and the account has no packages.
+    #
+    # Enabling it would mean building and publishing that image, then handing an
+    # in-cluster Job an Omni Operator credential capable of rebooting all three
+    # control-plane nodes unattended. The same operation is already done safely
+    # and deliberately from the workstation via /cluster-sync, which gates it
+    # with the validate step plus UKI and Cilium pre-flight checks (Rule #5).
+    disable: true
     name: talos
     namespace: talos-system
     appCategory: cluster
@@ -36,7 +48,11 @@ argocdApplications:
     repoURL: https://github.com/ghubprime/omni-infra.git
     path: "."
     disableAutomated: false
-    disable: false
+    # Disabled 2026-08-07, same reasoning as `talos` above. Deploys
+    # omnictl-apply-job, which runs `omnictl apply` on the machine ConfigPatches
+    # in omni-infra/patches/. Blocked on the same nonexistent
+    # ghcr.io/ghubprime/omnictl image, and dormant since 2026-03-29.
+    disable: true
     name: omni
     namespace: omni-system
     directory:
