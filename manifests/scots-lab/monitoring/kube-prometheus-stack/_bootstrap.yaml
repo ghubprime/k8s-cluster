@@ -78247,7 +78247,7 @@ metadata:
 ---
 apiVersion: v1
 data:
-  admin-password: S2k1aTk4WkNaUnk0eEJXbHVCSHJxclNpajJWMXpwVkVNejRpd0hGNw==
+  admin-password: QVJPYmtram5qdk1YOHVyUjdPajVTcEVENlBuMERVdHVWblR0VVd2YQ==
   admin-user: YWRtaW4=
   ldap-toml: ""
 kind: Secret
@@ -78482,7 +78482,7 @@ spec:
         checksum/config: c9b0eccfde188c3ab31435e524cc3fc25f2913efecb3bee559d4c96cf8e322d7
         checksum/dashboards-json-config: d6da0f1f5f3537395450eb1fc5f2a5a30735823885d3ed13cd54a67c09d8f12f
         checksum/sc-dashboard-provider-config: e70bf6a851099d385178a76de9757bb0bef8299da6d8443602590e44f05fdf24
-        checksum/secret: f9a89ddd34d131e8d3315b32d7ed27e3af7f57cb68d93d6dedcf4d9131ada880
+        checksum/secret: dd0c0bbdcaa25cb8382f54322135be72b6db84934a2c98a2855ded5b223ccef1
         kubectl.kubernetes.io/default-container: grafana
       labels:
         app.kubernetes.io/instance: kube-prometheus-stack
@@ -82854,6 +82854,56 @@ spec:
       for: 5m
       labels:
         severity: warning
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  labels:
+    app: kube-prometheus-stack
+    release: kube-prometheus-stack
+  name: scots-lab-ephemeral-storage
+  namespace: kube-prometheus-system
+spec:
+  groups:
+  - name: scots-lab.ephemeral-storage
+    rules:
+    - alert: EphemeralStorageLowHeadroom
+      annotations:
+        description: '{{ $labels.instance }} has {{ printf "%.1f" $value }}% free
+          on /var. kubelet begins soft-evicting pods at 10%. Check image footprint
+          with `talosctl -n <ip> usage -d 1 /var/lib` — containerd is normally the
+          dominant consumer and image GC cannot reclaim in-use layers.'
+        summary: EPHEMERAL partition headroom low on {{ $labels.instance }}
+      expr: |
+        node_filesystem_avail_bytes{job="node-exporter",mountpoint="/var"}
+          / node_filesystem_size_bytes{job="node-exporter",mountpoint="/var"} * 100 < 18
+      for: 15m
+      labels:
+        severity: warning
+    - alert: EphemeralStorageNearEviction
+      annotations:
+        description: '{{ $labels.instance }} has {{ printf "%.1f" $value }}% free
+          on /var, closing on the 10% soft-eviction threshold (90s grace). Pod evictions
+          are imminent. Free space or drain non-critical workloads now.'
+        summary: '{{ $labels.instance }} approaching kubelet eviction threshold'
+      expr: |
+        node_filesystem_avail_bytes{job="node-exporter",mountpoint="/var"}
+          / node_filesystem_size_bytes{job="node-exporter",mountpoint="/var"} * 100 < 12
+      for: 2m
+      labels:
+        severity: critical
+    - alert: NodeUnderDiskPressure
+      annotations:
+        description: '{{ $labels.node }} reports DiskPressure and carries a NoSchedule
+          taint. Pods are being evicted and cannot be scheduled here. This fires on
+          the condition itself, so it is not subject to the filesystem-percentage
+          thresholds above.'
+        summary: '{{ $labels.node }} is under DiskPressure'
+      expr: kube_node_status_condition{condition="DiskPressure",status="true"} ==
+        1
+      for: 1m
+      labels:
+        severity: critical
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
