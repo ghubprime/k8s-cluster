@@ -1323,10 +1323,6 @@ spec:
       app.kubernetes.io/name: cert-manager
   template:
     metadata:
-      annotations:
-        prometheus.io/path: /metrics
-        prometheus.io/port: "9402"
-        prometheus.io/scrape: "true"
       labels:
         app: cert-manager
         app.kubernetes.io/component: controller
@@ -1405,10 +1401,6 @@ spec:
       app.kubernetes.io/name: cainjector
   template:
     metadata:
-      annotations:
-        prometheus.io/path: /metrics
-        prometheus.io/port: "9402"
-        prometheus.io/scrape: "true"
       labels:
         app: cainjector
         app.kubernetes.io/component: cainjector
@@ -1471,10 +1463,6 @@ spec:
       app.kubernetes.io/name: webhook
   template:
     metadata:
-      annotations:
-        prometheus.io/path: /metrics
-        prometheus.io/port: "9402"
-        prometheus.io/scrape: "true"
       labels:
         app: webhook
         app.kubernetes.io/component: webhook
@@ -1671,6 +1659,47 @@ metadata:
   namespace: cert-manager
 spec:
   selfSigned: {}
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    app: cert-manager
+    app.kubernetes.io/component: controller
+    app.kubernetes.io/instance: cert-manager
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: cert-manager
+    app.kubernetes.io/version: v1.20.2
+    helm.sh/chart: cert-manager-v1.20.2
+    prometheus: default
+  name: cert-manager
+  namespace: cert-manager
+spec:
+  endpoints:
+  - honorLabels: false
+    interval: 60s
+    path: /metrics
+    scrapeTimeout: 30s
+    targetPort: http-metrics
+  jobLabel: app.kubernetes.io/name
+  selector:
+    matchExpressions:
+    - key: app.kubernetes.io/name
+      operator: In
+      values:
+      - cainjector
+      - cert-manager
+      - webhook
+    - key: app.kubernetes.io/instance
+      operator: In
+      values:
+      - cert-manager
+    - key: app.kubernetes.io/component
+      operator: In
+      values:
+      - cainjector
+      - controller
+      - webhook
 ---
 apiVersion: admissionregistration.k8s.io/v1
 kind: MutatingWebhookConfiguration
