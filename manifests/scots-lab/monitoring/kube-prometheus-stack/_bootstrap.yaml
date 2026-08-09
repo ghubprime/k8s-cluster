@@ -77369,7 +77369,7 @@ data:
                 - phase
             type: Info
           help: Velero BackupRepository phase and status message
-          name: status
+          name: status_info
 kind: ConfigMap
 metadata:
   labels:
