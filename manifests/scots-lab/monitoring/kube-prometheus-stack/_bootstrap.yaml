@@ -75353,6 +75353,20 @@ rules:
   verbs:
   - list
   - watch
+- apiGroups:
+  - apiextensions.k8s.io
+  resources:
+  - customresourcedefinitions
+  verbs:
+  - list
+  - watch
+- apiGroups:
+  - velero.io
+  resources:
+  - backuprepositories
+  verbs:
+  - list
+  - watch
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -77332,6 +77346,46 @@ metadata:
 ---
 apiVersion: v1
 data:
+  config.yaml: |
+    spec:
+      resources:
+      - groupVersionKind:
+          group: velero.io
+          kind: BackupRepository
+          version: v1
+        metricNamePrefix: velero_backuprepository
+        metrics:
+        - each:
+            info:
+              labelsFromPath:
+                message:
+                - status
+                - message
+                name:
+                - metadata
+                - name
+                phase:
+                - status
+                - phase
+            type: Info
+          help: Velero BackupRepository phase and status message
+          name: status
+kind: ConfigMap
+metadata:
+  labels:
+    app.kubernetes.io/component: metrics
+    app.kubernetes.io/instance: kube-prometheus-stack
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: kube-state-metrics
+    app.kubernetes.io/part-of: kube-state-metrics
+    app.kubernetes.io/version: 2.19.0
+    helm.sh/chart: kube-state-metrics-7.4.0
+    release: kube-prometheus-stack
+  name: kube-prometheus-stack-kube-state-metrics-customresourcestate-config
+  namespace: kube-prometheus-system
+---
+apiVersion: v1
+data:
   kubelet.json: '{"editable":true,"links":[{"asDropdown":true,"includeVars":true,"keepTime":true,"tags":["kubernetes-mixin"],"targetBlank":false,"title":"Kubernetes","type":"dashboards"}],"panels":[{"datasource":{"type":"datasource","uid":"--
     Mixed --"},"fieldConfig":{"defaults":{"unit":"none"}},"gridPos":{"h":7,"w":4,"x":0,"y":0},"id":1,"interval":"1m","options":{"colorMode":"none"},"pluginVersion":"v11.4.0","targets":[{"datasource":{"type":"prometheus","uid":"${datasource}"},"expr":"sum(kubelet_node_name{cluster=\"$cluster\",
     job=\"kubelet\", metrics_path=\"/metrics\"})","instant":true}],"title":"Running
@@ -78230,7 +78284,7 @@ metadata:
 ---
 apiVersion: v1
 data:
-  alertmanager.yaml: Z2xvYmFsOgogIHJlc29sdmVfdGltZW91dDogNW0KaW5oaWJpdF9ydWxlczoKLSBlcXVhbDoKICAtIG5hbWVzcGFjZQogIC0gYWxlcnRuYW1lCiAgc291cmNlX21hdGNoZXJzOgogIC0gc2V2ZXJpdHkgPSBjcml0aWNhbAogIHRhcmdldF9tYXRjaGVyczoKICAtIHNldmVyaXR5ID1+IHdhcm5pbmd8aW5mbwotIGVxdWFsOgogIC0gbmFtZXNwYWNlCiAgLSBhbGVydG5hbWUKICBzb3VyY2VfbWF0Y2hlcnM6CiAgLSBzZXZlcml0eSA9IHdhcm5pbmcKICB0YXJnZXRfbWF0Y2hlcnM6CiAgLSBzZXZlcml0eSA9IGluZm8KLSBlcXVhbDoKICAtIG5hbWVzcGFjZQogIHNvdXJjZV9tYXRjaGVyczoKICAtIGFsZXJ0bmFtZSA9IEluZm9JbmhpYml0b3IKICB0YXJnZXRfbWF0Y2hlcnM6CiAgLSBzZXZlcml0eSA9IGluZm8KLSB0YXJnZXRfbWF0Y2hlcnM6CiAgLSBhbGVydG5hbWUgPSBJbmZvSW5oaWJpdG9yCnJlY2VpdmVyczoKLSBuYW1lOiBudGZ5CiAgd2ViaG9va19jb25maWdzOgogIC0gc2VuZF9yZXNvbHZlZDogdHJ1ZQogICAgdXJsOiBodHRwOi8vbnRmeS5udGZ5LnN2Yy5jbHVzdGVyLmxvY2FsL2FsZXJ0cwpyb3V0ZToKICBncm91cF9ieToKICAtIGFsZXJ0bmFtZQogIC0gbmFtZXNwYWNlCiAgLSBqb2IKICBncm91cF9pbnRlcnZhbDogNW0KICBncm91cF93YWl0OiAzMHMKICByZWNlaXZlcjogbnRmeQogIHJlcGVhdF9pbnRlcnZhbDogNGgKICByb3V0ZXM6CiAgLSBtYXRjaDoKICAgICAgc2V2ZXJpdHk6IGNyaXRpY2FsCiAgICByZWNlaXZlcjogbnRmeQogICAgcmVwZWF0X2ludGVydmFsOiAxaAogIC0gbWF0Y2g6CiAgICAgIHNldmVyaXR5OiB3YXJuaW5nCiAgICByZWNlaXZlcjogbnRmeQogICAgcmVwZWF0X2ludGVydmFsOiA0aAp0ZW1wbGF0ZXM6Ci0gL2V0Yy9hbGVydG1hbmFnZXIvY29uZmlnLyoudG1wbA==
+  alertmanager.yaml: Z2xvYmFsOgogIHJlc29sdmVfdGltZW91dDogNW0KaW5oaWJpdF9ydWxlczoKLSBlcXVhbDoKICAtIGFsZXJ0bmFtZQogIC0gbmFtZXNwYWNlCiAgc291cmNlX21hdGNoZXJzOgogIC0gc2V2ZXJpdHkgPSAiY3JpdGljYWwiCiAgdGFyZ2V0X21hdGNoZXJzOgogIC0gc2V2ZXJpdHkgPSAid2FybmluZyIKLSBlcXVhbDoKICAtIG5vZGUKICBzb3VyY2VfbWF0Y2hlcnM6CiAgLSBhbGVydG5hbWUgPSAiS3ViZU5vZGVOb3RSZWFkeSIKICB0YXJnZXRfbWF0Y2hlcnM6CiAgLSBzZXZlcml0eSA9fiAid2FybmluZ3xjcml0aWNhbCIKLSBlcXVhbDoKICAtIG5hbWVzcGFjZQogIHNvdXJjZV9tYXRjaGVyczoKICAtIGFsZXJ0bmFtZSA9ICJDZXBoQ2x1c3RlckVycm9yU3RhdGUiCiAgdGFyZ2V0X21hdGNoZXJzOgogIC0gc2V2ZXJpdHkgPSAid2FybmluZyIKcmVjZWl2ZXJzOgotIG5hbWU6IG50ZnktY3JpdGljYWwKICB3ZWJob29rX2NvbmZpZ3M6CiAgLSBzZW5kX3Jlc29sdmVkOiB0cnVlCiAgICB1cmw6IGh0dHA6Ly9udGZ5Lm50Znkuc3ZjLmNsdXN0ZXIubG9jYWwvYWxlcnRzLWNyaXRpY2FsCi0gbmFtZTogbnRmeS13YXJuaW5nCiAgd2ViaG9va19jb25maWdzOgogIC0gc2VuZF9yZXNvbHZlZDogdHJ1ZQogICAgdXJsOiBodHRwOi8vbnRmeS5udGZ5LnN2Yy5jbHVzdGVyLmxvY2FsL2FsZXJ0cwpyb3V0ZToKICBncm91cF9ieToKICAtIGFsZXJ0bmFtZQogIC0gbmFtZXNwYWNlCiAgLSBqb2IKICBncm91cF9pbnRlcnZhbDogNW0KICBncm91cF93YWl0OiAzMHMKICByZWNlaXZlcjogbnRmeS13YXJuaW5nCiAgcmVwZWF0X2ludGVydmFsOiA0aAogIHJvdXRlczoKICAtIG1hdGNoOgogICAgICBzZXZlcml0eTogY3JpdGljYWwKICAgIHJlY2VpdmVyOiBudGZ5LWNyaXRpY2FsCiAgICByZXBlYXRfaW50ZXJ2YWw6IDFoCiAgLSBtYXRjaDoKICAgICAgc2V2ZXJpdHk6IHdhcm5pbmcKICAgIHJlY2VpdmVyOiBudGZ5LXdhcm5pbmcKICAgIHJlcGVhdF9pbnRlcnZhbDogNGgKdGVtcGxhdGVzOgotIC9ldGMvYWxlcnRtYW5hZ2VyL2NvbmZpZy8qLnRtcGw=
 kind: Secret
 metadata:
   labels:
@@ -78725,6 +78779,7 @@ spec:
         - --port=8080
         - --resources=certificatesigningrequests,configmaps,cronjobs,daemonsets,deployments,endpointslices,horizontalpodautoscalers,ingresses,jobs,leases,limitranges,mutatingwebhookconfigurations,namespaces,networkpolicies,nodes,persistentvolumeclaims,persistentvolumes,poddisruptionbudgets,pods,replicasets,replicationcontrollers,resourcequotas,secrets,services,statefulsets,storageclasses,validatingwebhookconfigurations,volumeattachments
         - --metric-labels-allowlist=pods=[app.kubernetes.io/name,app.kubernetes.io/instance,app.kubernetes.io/component],nodes=[kubernetes.io/hostname,node.kubernetes.io/instance-type]
+        - --custom-resource-state-config-file=/etc/customresourcestate/config.yaml
         image: registry.k8s.io/kube-state-metrics/kube-state-metrics:v2.19.0
         imagePullPolicy: IfNotPresent
         livenessProbe:
@@ -78762,6 +78817,10 @@ spec:
             drop:
             - ALL
           readOnlyRootFilesystem: true
+        volumeMounts:
+        - mountPath: /etc/customresourcestate
+          name: customresourcestate-config
+          readOnly: true
       dnsPolicy: ClusterFirst
       hostNetwork: false
       priorityClassName: homelab-critical
@@ -78773,6 +78832,10 @@ spec:
         seccompProfile:
           type: RuntimeDefault
       serviceAccountName: kube-prometheus-stack-kube-state-metrics
+      volumes:
+      - configMap:
+          name: kube-prometheus-stack-kube-state-metrics-customresourcestate-config
+        name: customresourcestate-config
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -79251,15 +79314,6 @@ spec:
     seccompProfile:
       type: RuntimeDefault
   serviceAccountName: kube-prometheus-stack-alertmanager
-  storage:
-    volumeClaimTemplate:
-      spec:
-        accessModes:
-        - ReadWriteOnce
-        resources:
-          requests:
-            storage: 1Gi
-        storageClassName: ceph-block
   version: v0.32.1
 ---
 apiVersion: monitoring.coreos.com/v1
@@ -82851,6 +82905,38 @@ spec:
       for: 5m
       labels:
         severity: warning
+    - alert: VeleroBackupRepositoryNotReady
+      annotations:
+        description: BackupRepository {{ $labels.name }} has not been Ready for 15
+          minutes. New PVC data is probably not reaching R2 even if backups report
+          Completed.
+        summary: Velero BackupRepository {{ $labels.name }} is {{ $labels.phase }}
+      expr: velero_backuprepository_status_info{phase!="Ready"} == 1
+      for: 15m
+      labels:
+        severity: critical
+    - alert: VeleroBackupRepositoryUnhealthyMessage
+      annotations:
+        description: 'BackupRepository {{ $labels.name }} carries status message "{{
+          $labels.message }}" while phase is {{ $labels.phase }}. A Ready phase alongside
+          a non-empty message is the exact signature of destroyed kopia repositories
+          (Rule #31). Treat every restore point as suspect until a real restore proves
+          otherwise — do NOT trust the Completed status of backups.'
+        summary: Velero BackupRepository {{ $labels.name }} reports an error
+      expr: velero_backuprepository_status_info{message!=""} == 1
+      for: 15m
+      labels:
+        severity: critical
+    - alert: VeleroBackupRepositoryMonitoringBlind
+      annotations:
+        description: velero_backuprepository_status_info has no series. The restorability
+          alerts cannot fire, so backup health is currently unverified. Check kube-state-metrics
+          is Running and its customResourceState config parsed.
+        summary: Velero BackupRepository monitoring is not reporting
+      expr: absent(velero_backuprepository_status_info)
+      for: 1h
+      labels:
+        severity: critical
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule

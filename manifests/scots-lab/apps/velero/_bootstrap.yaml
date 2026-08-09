@@ -3513,6 +3513,28 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/name: velero
     helm.sh/chart: velero-5.4.1
+  name: velero-critical-data-backup
+  namespace: velero
+spec:
+  schedule: 0 8 * * *
+  template:
+    defaultVolumesToFsBackup: true
+    includedNamespaces:
+    - immich
+    - photoprism
+    - paperless
+    - nextcloud
+    snapshotVolumes: true
+    ttl: 2160h
+---
+apiVersion: velero.io/v1
+kind: Schedule
+metadata:
+  labels:
+    app.kubernetes.io/instance: velero
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: velero
+    helm.sh/chart: velero-5.4.1
   name: velero-deep-cluster-backup
   namespace: velero
 spec:
