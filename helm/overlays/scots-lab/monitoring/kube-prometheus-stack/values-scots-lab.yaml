@@ -256,7 +256,13 @@ kube-state-metrics:
               kind: BackupRepository
             metricNamePrefix: velero_backuprepository
             metrics:
-              - name: status
+              # Name MUST end in _info for an Info-type metric. kube-state-metrics does
+              # NOT append the suffix for you — it logs "Info metric does not have _info
+              # suffix" and publishes the family under the bare name. Named `status`
+              # first, which produced `velero_backuprepository_status` while the alerts
+              # below queried `..._status_info`, so they matched nothing and could never
+              # have fired. Verified against the live /metrics endpoint 2026-08-09.
+              - name: status_info
                 help: "Velero BackupRepository phase and status message"
                 each:
                   type: Info
