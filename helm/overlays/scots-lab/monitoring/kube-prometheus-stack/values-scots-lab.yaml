@@ -39,6 +39,11 @@ prometheus:
     ruleSelectorNilUsesHelmValues: false
     retention: 15d
     retentionSize: 20GB
+    # ⚠️ Prometheus stays on ceph-block on purpose — do NOT copy the Alertmanager
+    # emptyDir change up here. 20-25Gi of TSDB cannot live on the nodes' 29GB eMMC,
+    # which is already firing EphemeralStorageLowHeadroom. Losing metrics history on
+    # every restart would also destroy the ability to investigate the incident you are
+    # currently in. Alertmanager holds ~1Gi of disposable state; Prometheus does not.
     scrapeConfigSelectorNilUsesHelmValues: false
     # Persistent storage — moves TSDB off ephemeral eMMC to Ceph
     # Prevents DiskPressure evictions on 27GB root partitions
@@ -63,35 +68,80 @@ alertmanager:
   alertmanagerSpec:
     replicas: 1
     priorityClassName: homelab-critical
-    # Persistent storage for alert state across restarts
-    storage:
-      volumeClaimTemplate:
-        spec:
-          storageClassName: ceph-block
-          accessModes: ["ReadWriteOnce"]
-          resources:
-            requests:
-              storage: 1Gi
+    # ── NO PVC — deliberately on emptyDir since 2026-08-09 ─────────────────────
+    # Audit finding SRE P1: the alerting plane must not depend on the storage plane.
+    #
+    # This previously used a 1Gi `ceph-block` PVC. That created a circular dependency:
+    # if Ceph degrades — and Ceph has been HEALTH_WARN — then any Alertmanager restart
+    # or reschedule cannot mount its volume, so Alertmanager stays down. You lose
+    # alerting at exactly the moment you need it, and the first symptom is silence,
+    # which is indistinguishable from health. That is Rule #30 baked into the topology
+    # of the monitoring stack itself.
+    #
+    # THE TRADE, stated plainly: on restart Alertmanager loses its silences and its
+    # notification log (nflog). Practical effect for a single-operator homelab —
+    # previously-silenced alerts start firing again, and some notifications may repeat.
+    # Both failure modes are LOUD. The PVC's failure mode is SILENT. Loud wins.
+    #
+    # Note there is no non-Ceph StorageClass in this cluster (only ceph-block and
+    # ceph-filesystem), so "move it to local storage" is not available without adding a
+    # local-path provisioner — extra moving parts for 1Gi of ephemeral state.
+    #
+    # To revert: restore the storage: block below.
+    #   storage:
+    #     volumeClaimTemplate:
+    #       spec:
+    #         storageClassName: ceph-block
+    #         accessModes: ["ReadWriteOnce"]
+    #         resources: {requests: {storage: 1Gi}}
+    #
+    # ⚠️ Prometheus DELIBERATELY stays on ceph-block — see prometheusSpec below. Do not
+    # apply this same change there.
   config:
     global:
       resolve_timeout: 5m
     route:
-      receiver: ntfy
+      receiver: ntfy-warning
       group_by: ["alertname", "namespace", "job"]
       group_wait: 30s
       group_interval: 5m
       repeat_interval: 4h
       routes:
+      # Critical goes to its OWN ntfy topic. Previously both branches pointed at the
+      # same receiver and differed only in repeat_interval, so on the phone a critical
+      # alert was indistinguishable from a warning — the routing was decorative.
       - match:
           severity: critical
-        receiver: ntfy
+        receiver: ntfy-critical
         repeat_interval: 1h
       - match:
           severity: warning
-        receiver: ntfy
+        receiver: ntfy-warning
         repeat_interval: 4h
+    # Inhibition: when a node is down or Ceph is in ERROR, dozens of dependent alerts
+    # fire for the same underlying cause. Without these rules a single node failure
+    # produces an unreadable wall of notifications and the real signal is lost in it.
+    inhibit_rules:
+      # A critical alert suppresses the warning-level version of the same alert.
+      - source_matchers: ['severity = "critical"']
+        target_matchers: ['severity = "warning"']
+        equal: ["alertname", "namespace"]
+      # A down node suppresses everything else scoped to that node.
+      - source_matchers: ['alertname = "KubeNodeNotReady"']
+        target_matchers: ['severity =~ "warning|critical"']
+        equal: ["node"]
+      # Ceph in ERROR suppresses the individual component warnings underneath it.
+      - source_matchers: ['alertname = "CephClusterErrorState"']
+        target_matchers: ['severity = "warning"']
+        equal: ["namespace"]
     receivers:
-    - name: ntfy
+    # ntfy maps the topic from the URL path. Set the critical topic to a high priority
+    # and a distinct sound in the ntfy client so it is recognisable without reading it.
+    - name: ntfy-critical
+      webhook_configs:
+      - url: http://ntfy.ntfy.svc.cluster.local/alerts-critical
+        send_resolved: true
+    - name: ntfy-warning
       webhook_configs:
       - url: http://ntfy.ntfy.svc.cluster.local/alerts
         send_resolved: true
@@ -177,6 +227,49 @@ kube-state-metrics:
   enabled: true
   namespaceOverride: kube-prometheus-system
   priorityClassName: homelab-critical
+  # Expose Velero BackupRepository status as metrics (audit finding SRE P5).
+  #
+  # Why: every existing Velero alert watches whether the backup JOB ran. None watched
+  # whether the data is RESTORABLE. That is the exact gap that let 12 phantom restore
+  # points accumulate while reporting Completed — the kopia repositories were destroyed
+  # on 2026-08-02 and each BackupRepository sat at `phase: Ready` with a fatal
+  # `.status.message` of "repository not initialized in the provided storage" for days,
+  # alerting nobody. Rule #30 in its purest form: Ready was not evidence of anything.
+  #
+  # Both fields are exposed because phase alone would NOT have caught it — the phase was
+  # Ready the whole time. The message is the signal.
+  #
+  # ⚠️ VERIFY AFTER SYNC: a malformed customResourceState config makes kube-state-metrics
+  # crash-loop, which would take out a large share of cluster monitoring. Confirm with:
+  #   kubectl -n kube-prometheus-system get pods -l app.kubernetes.io/name=kube-state-metrics
+  # If it is not Running, set `customResourceState.enabled: false` and push again.
+  # The paired VeleroBackupRepositoryMonitoringBlind alert below fires if the metric
+  # never appears, so a silent failure of this block is not possible.
+  customResourceState:
+    enabled: true
+    config:
+      spec:
+        resources:
+          - groupVersionKind:
+              group: velero.io
+              version: v1
+              kind: BackupRepository
+            metricNamePrefix: velero_backuprepository
+            metrics:
+              - name: status
+                help: "Velero BackupRepository phase and status message"
+                each:
+                  type: Info
+                  info:
+                    labelsFromPath:
+                      name: [metadata, name]
+                      phase: [status, phase]
+                      message: [status, message]
+  rbac:
+    extraRules:
+      - apiGroups: ["velero.io"]
+        resources: ["backuprepositories"]
+        verbs: ["list", "watch"]
   metricLabelsAllowlist:
     # Expose only labels used in dashboards and alerts to control time series cardinality.
     # Wildcard pods=[*] was inflating series count from high-cardinality labels
@@ -221,6 +314,51 @@ additionalPrometheusRulesMap:
         annotations:
           summary: "Velero backup missing for 8+ hours ({{ $labels.schedule }})"
           description: "No successful backup for schedule {{ $labels.schedule }} in over 8 hours. The backup pipeline may be stalled or OOMKilled."
+
+      # ── Restorability, not just job success (added 2026-08-09) ──────────────────
+      # The three alerts above all watch whether the backup JOB ran. These watch whether
+      # the data can actually be restored. See the kube-state-metrics block above.
+      - alert: VeleroBackupRepositoryNotReady
+        expr: velero_backuprepository_status_info{phase!="Ready"} == 1
+        for: 15m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Velero BackupRepository {{ $labels.name }} is {{ $labels.phase }}"
+          description: >-
+            BackupRepository {{ $labels.name }} has not been Ready for 15 minutes.
+            New PVC data is probably not reaching R2 even if backups report Completed.
+
+      # The one that would actually have caught 2026-08-02. Phase stayed `Ready`; the
+      # message was the only evidence. Never trust the phase alone here.
+      - alert: VeleroBackupRepositoryUnhealthyMessage
+        expr: velero_backuprepository_status_info{message!=""} == 1
+        for: 15m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Velero BackupRepository {{ $labels.name }} reports an error"
+          description: >-
+            BackupRepository {{ $labels.name }} carries status message
+            "{{ $labels.message }}" while phase is {{ $labels.phase }}. A Ready phase
+            alongside a non-empty message is the exact signature of destroyed kopia
+            repositories (Rule #31). Treat every restore point as suspect until a real
+            restore proves otherwise — do NOT trust the Completed status of backups.
+
+      # Fail closed, same pattern as CertificateMonitoringBlind: if the custom-resource
+      # metric never appears (bad CRS config, missing RBAC, KSM crash-looping) then the
+      # two alerts above can never fire, and their silence would look like health.
+      - alert: VeleroBackupRepositoryMonitoringBlind
+        expr: absent(velero_backuprepository_status_info)
+        for: 1h
+        labels:
+          severity: critical
+        annotations:
+          summary: "Velero BackupRepository monitoring is not reporting"
+          description: >-
+            velero_backuprepository_status_info has no series. The restorability alerts
+            cannot fire, so backup health is currently unverified. Check
+            kube-state-metrics is Running and its customResourceState config parsed.
   ceph-capacity-alerts:
     groups:
     - name: ceph-capacity.rules

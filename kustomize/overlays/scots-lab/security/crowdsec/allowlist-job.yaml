@@ -17,7 +17,14 @@ spec:
       serviceAccountName: crowdsec-allowlist-provisioner
       containers:
         - name: provisioner
-          image: bitnami/kubectl:latest
+          # Pinned 2026-08-09. Was `bitnami/kubectl:latest` — two problems in one string:
+          # (1) :latest is unpinnable and unreviewable; the CrowdSec bouncer is already dead
+          #     because its :latest image was deleted from Docker Hub.
+          # (2) Bitnami changed how it distributes images on Docker Hub, so that path is an
+          #     active supply-chain risk rather than a theoretical one.
+          # registry.k8s.io/kubectl is the upstream-maintained image and is already used by
+          # the Velero chart values in this repo. Version tracks the cluster (K8s v1.36.1).
+          image: registry.k8s.io/kubectl:v1.36.1
           command:
             - /bin/sh
             - -e

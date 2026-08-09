@@ -116,3 +116,35 @@ schedules:
         - rook-ceph
       defaultVolumesToFsBackup: true
       snapshotVolumes: true
+
+  # Tier 2b: Nightly filesystem backup of the IRREPLACEABLE data only.
+  #
+  # Why this exists (added 2026-08-09, audit finding Storage P2):
+  #   The 6-hourly `cluster-backup` tier takes CSI snapshots, but `snapshotMoveData` is
+  #   not set, so those snapshots never leave Ceph. They protect against "I deleted a
+  #   file"; they protect against nothing if Ceph itself is lost. That made the real
+  #   off-site RPO for photos and documents **48 hours**, not the 6 hours the SLO
+  #   document implied.
+  #
+  #   The measured application-data footprint is ~2.47 GB across ALL apps (the 31.29 GB
+  #   traversed by the last healthy deep backup was 92% observability TSDB, now excluded).
+  #   Backing up just these four namespaces nightly is therefore cheap — single-digit GB
+  #   at steady state, and kopia dedupes across runs.
+  #
+  # Effect: off-site RPO for photos + documents goes 48h -> <=24h.
+  #
+  # Deliberately a separate schedule rather than shortening `deep-cluster-backup`:
+  # keeping the 48h whole-cluster cadence avoids re-inflating the R2 bill that triggered
+  # the manual cleanup on 2026-08-02 which destroyed the kopia repositories (Rule #31).
+  critical-data-backup:
+    disabled: false
+    schedule: "0 8 * * *"  # Daily 08:00 UTC (01:00 PDT) — after the 06:00 deep window
+    template:
+      ttl: "2160h"  # 90 days, matching deep-cluster-backup
+      includedNamespaces:
+        - immich       # photo/video library
+        - photoprism   # photo library
+        - paperless    # scanned documents + OCR
+        - nextcloud    # files, contacts, calendars
+      defaultVolumesToFsBackup: true
+      snapshotVolumes: true

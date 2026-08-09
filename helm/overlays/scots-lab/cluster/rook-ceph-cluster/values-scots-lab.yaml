@@ -73,12 +73,27 @@ cephClusterSpec:
         memory: 1Gi
     osd:
       requests:
+        # The request is what freed ~14,650m of scheduling capacity in May and took node
+        # allocation from 99% to ~55%. Keep it. See Knowledge/ceph-cpu-saturation-bug.md.
         cpu: 100m
         # Actual OSD scheduling footprint is ~512Mi; steady-state usage is 887Mi-989Mi
         memory: 512Mi
       limits:
-        # Tighten QoS ceiling to prevent OSD rebalancing from saturating node CPU and evicting pods
-        cpu: 400m
+        # ── NO cpu LIMIT ON OSDs — deliberately absent (2026-08-09) ──────────────
+        # Previously `cpu: 400m`, added to stop rebalancing spikes causing evictions.
+        # A CPU limit is enforced by CFS quota: once the OSD burns its slice within a
+        # scheduling period it is hard-throttled until the next one. That stalls the
+        # BlueStore commit path, and the symptom is BLUESTORE_SLOW_OP_ALERT — which was
+        # firing on osd.3, osd.5 and osd.7 and was recorded as "not yet root-caused".
+        #
+        # Ceph upstream advises against CPU limits on OSDs. The `requests` value above is
+        # what protects scheduling; the limit only created the problem it was meant to
+        # prevent. Rule #30: verify the work product, not the Ready flag.
+        #
+        # ⚠️ If slow ops persist after this change, the competing hypothesis stands — the
+        # three slow OSDs are each the *second* OSD of a pair sharing one M.2 WAL+DB
+        # device, i.e. SSD contention. See Knowledge/ceph-waldb-migration-runbook.md.
+        #
         # Ceph Tentacle v20.2.0 requires >1GiB during config initialization (parse_env).
         # Previous 1Gi limit caused ceph_assert crash in set_val_default(). Set to 4Gi
         # to match MDS and provide headroom for recovery I/O spikes.
