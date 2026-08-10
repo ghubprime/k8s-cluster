@@ -998,7 +998,7 @@ spec:
           kubectl delete ccwnp crowdsec-cilium-bouncer --ignore-not-found=true || true
 
           echo "Provisioning sequence complete!"
-        image: registry.k8s.io/kubectl:v1.36.1
+        image: docker.io/alpine/k8s:1.36.1
         name: provisioner
       restartPolicy: OnFailure
       serviceAccountName: crowdsec-allowlist-provisioner

@@ -1698,7 +1698,7 @@ spec:
       rook_cluster: rook-ceph
 ---
 apiVersion: snapshot.storage.k8s.io/v1
-deletionPolicy: Retain
+deletionPolicy: Delete
 driver: rook-ceph.rbd.csi.ceph.com
 kind: VolumeSnapshotClass
 metadata:
@@ -1713,7 +1713,7 @@ parameters:
   csi.storage.k8s.io/snapshotter-secret-namespace: rook-ceph
 ---
 apiVersion: snapshot.storage.k8s.io/v1
-deletionPolicy: Retain
+deletionPolicy: Delete
 driver: rook-ceph.cephfs.csi.ceph.com
 kind: VolumeSnapshotClass
 metadata:
