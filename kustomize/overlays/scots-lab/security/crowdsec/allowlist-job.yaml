@@ -17,14 +17,20 @@ spec:
       serviceAccountName: crowdsec-allowlist-provisioner
       containers:
         - name: provisioner
-          # Pinned 2026-08-09. Was `bitnami/kubectl:latest` — two problems in one string:
-          # (1) :latest is unpinnable and unreviewable; the CrowdSec bouncer is already dead
-          #     because its :latest image was deleted from Docker Hub.
-          # (2) Bitnami changed how it distributes images on Docker Hub, so that path is an
-          #     active supply-chain risk rather than a theoretical one.
-          # registry.k8s.io/kubectl is the upstream-maintained image and is already used by
-          # the Velero chart values in this repo. Version tracks the cluster (K8s v1.36.1).
-          image: registry.k8s.io/kubectl:v1.36.1
+          # Image must provide a SHELL, curl and coreutils - this job is a shell script.
+          #
+          # History worth keeping (2026-08-09/10):
+          #   bitnami/kubectl:latest              -> floating tag, the exact pattern that killed
+          #                                          the CrowdSec bouncer when its image vanished
+          #   registry.k8s.io/kubectl:v1.36.1     -> DISTROLESS. No /bin/sh, no curl, no wc.
+          #                                          Broke this job: 7 StartError runs on 08-10
+          #                                          ("stat /bin/sh: no such file or directory")
+          #   bitnami/kubectl:1.32.0-debian-12-r0 -> ImagePullBackOff. Bitnami removed pinned
+          #                                          tags from Docker Hub - the supply-chain
+          #                                          risk is real, not theoretical
+          #   alpine/k8s:1.36.1                   -> verified in-cluster: SHELL_OK CURL_OK
+          #                                          KUBECTL_OK WC_OK, and matches K8s v1.36.1
+          image: docker.io/alpine/k8s:1.36.1
           command:
             - /bin/sh
             - -e

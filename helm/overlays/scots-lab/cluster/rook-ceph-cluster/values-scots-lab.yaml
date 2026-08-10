@@ -126,14 +126,42 @@ cephClusterSpec:
 toolbox:
   enabled: true
 
+# ── deletionPolicy: Retain -> Delete (2026-08-10) ───────────────────────────────
+# `Retain` leaked 9,910 orphaned RBD snapshot images (86.7% of all snapshot images
+# in ceph-blockpool) and ~1.77 TiB of space.
+#
+# The mechanism: Velero CSI-snapshots every PVC every 6 hours. The backup expires
+# at its TTL and its VolumeSnapshot object is removed — but `Retain` means the
+# VolumeSnapshotContent AND the underlying Ceph RBD image are deliberately kept.
+# Nothing ever collects them. Measured 2026-08-09:
+#
+#     csi-vol-*  live PVC volumes :     40   (matches 40 PVCs exactly — no leak here)
+#     csi-snap-* snapshot images  : 11,432
+#     VolumeSnapshotContent        :  1,856
+#     VolumeSnapshot               :     39
+#
+# `ceph df` reported 1.8 TiB stored against ~32 GiB of live filesystem data.
+#
+# `Delete` makes the RBD image go away when its VolumeSnapshot does, which is the
+# correct lifecycle for snapshots that Velero creates and expires on a schedule.
+#
+# ⚠️ WHAT THIS CHANGES: deleting a VolumeSnapshot now destroys its underlying data
+# immediately, instead of leaving a recoverable image behind. That is the intended
+# behaviour here — Velero owns these and expires them on TTL — but it does remove a
+# safety net that previously existed by accident. Off-site protection does not rely
+# on these: CSI snapshots never leave Ceph (`snapshotMoveData` is unset), so the
+# real restore path is the Velero fs-backup to R2 and its Google Drive mirror.
+#
+# ⚠️ This does NOT retroactively clean the existing 9,910 orphans — those predate
+# any VolumeSnapshot object and must be removed with tools/ceph-snapshot-audit.py.
 cephBlockPoolsVolumeSnapshotClass:
   enabled: true
   name: ceph-block
   isDefault: true
-  deletionPolicy: Retain
+  deletionPolicy: Delete
 
 cephFileSystemVolumeSnapshotClass:
   enabled: true
   name: ceph-filesystem
   isDefault: false
-  deletionPolicy: Retain
+  deletionPolicy: Delete
