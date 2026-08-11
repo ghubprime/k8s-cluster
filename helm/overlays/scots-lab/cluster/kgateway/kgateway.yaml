@@ -2,4 +2,9 @@ apiVersion: builtin
 kind: HelmChartInflationGenerator
 metadata:
   name: kgateway
-valuesFile: values-scots-lab.yaml
+# No valuesFile: the kgateway v2.2.2 chart has no extAuth / glooGateway key, so the
+# three values files that used to be referenced here set nothing. Verified against the
+# rendered _bootstrap.yaml: zero occurrences of extAuth. Removed 2026-08-11 along with
+# the files themselves, which also cleared the last Rule #32 ambiguity (the same
+# filename existed in BOTH this directory and the kustomize overlay, and only one could
+# ever win). ExtAuth was a Gloo Gateway concept that kgateway v2 dropped - see Rule #19.

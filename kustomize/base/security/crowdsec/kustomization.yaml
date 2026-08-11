@@ -3,5 +3,18 @@ kind: Kustomization
 namespace: crowdsec
 resources:
   - namespace.yaml
-  - kubernetes-bouncer.yaml
+  # kubernetes-bouncer.yaml removed 2026-08-11. The bouncer had been at replicas: 0 since
+  # its image (crowdsecurity/crowdsec-bouncer-cilium:latest) was deleted from Docker Hub,
+  # so enforcement has been inert for months while ADR-002 and security-and-waf.md still
+  # described it as an active control.
+  #
+  # What actually made removing it worthwhile is not the dead Deployment but the RBAC it
+  # left behind: a ServiceAccount bound to a ClusterRole with cluster-wide create/update/
+  # delete on networkpolicies AND ciliumclusterwidenetworkpolicies. That is a standing
+  # credential holding the precise permission that produced the Empty-Ban Bug, attached to
+  # a workload that could never run.
+  #
+  # CrowdSec DETECTION is untouched and still running - LAPI + 3 agents. The WAF is now
+  # explicitly detection-only. Rebuilding enforcement on cs-firewall-bouncer or at
+  # kGateway/Envoy remains an open decision; see Knowledge/known-issues.md.
   - coredns-safety-valve.yaml

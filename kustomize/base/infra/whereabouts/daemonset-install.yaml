@@ -123,7 +123,15 @@ spec:
             SLEEP=false source /install-cni.sh
             /token-watcher.sh &
             /ip-control-loop -log-level debug
-        image: ghcr.io/k8snetworkplumbingwg/whereabouts:latest
+        # Pinned by DIGEST 2026-08-11. Was `:latest`.
+        # whereabouts is the CNI IPAM plugin - an unexpected upstream change here breaks pod
+# addressing cluster-wide, which is about the worst blast radius a floating tag can have.
+        #
+        # This digest is exactly what was already running when it was pinned, read from the
+        # live pod's imageID - so this is a no-op for the running cluster and cannot drift.
+        # A version tag was deliberately not guessed at; Renovate tracks digest pins via
+        # pinDigest and will propose updates as reviewable PRs (Rule #27).
+        image: ghcr.io/k8snetworkplumbingwg/whereabouts@sha256:825e365861a06c1c057e050791e02b9092b11c602a778b60e8c80530121ff170
         imagePullPolicy: IfNotPresent
         env:
         - name: NODENAME
