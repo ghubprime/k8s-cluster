@@ -13,12 +13,6 @@ metadata:
   name: crowdsec-allowlist-provisioner
   namespace: crowdsec
 ---
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: crowdsec-kubernetes-bouncer
-  namespace: crowdsec
----
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
@@ -65,46 +59,6 @@ rules:
   - patch
 ---
 apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  name: crowdsec-kubernetes-bouncer
-rules:
-- apiGroups:
-  - networking.k8s.io
-  resources:
-  - networkpolicies
-  verbs:
-  - get
-  - list
-  - watch
-  - create
-  - update
-  - patch
-  - delete
-- apiGroups:
-  - cilium.io
-  resources:
-  - ciliumnetworkpolicies
-  - ciliumclusterwidenetworkpolicies
-  verbs:
-  - get
-  - list
-  - watch
-  - create
-  - update
-  - patch
-  - delete
-- apiGroups:
-  - ""
-  resources:
-  - namespaces
-  - pods
-  verbs:
-  - get
-  - list
-  - watch
----
-apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: crowdsec-allowlist-provisioner
@@ -129,19 +83,6 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: crowdsec-allowlist-provisioner
-  namespace: crowdsec
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: crowdsec-kubernetes-bouncer
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: crowdsec-kubernetes-bouncer
-subjects:
-- kind: ServiceAccount
-  name: crowdsec-kubernetes-bouncer
   namespace: crowdsec
 ---
 apiVersion: v1
@@ -635,44 +576,6 @@ spec:
   resources:
     requests:
       storage: 1Gi
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: crowdsec-kubernetes-bouncer
-  namespace: crowdsec
-spec:
-  replicas: 0
-  selector:
-    matchLabels:
-      app: crowdsec-kubernetes-bouncer
-  template:
-    metadata:
-      labels:
-        app: crowdsec-kubernetes-bouncer
-    spec:
-      containers:
-      - env:
-        - name: CROWDSEC_BOUNCER_API_KEY
-          value: kubernetes-bouncer-static-key
-        - name: CROWDSEC_URL
-          value: http://crowdsec-service.crowdsec.svc.cluster.local:8080
-        - name: CILIUM_POLICY_NAME
-          value: crowdsec-cilium-bouncer
-        - name: DELETE_POLICY_ON_EMPTY
-          value: "true"
-        - name: UPDATE_FREQUENCY
-          value: 30s
-        image: crowdsecurity/crowdsec-bouncer-cilium:latest
-        name: bouncer
-        resources:
-          limits:
-            cpu: 100m
-            memory: 128Mi
-          requests:
-            cpu: 10m
-            memory: 32Mi
-      serviceAccountName: crowdsec-kubernetes-bouncer
 ---
 apiVersion: apps/v1
 kind: Deployment
