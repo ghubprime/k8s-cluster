@@ -1,19 +1,16 @@
 {{- if .Values.rbac.create -}}
-{{- if .Values.addonResizer.enabled -}}
 apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
+kind: ClusterRoleBinding
 metadata:
-  name: {{ printf "%s-nanny" (include "metrics-server.fullname" .)  }}
-  namespace: {{ .Release.Namespace }}
+  name: {{ printf "%s:system:auth-delegator" (include "metrics-server.fullname" .) }}
   labels:
     {{- include "metrics-server.labels" . | nindent 4 }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
-  kind: Role
-  name: {{ include "metrics-server.addonResizer.role" . }}
+  kind: ClusterRole
+  name: system:auth-delegator
 subjects:
   - kind: ServiceAccount
     name: {{ include "metrics-server.serviceAccountName" . }}
-    namespace: {{ .Release.Namespace }}
-{{- end -}}
+    namespace: {{ include "metrics-server.namespace" . }}
 {{- end -}}
