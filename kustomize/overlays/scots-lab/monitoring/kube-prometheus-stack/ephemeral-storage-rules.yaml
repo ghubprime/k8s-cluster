@@ -2,9 +2,18 @@
 #
 # Why the upstream node-exporter rules are not enough here:
 #
-#   kubelet soft eviction (k8s-cluster.yaml)  nodefs.available < 10%   grace 1m30s
+#   kubelet HARD eviction (k8s-cluster.yaml)  imagefs/nodefs < 5%      no grace
+#   kubelet soft eviction (k8s-cluster.yaml)  imagefs/nodefs < 10%     grace 1m30s
 #   NodeFilesystemSpaceFillingUp  (warning)   avail < 15%              for: 1h
 #   NodeFilesystemAlmostOutOfSpace (warning)  avail < 5%               for: 30m
+#
+# ⚠️ The hard threshold above was only set on 2026-10-20. Before that this file
+# documented soft eviction at 10% and assumed that was the binding constraint --
+# but evictionHard had been left at its default `imagefs.available: 15%`, which
+# has no grace period and therefore always fired first. The 12% critical alert
+# below was consequently positioned BELOW the real eviction point and could never
+# warn before an eviction, only after. These thresholds are only correct while
+# evictionHard stays under 10%; if that changes in k8s-cluster.yaml, re-check them.
 #
 # Those defaults assume large, slowly-filling disks. These nodes boot from a
 # 31 GB eMMC whose EPHEMERAL partition is ~29 GB, and a rolling deploy can pull
@@ -58,8 +67,10 @@ spec:
             summary: "{{ $labels.instance }} approaching kubelet eviction threshold"
             description: >-
               {{ $labels.instance }} has {{ printf "%.1f" $value }}% free on /var,
-              closing on the 10% soft-eviction threshold (90s grace). Pod evictions
-              are imminent. Free space or drain non-critical workloads now.
+              closing on the 10% soft-eviction threshold (90s grace), with hard
+              eviction at 5%. Pod evictions are imminent. Free space or drain
+              non-critical workloads now. Note that velero/node-agent runs here and
+              evicting it degrades fs-backup.
 
         - alert: NodeUnderDiskPressure
           expr: kube_node_status_condition{condition="DiskPressure",status="true"} == 1

@@ -49,6 +49,11 @@ patches:
             shutdownGracePeriodCriticalPods: "120s"
             imageGCHighThresholdPercent: 60
             imageGCLowThresholdPercent: 50
+            # Unused images age out after 7d even when the GC high threshold is not
+            # reached. Default is 0 = disabled, which lets superseded tags accumulate
+            # indefinitely; 543 overlayfs snapshots were present on 2026-10-20 against
+            # 46 live images. imageMinimumGCAge (2m default) still protects fresh pulls.
+            imageMaximumGCAge: "168h"
             # Lower soft eviction thresholds from default 15% to 10% to prevent
             # pod evictions during transient upgrade churn on 29GB eMMC nodes.
             # Baseline image usage sits at ~83% (17% free), too close to the 15% default.
@@ -58,6 +63,25 @@ patches:
             evictionSoftGracePeriod:
               nodefs.available: "1m30s"
               imagefs.available: "1m30s"
+            # evictionHard MUST be set alongside evictionSoft, and MUST be lower.
+            #
+            # Until 2026-10-20 only evictionSoft was set here, so the defaults stayed in
+            # force -- including `imagefs.available: 15%`. Hard eviction has NO grace
+            # period and fires first, so at 15% free kubelet evicted immediately and the
+            # soft 10%/90s path above was unreachable. The mitigation above had therefore
+            # never once taken effect. Observed live on 2026-10-20: talos-pyf-pz9 hit
+            # 14.0% free and instantly evicted two velero/node-agent pods (the fs-backup
+            # workers), loki/alloy, rook-ceph-exporter and a running Job.
+            #
+            # imagefs and nodefs are the SAME partition on these nodes, so whichever
+            # threshold is highest is the one that governs. Keeping hard below soft is
+            # what makes the 90s grace period real.
+            evictionHard:
+              nodefs.available: "5%"
+              imagefs.available: "5%"
+              nodefs.inodesFree: "5%"
+              imagefs.inodesFree: "5%"
+              memory.available: "100Mi"
 
         features:
           hostDNS:
