@@ -83026,8 +83026,10 @@ spec:
     - alert: EphemeralStorageNearEviction
       annotations:
         description: '{{ $labels.instance }} has {{ printf "%.1f" $value }}% free
-          on /var, closing on the 10% soft-eviction threshold (90s grace). Pod evictions
-          are imminent. Free space or drain non-critical workloads now.'
+          on /var, closing on the 10% soft-eviction threshold (90s grace), with hard
+          eviction at 5%. Pod evictions are imminent. Free space or drain non-critical
+          workloads now. Note that velero/node-agent runs here and evicting it degrades
+          fs-backup.'
         summary: '{{ $labels.instance }} approaching kubelet eviction threshold'
       expr: |
         node_filesystem_avail_bytes{job="node-exporter",mountpoint="/var"}
