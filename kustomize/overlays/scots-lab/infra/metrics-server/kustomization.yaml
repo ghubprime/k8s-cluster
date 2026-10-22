@@ -8,6 +8,6 @@ helmCharts:
     repo: https://kubernetes-sigs.github.io/metrics-server/
     releaseName: metrics-server
     namespace: kube-system
-    version: 3.13.0
+    version: 3.14.0
     includeCRDs: true
     valuesFile: ../../../../../helm/overlays/scots-lab/infra/metrics-server/values-scots-lab.yaml
