@@ -81,7 +81,21 @@ schedules:
   # Runs every 48 hours — the "restore everything" safety net for full data recovery
   deep-cluster-backup:
     disabled: false
-    schedule: "0 6 */2 * *"  # Shifted from 1 AM UTC (6 PM PDT) to 6 AM UTC (11 PM PDT)
+    # 14:00, NOT 06:00. It collided head-on with cluster-backup, which also fires at
+    # 06:00 every day. Velero queued this one behind it, so on 2026-10-23 it started at
+    # 06:43:03 while cluster-backup was still running, and cluster-backup completed at
+    # 06:43:55 and deleted the VolumeSnapshots out from under it. Every subsequent
+    # annotation patch then failed for 36 minutes:
+    #
+    #   Fail to patch volumesnapshot with content {...csi-volumesnapshot-handle...}:
+    #   volumesnapshots.snapshot.storage.k8s.io "velero-db-data-znuny-mariadb-0-..." not found
+    #
+    # 33 of 73 volumes, 66 errors, PartiallyFailed on every single run. The volume DATA
+    # was always fine (73/73 PodVolumeBackups Completed) -- it was purely the redundant
+    # CSI half failing loudly. critical-data-backup runs alone at 08:00 with the IDENTICAL
+    # flag pair on the SAME volumes and reports 0 errors, which is what ruled out the
+    # flags and pointed at the overlap. Keep this clear of 00/06/12/18 and of 08:00.
+    schedule: "0 14 */2 * *"
     template:
       ttl: "2160h"
       includedNamespaces:
@@ -115,7 +129,18 @@ schedules:
         - loki
         - rook-ceph
       defaultVolumesToFsBackup: true
-      snapshotVolumes: true
+      # false, because the CSI half of this tier was pure waste.
+      #
+      # With defaultVolumesToFsBackup: true, kopia takes the volume and the CSI snapshot
+      # is redundant -- Velero discards it rather than retaining it. Measured 2026-10-23:
+      # this schedule retained **0** VolumeSnapshotContents per run while cluster-backup,
+      # which has no defaultVolumesToFsBackup, retained **39** (one per PVC, 4x daily).
+      # So every PVC already has CSI snapshot coverage from Tier 1 and loses nothing here.
+      #
+      # Creating them anyway cost a VolumeSnapshot per volume that was immediately torn
+      # down, and was the thing racing with cluster-backup above. Rescheduling alone would
+      # have hidden the race; this removes the redundant work that caused it.
+      snapshotVolumes: false
 
   # Tier 2b: Nightly filesystem backup of the IRREPLACEABLE data only.
   #
